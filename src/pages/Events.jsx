@@ -110,8 +110,9 @@ const Events = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
                 >
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-5 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-300 to-purple-400">
-                        Upcoming&nbsp;Events
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-5 tracking-tight leading-tight">
+                        <span className="text-slate-900">Upcoming </span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-300 to-purple-400">Events</span>
                     </h1>
                     <p className="text-lg text-slate-400 leading-relaxed">
                         Join us for exclusive industry sessions, practical workshops, and career-defining opportunities.
