@@ -6,8 +6,8 @@ import PageTransition from '../components/PageTransition';
 
 // ── Swap this to your Google Apps Script URL once deployed ──
 // const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
-const USE_APPS_SCRIPT = false; // flip to true after deploying Apps Script
-const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+const USE_APPS_SCRIPT = true; // flip to true after deploying Apps Script
+const APPS_SCRIPT_URL = 'https://script.google.com/a/macros/hitam.org/s/AKfycbx_MM60s1N5BhMCMW6G4zrdVfprZfYHU0zjld1F4W7xI0IxzrH6joThEaPVNFmVlgQSOg/exec';
 const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/minds.datascience@hitam.org';
 
 const Join = () => {
