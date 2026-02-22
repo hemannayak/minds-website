@@ -87,21 +87,21 @@ const Contact = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6">
                             <ContactCard
                                 icon={<Phone size={24} />}
-                                title="MS Richa Tiwari"
+                                title="Ms. Richa Tiwari"
                                 value="Faculty Facilitator"
-                                subValue="+91 XXXXX XXXXX"
+                                subValue="+91 91315 39794"
                             />
                             <ContactCard
                                 icon={<Phone size={24} />}
-                                title="Apurba"
+                                title="Apurba Nandi"
                                 value="Logistics Team Lead"
-                                subValue="+91 XXXXX XXXXX"
+                                subValue="+91 81797 17349"
                             />
                             <ContactCard
                                 icon={<Phone size={24} />}
-                                title="Prasanna"
+                                title="Sai Prasanna"
                                 value="PR & Media Lead"
-                                subValue="+91 XXXXX XXXXX"
+                                subValue="+91 81061 10146"
                             />
                         </div>
                     </motion.div>

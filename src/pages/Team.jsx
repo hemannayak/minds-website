@@ -52,7 +52,7 @@ const teams = [
         accentText: 'text-amber-600',
         accentBorder: 'border-amber-100',
         gradient: 'from-amber-500 to-orange-500',
-        lead: { name: 'Apurba', initials: 'AP' },
+        lead: { name: 'Apurba Nandi', initials: 'AN' },
         members: ['Sohan', 'Charlson', 'Dhanudeep'],
     },
     {
@@ -61,7 +61,7 @@ const teams = [
         accentText: 'text-pink-600',
         accentBorder: 'border-pink-100',
         gradient: 'from-pink-500 to-purple-500',
-        lead: { name: 'Prasanna', initials: 'PR' },
+        lead: { name: 'Sai Prasanna', initials: 'SP' },
         members: ['Sarika', 'Keerthana', 'Harshitha', 'Sindhu', 'Karthik'],
     },
 ];
