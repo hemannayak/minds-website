@@ -113,7 +113,7 @@ const OrganisingCard = ({ team }) => (
             </div>
             <div>
                 <p className="text-slate-800 font-bold text-sm leading-none mb-0.5">{team.lead.name}</p>
-                <p className={`text-xs font-semibold ${team.accentText}`}>{team.label} Lead</p>
+                <p className={`text-xs font-semibold ${team.accentText}`}>{team.label} Coordinator</p>
             </div>
         </div>
 
