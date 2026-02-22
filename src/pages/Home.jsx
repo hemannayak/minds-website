@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Briefcase, Target, Users, ArrowRight } from 'lucide-react';
-import Popup from '../components/Popup';
+import LaunchReveal from '../components/LaunchReveal';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
 // Target Launch Date: 27 February 2026, 2:00 PM IST
@@ -93,23 +93,40 @@ const LaunchCountdown = ({ onComplete }) => {
 
 const Home = () => {
     const [isLaunched, setIsLaunched] = useState(false);
+    const [showRevealPanel, setShowRevealPanel] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
-        // Check initial state in case we load after launch time
         if (new Date().getTime() >= LAUNCH_DATE) {
             setIsLaunched(true);
+            // Only fire reveal panel once (not on every refresh after launch)
+            const hasRevealed = localStorage.getItem('minds_launched');
+            if (!hasRevealed) {
+                setShowRevealPanel(true);
+                localStorage.setItem('minds_launched', '1');
+            }
         }
     }, []);
 
-    // Prevent hydration mismatch or layout shifts before checking time
+    const handleCountdownComplete = useCallback(() => {
+        setIsLaunched(true);
+        setShowRevealPanel(true);
+        localStorage.setItem('minds_launched', '1');
+    }, []);
+
+    const handleRevealComplete = useCallback(() => {
+        setShowRevealPanel(false);
+    }, []);
+
     if (!isMounted) return null;
 
     return (
         <main className="w-full">
+            {/* Launch reveal panel — fires once when countdown hits zero */}
+            <LaunchReveal show={showRevealPanel} onComplete={handleRevealComplete} />
+
             <section className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden px-6 flex items-center justify-center bg-background">
-                <Popup />
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-50 via-background to-background z-0"></div>
 
                 <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10 w-full h-full justify-center">
@@ -150,7 +167,7 @@ const Home = () => {
                     <div className="mt-8 relative w-full flex justify-center min-h-[250px] items-center">
                         <AnimatePresence mode="wait">
                             {!isLaunched ? (
-                                <LaunchCountdown key="countdown" onComplete={() => setIsLaunched(true)} />
+                                <LaunchCountdown key="countdown" onComplete={handleCountdownComplete} />
                             ) : LAUNCH_CONFIG.showReveal ? (
                                 /* ── OFFICIAL LAUNCH REVEAL ── flip LAUNCH_CONFIG.showReveal to true to enable ── */
                                 <motion.div
@@ -186,8 +203,8 @@ const Home = () => {
                                                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                                                 transition={{ duration: 0.8, delay: 1 + (i * 0.15), ease: "easeOut" }}
                                                 className={`text-xl md:text-3xl lg:text-4xl font-bold tracking-tight ${["Modern", "Innovation", "Next-Gen", "Data-Science", "Society"].includes(word)
-                                                        ? 'text-slate-800'
-                                                        : 'text-slate-400'
+                                                    ? 'text-slate-800'
+                                                    : 'text-slate-400'
                                                     }`}
                                             >
                                                 {word}

@@ -3,17 +3,34 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 
+const LAUNCH_DATE = new Date('2026-02-27T14:00:00+05:30').getTime();
+
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isLaunched, setIsLaunched] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
-        };
+        const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+
+        // Check launch state on mount
+        const checkLaunch = () => {
+            const pastDate = new Date().getTime() >= LAUNCH_DATE;
+            const hasFlag = !!localStorage.getItem('minds_launched');
+            setIsLaunched(pastDate || hasFlag);
+        };
+        checkLaunch();
+
+        // Listen for the flag being set (reveal panel fires it)
+        const onStorage = (e) => { if (e.key === 'minds_launched') checkLaunch(); };
+        window.addEventListener('storage', onStorage);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('storage', onStorage);
+        };
     }, []);
 
     const navLinks = [
@@ -37,16 +54,27 @@ const Navbar = () => {
         >
             <div className="max-w-7xl mx-auto px-4 md:px-8 h-full flex items-center justify-between">
 
-                {/* Logo Text */}
+                {/* Logo */}
                 <Link
                     to="/"
                     className="flex flex-col justify-center cursor-pointer group"
                     onClick={() => setMobileMenuOpen(false)}
                 >
                     <span className="text-2xl font-black tracking-tighter text-slate-800 leading-none">MINDS</span>
-                    <span className="text-[0.6rem] sm:text-xs font-semibold tracking-wide text-slate-500 mt-1 uppercase hidden sm:block">
-                        Official Club of Data Science Department, HITAM
-                    </span>
+                    {isLaunched ? (
+                        <motion.span
+                            initial={{ opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                            className="text-[0.55rem] sm:text-[0.6rem] font-semibold tracking-wide text-indigo-500 mt-0.5 uppercase hidden sm:block"
+                        >
+                            Modern Innovation · Next-Gen Data-Science Society
+                        </motion.span>
+                    ) : (
+                        <span className="text-[0.6rem] sm:text-xs font-semibold tracking-wide text-slate-500 mt-1 uppercase hidden sm:block">
+                            Official Club of Data Science Department, HITAM
+                        </span>
+                    )}
                 </Link>
 
                 {/* Desktop Links */}
