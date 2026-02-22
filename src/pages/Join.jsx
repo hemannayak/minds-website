@@ -25,21 +25,17 @@ const Join = () => {
 
             if (USE_APPS_SCRIPT && APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
                 // ── Google Apps Script path (Sheets + email) ──
-                const payload = {
-                    name: formData.get('name'),
-                    email: formData.get('email'),
-                    year: formData.get('year'),
-                    branch: formData.get('branch'),
-                    section: formData.get('section'),
-                };
+                // Apps script requires form-urlencoded data to avoid CORS preflight failures
+                const formBody = new URLSearchParams(formData).toString();
+
                 response = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Google Apps Script requires no-cors
-                    body: JSON.stringify(payload),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formBody,
                 });
-                // no-cors means we can't read the response — optimistically proceed
-                navigate('/welcome');
-                return;
+                data = await response.json();
             } else {
                 // ── FormSubmit fallback ──
                 formData.append('_subject', 'New Club Membership Application - MINDS');
