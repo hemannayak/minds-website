@@ -53,7 +53,7 @@ const teams = [
         accentBorder: 'border-amber-100',
         gradient: 'from-amber-500 to-orange-500',
         lead: { name: 'Apurba Nandi', initials: 'AN' },
-        members: ['Sohan', 'Charlson', 'Dhanudeep'],
+        members: ['Sohan', 'Charlson', 'Dhanudeep', 'Akansha', 'Bhuvana'],
     },
     {
         label: 'PR & Media',
@@ -62,7 +62,7 @@ const teams = [
         accentBorder: 'border-pink-100',
         gradient: 'from-pink-500 to-purple-500',
         lead: { name: 'Sai Prasanna', initials: 'SP' },
-        members: ['Sarika', 'Keerthana', 'Harshitha', 'Sindhu', 'Karthik'],
+        members: ['Sarika', 'Nootan', 'Keerthana', 'Harshitha', 'Sindhu', 'Karthik', 'Lashmi'],
     },
 ];
 
