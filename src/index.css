@@ -1,48 +1,100 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #F8FAFC;
-  color: #0F172A;
-  /* Slate 900 for high-contrast legible text */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
+/* ── Global Base ─────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: #F8FAFC;
+    color: #0F172A;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* Typography scale */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    line-height: 1.7;
+  }
+
+  /* Consistent focus rings */
+  *:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
 }
 
-/* Custom selection color */
+/* ── Global Transitions ──────────────────────────────────── */
+@layer base {
+
+  a,
+  button {
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* ── Selection ───────────────────────────────────────────── */
 ::selection {
-  background-color: rgba(79, 70, 229, 0.2);
-  /* primary/20 */
+  background-color: rgba(99, 102, 241, 0.15);
+  color: #312e81;
 }
 
-html {
-  scroll-behavior: smooth;
-
-}
-
-/* Custom scrollbar for better aesthetics */
+/* ── Scrollbar ───────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #E2E8F0;
-  /* Slate 200 */
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  /* Slate 300 */
-  border-radius: 4px;
+  background: linear-gradient(to bottom, #a5b4fc, #94a3b8);
+  border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
-  /* Slate 400 */
+  background: linear-gradient(to bottom, #818cf8, #64748b);
+}
+
+/* ── Utility: Section spacing ────────────────────────────── */
+@layer utilities {
+  .section-padding {
+    @apply py-24 px-6;
+  }
+
+  .card-base {
+    @apply bg-white border border-slate-100 rounded-3xl transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply hover:-translate-y-1 hover:shadow-xl hover:border-indigo-100;
+  }
+
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-sky-500;
+  }
 }
