@@ -6,8 +6,8 @@ import LaunchReveal from '../components/LaunchReveal';
 import Popup from '../components/Popup';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-// Target Launch Date: 27 February 2026, 2:00 PM IST
-const LAUNCH_DATE = new Date("2026-02-27T14:00:00+05:30").getTime();
+// Target Launch Date: 27 February 2026, 4:15 PM IST
+const LAUNCH_DATE = new Date("2026-02-27T16:15:00+05:30").getTime();
 
 // ─── Launch Config ───────────────────────────────────────────────
 // Set showReveal to true ONLY on the day of official launch.

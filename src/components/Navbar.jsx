@@ -3,7 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 
-const LAUNCH_DATE = new Date('2026-02-27T14:00:00+05:30').getTime();
+const LAUNCH_DATE = new Date('2026-02-27T16:15:00+05:30').getTime();
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
