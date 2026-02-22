@@ -3,214 +3,202 @@ import { motion } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-/* ─── Data ───────────────────────────────────────────────── */
+/* ───────────────────────────── Data ───────────────────────────── */
 
 const leadership = [
     {
         name: 'Dr. Kolluru David Raju',
         role: 'Head of Department',
-        department: 'Data Science',
-        initials: 'KDR',
-        color: 'from-blue-500 to-indigo-600',
+        dept: 'Data Science',
+        initials: 'KR',
+        hue: 'from-blue-600 to-indigo-700',
     },
     {
         name: 'Mr. Bhaskar Das',
         role: 'Program Head',
-        department: 'MINDS Tech Initiative',
+        dept: 'MINDS Tech Initiative',
         initials: 'BD',
-        color: 'from-indigo-500 to-purple-600',
+        hue: 'from-violet-600 to-purple-700',
     },
     {
         name: 'Ms. Richa Tiwari',
         role: 'Faculty Program Representative',
-        department: 'MINDS Club',
+        dept: 'MINDS Club',
         initials: 'RT',
-        color: 'from-emerald-500 to-teal-600',
+        hue: 'from-teal-600 to-emerald-700',
     },
 ];
 
-const organizingTeam = [
+const teams = [
     {
-        category: 'Registration Team',
-        accent: 'from-indigo-500 to-sky-500',
-        border: 'border-indigo-500/30',
-        bg: 'bg-indigo-500/10',
-        text: 'text-indigo-300',
-        lead: { name: 'Hemanth', initials: 'HE', color: 'from-indigo-500 to-sky-600' },
+        label: 'Registration',
+        dotColor: 'bg-sky-400',
+        lineColor: 'bg-sky-500/20',
+        textAccent: 'text-sky-400',
+        lead: 'Hemanth',
         members: ['Deepnitha', 'Siddarth', 'Gowtham'],
     },
     {
-        category: 'Logistics Team',
-        accent: 'from-amber-500 to-orange-500',
-        border: 'border-amber-500/30',
-        bg: 'bg-amber-500/10',
-        text: 'text-amber-300',
-        lead: { name: 'Apurba', initials: 'AP', color: 'from-amber-500 to-orange-600' },
+        label: 'Logistics',
+        dotColor: 'bg-amber-400',
+        lineColor: 'bg-amber-500/20',
+        textAccent: 'text-amber-400',
+        lead: 'Apurba',
         members: ['Sohan', 'Charlson', 'Dhanudeep'],
     },
     {
-        category: 'PR & Media',
-        accent: 'from-pink-500 to-purple-500',
-        border: 'border-pink-500/30',
-        bg: 'bg-pink-500/10',
-        text: 'text-pink-300',
-        lead: { name: 'Prasanna', initials: 'PR', color: 'from-pink-500 to-purple-600' },
+        label: 'PR & Media',
+        dotColor: 'bg-pink-400',
+        lineColor: 'bg-pink-500/20',
+        textAccent: 'text-pink-400',
+        lead: 'Prasanna',
         members: ['Sarika', 'Keerthana', 'Harshitha', 'Sindhu', 'Karthik'],
     },
 ];
 
-/* ─── Components ─────────────────────────────────────────── */
+/* ──────────────────────────── Sub-components ──────────────────── */
 
-const getInitials = (name) =>
-    name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2);
+const Avatar = ({ initials, hue, size = 'sm' }) => {
+    const dim = size === 'lg' ? 'w-14 h-14 text-base' : 'w-9 h-9 text-xs';
+    return (
+        <div className={`${dim} rounded-xl bg-gradient-to-br ${hue} flex items-center justify-center font-bold text-white shrink-0 shadow-lg`}>
+            {initials}
+        </div>
+    );
+};
 
-/** Faculty card — clean light card style */
-const FacultyCard = ({ member }) => (
+/** Thin horizontal rule with center label */
+const Divider = ({ label }) => (
+    <div className="flex items-center gap-5 mb-12">
+        <div className="h-px bg-slate-800 flex-1" />
+        <span className="text-[10px] font-semibold tracking-[0.22em] text-slate-500 uppercase">{label}</span>
+        <div className="h-px bg-slate-800 flex-1" />
+    </div>
+);
+
+/** Faculty row — horizontal minimal design */
+const FacultyRow = ({ member, index }) => (
     <motion.div
         variants={fadeInUp}
-        className="group relative rounded-2xl overflow-hidden bg-white border border-slate-100 p-8 flex flex-col items-center text-center hover:-translate-y-1 hover:shadow-lg hover:border-indigo-100 transition-all duration-300"
+        className="group flex items-center gap-5 py-5 px-6 rounded-2xl border border-transparent hover:border-slate-800 hover:bg-slate-900/60 transition-all duration-300 cursor-default"
     >
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none" />
-        <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${member.color} flex items-center justify-center mb-5 shadow-md`}>
-            <span className="text-2xl font-black text-white tracking-tight">{member.initials}</span>
+        <Avatar initials={member.initials} hue={member.hue} size="lg" />
+        <div className="flex-1 min-w-0">
+            <p className="text-slate-100 font-semibold text-base leading-snug truncate">{member.name}</p>
+            <p className="text-slate-500 text-sm mt-0.5">{member.dept}</p>
         </div>
-        <h3 className="text-lg font-bold text-slate-800 group-hover:text-indigo-600 transition-colors mb-1">{member.name}</h3>
-        <p className="text-sky-600 font-semibold text-xs uppercase tracking-widest mb-1">{member.role}</p>
-        <p className="text-slate-400 text-sm">{member.department}</p>
+        <span className="text-xs font-semibold text-slate-400 tracking-wide hidden sm:block">{member.role}</span>
     </motion.div>
 );
 
-/** Single member pill */
-const MemberPill = ({ name, color }) => (
-    <motion.div
-        variants={fadeInUp}
-        className="group flex items-center gap-3 bg-slate-800/60 border border-slate-700/60 rounded-xl px-4 py-3 hover:border-slate-600 hover:bg-slate-800 transition-all duration-200"
-    >
-        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${color} flex items-center justify-center shrink-0`}>
-            <span className="text-xs font-bold text-white">{getInitials(name)}</span>
-        </div>
-        <span className="text-slate-200 font-medium text-sm">{name}</span>
-    </motion.div>
-);
-
-/** Category group card */
-const CategoryGroup = ({ group }) => (
-    <motion.div
-        variants={fadeInUp}
-        className={`rounded-2xl border ${group.border} bg-slate-900/80 backdrop-blur-sm p-6 md:p-8 flex flex-col`}
-    >
+/** Organising team column */
+const TeamColumn = ({ team }) => (
+    <motion.div variants={fadeInUp} className="flex flex-col">
         {/* Category header */}
-        <div className="flex items-center gap-3 mb-6">
-            <div className={`px-3 py-1 rounded-full ${group.bg} border ${group.border} text-xs font-bold uppercase tracking-widest ${group.text}`}>
-                {group.category}
-            </div>
+        <div className="flex items-center gap-2.5 mb-6">
+            <span className={`w-2 h-2 rounded-full ${team.dotColor}`} />
+            <h3 className={`text-xs font-bold tracking-[0.18em] uppercase ${team.textAccent}`}>{team.label} Team</h3>
         </div>
 
         {/* Lead */}
-        <div className="mb-5">
-            <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-2">Lead</p>
-            <div className="flex items-center gap-3 bg-slate-800 border border-slate-700 rounded-xl px-4 py-3">
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${group.lead.color} flex items-center justify-center shrink-0 shadow-md`}>
-                    <span className="text-sm font-black text-white">{group.lead.initials}</span>
+        <div className="mb-4">
+            <p className="text-[10px] text-slate-600 uppercase tracking-widest font-semibold mb-2 pl-1">Lead</p>
+            <div className="flex items-center gap-3 bg-slate-800/70 rounded-xl px-4 py-3.5 border border-slate-700/60">
+                <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${team.dotColor === 'bg-sky-400' ? 'from-sky-500 to-blue-600'
+                        : team.dotColor === 'bg-amber-400' ? 'from-amber-500 to-orange-600'
+                            : 'from-pink-500 to-rose-600'
+                    } flex items-center justify-center shrink-0`}>
+                    <span className="text-xs font-bold text-white">{team.lead.slice(0, 2).toUpperCase()}</span>
                 </div>
-                <div>
-                    <p className="text-white font-bold text-sm">{group.lead.name}</p>
-                    <p className={`text-xs font-semibold ${group.text}`}>{group.category} Lead</p>
-                </div>
+                <span className="text-slate-100 font-semibold text-sm">{team.lead}</span>
             </div>
         </div>
 
         {/* Members */}
         <div>
-            <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-3">Members</p>
-            <motion.div
-                className="grid grid-cols-1 sm:grid-cols-2 gap-2"
-                variants={staggerContainer}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: '-60px' }}
-            >
-                {group.members.map((name) => (
-                    <MemberPill key={name} name={name} color={group.lead.color} />
+            <p className="text-[10px] text-slate-600 uppercase tracking-widest font-semibold mb-2 pl-1">Members</p>
+            <div className="flex flex-col gap-1.5">
+                {team.members.map((name) => (
+                    <div
+                        key={name}
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-800/50 transition-colors duration-150 group/m"
+                    >
+                        <span className={`w-1 h-1 rounded-full ${team.dotColor} opacity-70 group-hover/m:opacity-100 transition-opacity`} />
+                        <span className="text-slate-400 text-sm font-medium group-hover/m:text-slate-200 transition-colors">{name}</span>
+                    </div>
                 ))}
-            </motion.div>
+            </div>
         </div>
     </motion.div>
 );
 
-/* ─── Section divider ─────────────────────────────────────── */
-const SectionLabel = ({ label, dark = false }) => (
-    <div className="flex items-center gap-4 mb-10">
-        <div className={`h-px flex-1 ${dark ? 'bg-slate-700' : 'bg-slate-200'}`} />
-        <h2 className={`text-xs font-bold tracking-[0.2em] uppercase ${dark ? 'text-slate-400' : 'text-slate-400'}`}>{label}</h2>
-        <div className={`h-px flex-1 ${dark ? 'bg-slate-700' : 'bg-slate-200'}`} />
-    </div>
-);
+/* ─────────────────────────────── Page ─────────────────────────── */
 
-/* ─── Page ────────────────────────────────────────────────── */
+const Team = () => (
+    <PageTransition>
+        <div className="min-h-screen bg-[#080c14] text-white">
+            <div className="pt-32 pb-28 px-6 max-w-6xl mx-auto">
 
-const Team = () => {
-    return (
-        <PageTransition>
-            <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto">
-
-                {/* Page heading */}
+                {/* ── Heading ── */}
                 <motion.div
-                    className="text-center max-w-3xl mx-auto mb-20"
-                    initial={{ opacity: 0, y: 24 }}
+                    className="mb-20 max-w-2xl"
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    transition={{ duration: 0.55, ease: 'easeOut' }}
                 >
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-5 tracking-tight leading-tight pb-2">
-                        <span className="text-slate-900">Meet the </span>
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-300 to-purple-400">Team</span>
+                    <p className="text-xs font-bold tracking-[0.22em] text-indigo-400 uppercase mb-4">MINDS Club</p>
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] pb-1">
+                        The People Behind<br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-sky-300 to-violet-300">
+                            Every Great Session
+                        </span>
                     </h1>
-                    <p className="text-lg text-slate-500 leading-relaxed">
-                        Faculty leadership and a dedicated student organizing team working together to deliver an impactful event experience.
+                    <p className="mt-5 text-slate-400 text-base leading-relaxed max-w-lg">
+                        Faculty leadership and a dedicated student organizing team committed to delivering a world-class career event.
                     </p>
                 </motion.div>
 
                 {/* ── Faculty Leadership ── */}
-                <div className="mb-24">
-                    <SectionLabel label="Faculty Leadership" />
+                <section className="mb-20">
+                    <Divider label="Faculty Leadership" />
                     <motion.div
-                        className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
-                        initial="hidden"
-                        whileInView="show"
-                        viewport={{ once: true, margin: '-80px' }}
-                        variants={staggerContainer}
-                    >
-                        {leadership.map((member) => (
-                            <FacultyCard key={member.name} member={member} />
-                        ))}
-                    </motion.div>
-                </div>
-
-                {/* ── Event Organizing Team ── */}
-                <div className="rounded-3xl bg-slate-950 border border-slate-800 p-8 md:p-12">
-                    <SectionLabel label="Event Organizing Team" dark />
-
-                    <motion.div
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        className="flex flex-col divide-y divide-slate-800/60"
                         initial="hidden"
                         whileInView="show"
                         viewport={{ once: true, margin: '-60px' }}
                         variants={staggerContainer}
                     >
-                        {organizingTeam.map((group) => (
-                            <CategoryGroup key={group.category} group={group} />
+                        {leadership.map((m) => (
+                            <FacultyRow key={m.name} member={m} />
                         ))}
                     </motion.div>
-                </div>
+                </section>
+
+                {/* ── Event Organizing Team ── */}
+                <section>
+                    <Divider label="Event Organizing Team" />
+
+                    <motion.div
+                        className="grid grid-cols-1 md:grid-cols-3 gap-px bg-slate-800/40 rounded-2xl overflow-hidden border border-slate-800"
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, margin: '-60px' }}
+                        variants={staggerContainer}
+                    >
+                        {teams.map((team, i) => (
+                            <div
+                                key={team.label}
+                                className={`bg-[#080c14] p-8 ${i !== teams.length - 1 ? 'md:border-r border-b md:border-b-0 border-slate-800/60' : ''}`}
+                            >
+                                <TeamColumn team={team} />
+                            </div>
+                        ))}
+                    </motion.div>
+                </section>
 
             </div>
-        </PageTransition>
-    );
-};
+        </div>
+    </PageTransition>
+);
 
 export default Team;
