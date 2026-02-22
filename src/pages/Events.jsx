@@ -148,7 +148,7 @@ const Events = () => {
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.95, opacity: 0, y: 20 }}
                             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                            className="bg-slate-900 w-full max-w-3xl h-[85vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col border border-slate-700 relative"
+                            className="bg-slate-900 w-full max-w-3xl h-[92vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col border border-slate-700 relative"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900 absolute top-0 w-full z-10">
@@ -168,7 +168,7 @@ const Events = () => {
                                     frameBorder="0"
                                     marginHeight="0"
                                     marginWidth="0"
-                                    className="w-full min-h-[1774px]"
+                                    className="w-full min-h-[2100px]"
                                 >
                                     Loading…
                                 </iframe>
