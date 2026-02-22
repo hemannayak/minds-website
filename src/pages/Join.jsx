@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { Send, UserPlus } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 
-// ── Paste your Google Apps Script Web App URL here after deploying ──
+// ── Swap this to your Google Apps Script URL once deployed ──
+// const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+const USE_APPS_SCRIPT = false; // flip to true after deploying Apps Script
 const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/minds.datascience@hitam.org';
 
 const Join = () => {
     const [formStatus, setFormStatus] = useState('');
@@ -16,23 +19,40 @@ const Join = () => {
         setFormStatus('sending');
 
         const formData = new FormData(e.target);
-        const payload = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            year: formData.get('year'),
-            branch: formData.get('branch'),
-            section: formData.get('section'),
-        };
 
         try {
-            const response = await fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
-            const data = await response.json();
+            let response, data;
 
-            if (data.success) {
+            if (USE_APPS_SCRIPT && APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                // ── Google Apps Script path (Sheets + email) ──
+                const payload = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    year: formData.get('year'),
+                    branch: formData.get('branch'),
+                    section: formData.get('section'),
+                };
+                response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Google Apps Script requires no-cors
+                    body: JSON.stringify(payload),
+                });
+                // no-cors means we can't read the response — optimistically proceed
+                navigate('/welcome');
+                return;
+            } else {
+                // ── FormSubmit fallback ──
+                formData.append('_subject', 'New Club Membership Application - MINDS');
+                formData.append('_captcha', 'false');
+                response = await fetch(FORMSUBMIT_URL, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: formData,
+                });
+                data = await response.json();
+            }
+
+            if (data?.success) {
                 navigate('/welcome');
             } else {
                 setFormStatus('error');
