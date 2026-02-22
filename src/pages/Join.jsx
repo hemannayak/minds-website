@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { Send, UserPlus } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 
+// ── Paste your Google Apps Script Web App URL here after deploying ──
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
 const Join = () => {
     const [formStatus, setFormStatus] = useState('');
     const navigate = useNavigate();
@@ -13,24 +16,23 @@ const Join = () => {
         setFormStatus('sending');
 
         const formData = new FormData(e.target);
-
-        // FormSubmit required configuration
-        formData.append('_subject', 'New Club Membership Application - MINDS');
-        formData.append('_captcha', 'false');
+        const payload = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            year: formData.get('year'),
+            branch: formData.get('branch'),
+            section: formData.get('section'),
+        };
 
         try {
-            // NOTE: Must replace this with the actual target email inside the URL
-            const response = await fetch('https://formsubmit.co/ajax/minds.datascience@hitam.org', {
+            const response = await fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json'
-                },
-                body: formData
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
             });
             const data = await response.json();
 
             if (data.success) {
-                // Successful submission advances the user to the safe welcome route
                 navigate('/welcome');
             } else {
                 setFormStatus('error');
