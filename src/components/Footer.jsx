@@ -35,7 +35,7 @@ const Footer = () => {
                         <ul className="space-y-5">
                             <li className="flex flex-col">
                                 <span className="text-slate-800 font-bold mb-0.5">MS Richa Tiwari</span>
-                                <span className="text-sky-600 font-semibold text-xs uppercase tracking-wider">Faculty & FPR of MINDS</span>
+                                <span className="text-sky-600 font-semibold text-xs uppercase tracking-wider">Faculty Facilitator</span>
                                 <span className="text-slate-500 text-sm mt-1">+91 XXXXX XXXXX</span>
                             </li>
                             <li className="grid grid-cols-2 gap-4">
@@ -59,7 +59,7 @@ const Footer = () => {
                             Locate Us
                         </h4>
                         <address className="text-slate-500 not-italic leading-loose font-medium">
-                            Room No: T16 <br />
+                            Room No: T19 <br />
                             ET Staff Room <br />
                             Department of Data Science <br />
                             HITAM

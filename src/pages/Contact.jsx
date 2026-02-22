@@ -88,7 +88,7 @@ const Contact = () => {
                             <ContactCard
                                 icon={<Phone size={24} />}
                                 title="MS Richa Tiwari"
-                                value="FPR of Club"
+                                value="Faculty Facilitator"
                                 subValue="+91 XXXXX XXXXX"
                             />
                             <ContactCard

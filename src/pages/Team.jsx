@@ -26,7 +26,7 @@ const leadership = [
     },
     {
         name: 'Ms. Richa Tiwari',
-        role: 'Faculty Program Representative',
+        role: 'Faculty Facilitator',
         dept: 'MINDS Club',
         initials: 'RT',
         gradient: 'from-emerald-500 to-teal-600',
