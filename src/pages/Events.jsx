@@ -118,42 +118,6 @@ const Events = () => {
                     </p>
                 </motion.div>
 
-                {/* Structured event announcement */}
-                <motion.div
-                    className="text-center mb-12 space-y-3"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }}
-                >
-                    <p className="text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-indigo-400">
-                        MINDS Club Presents
-                    </p>
-                    <p className="text-base md:text-lg font-semibold text-sky-300 flex items-center justify-center gap-2">
-                        <span>✨</span> An Exclusive Career Readiness Session
-                    </p>
-
-                    <div className="flex flex-wrap items-center justify-center gap-4 pt-2 text-sm md:text-base text-slate-300 font-medium">
-                        <span className="flex items-center gap-2">
-                            <Calendar size={16} className="text-sky-400" />
-                            27th February
-                        </span>
-                        <span className="text-slate-600">•</span>
-                        <span className="flex items-center gap-2">
-                            <MapPin size={16} className="text-purple-400" />
-                            T19 ET Staff Room
-                        </span>
-                        <span className="text-slate-600">•</span>
-                        <span className="flex items-center gap-2">
-                            <Clock size={16} className="text-amber-400" />
-                            [Time TBD]
-                        </span>
-                        <span className="text-slate-600">•</span>
-                        <span className="flex items-center gap-2">
-                            <Mic size={16} className="text-emerald-400" />
-                            Microsoft Tech Professional
-                        </span>
-                    </div>
-                </motion.div>
 
                 {/* Event card */}
                 <motion.div
