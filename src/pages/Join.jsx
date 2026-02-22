@@ -30,12 +30,16 @@ const Join = () => {
 
                 response = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
+                    mode: 'no-cors', // MUST be no-cors for Apps Script
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: formBody,
                 });
-                data = await response.json();
+                // When using no-cors, the response is opaque. We cannot read .json() 
+                // Assumed success if fetch didn't throw a network error.
+                navigate('/welcome');
+                return;
             } else {
                 // ── FormSubmit fallback ──
                 formData.append('_subject', 'New Club Membership Application - MINDS');
