@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Briefcase, Target, Users, ArrowRight } from 'lucide-react';
 import LaunchReveal from '../components/LaunchReveal';
+import Popup from '../components/Popup';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
 // Target Launch Date: 27 February 2026, 2:00 PM IST
@@ -125,6 +126,9 @@ const Home = () => {
         <main className="w-full">
             {/* Launch reveal panel — fires once when countdown hits zero */}
             <LaunchReveal show={showRevealPanel} onComplete={handleRevealComplete} />
+
+            {/* Pre-launch popup teaser — shown only before launch */}
+            {!isLaunched && <Popup />}
 
             <section className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden px-6 flex items-center justify-center bg-background">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-50 via-background to-background z-0"></div>
