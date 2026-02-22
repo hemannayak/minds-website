@@ -161,17 +161,16 @@ const Events = () => {
                                 </button>
                             </div>
                             <div className="flex-1 w-full bg-slate-50 pt-16 overflow-y-auto">
-                                {/* Replace src with your actual Google Form embed URL */}
                                 <iframe
-                                    src="https://docs.google.com/forms/d/e/1FAIpQLSe_Placeholder_Form_ID/viewform?embedded=true"
+                                    src="https://docs.google.com/forms/d/e/1FAIpQLScJza2go3FKlI2OcFPOMvHp0TqQP0yTupx27T-nc5E4kQSYCQ/viewform?embedded=true"
                                     width="100%"
                                     height="100%"
                                     frameBorder="0"
                                     marginHeight="0"
                                     marginWidth="0"
-                                    className="w-full min-h-[800px]"
+                                    className="w-full min-h-[1774px]"
                                 >
-                                    Loading Google Form…
+                                    Loading…
                                 </iframe>
                             </div>
                         </motion.div>
