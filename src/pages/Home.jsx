@@ -6,8 +6,14 @@ import Popup from '../components/Popup';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
 // Target Launch Date: 27 February 2026, 2:00 PM IST
-// IST is UTC+5:30. In ISO string, that's +05:30
 const LAUNCH_DATE = new Date("2026-02-27T14:00:00+05:30").getTime();
+
+// ─── Launch Config ───────────────────────────────────────────────
+// Set showReveal to true ONLY on the day of official launch.
+// This gates the logo pop-in and full-form expansion from appearing.
+const LAUNCH_CONFIG = {
+    showReveal: false, // ← flip to true on launch day
+};
 
 const CountdownUnit = ({ value, label }) => {
     return (
@@ -71,7 +77,7 @@ const LaunchCountdown = ({ onComplete }) => {
             transition={{ duration: 0.8, ease: "easeInOut" }}
             className="flex flex-col items-center mt-12"
         >
-            <p className="text-slate-500 text-sm tracking-[0.2em] uppercase mb-6 font-semibold">Official Reveal In</p>
+            <p className="text-slate-500 text-sm tracking-[0.2em] uppercase mb-6 font-semibold">Launching In</p>
             <div className="flex gap-4 sm:gap-6">
                 <CountdownUnit value={timeLeft.days} label="Days" />
                 <span className="text-2xl sm:text-4xl text-slate-300 font-light mt-4 sm:mt-5">:</span>
@@ -140,12 +146,13 @@ const Home = () => {
                         </motion.p>
                     </motion.div>
 
-                    {/* Dynamic Launch Area: Reserves height to prevent severe layout shift */}
+                    {/* Dynamic Launch Area */}
                     <div className="mt-8 relative w-full flex justify-center min-h-[250px] items-center">
                         <AnimatePresence mode="wait">
                             {!isLaunched ? (
                                 <LaunchCountdown key="countdown" onComplete={() => setIsLaunched(true)} />
-                            ) : (
+                            ) : LAUNCH_CONFIG.showReveal ? (
+                                /* ── OFFICIAL LAUNCH REVEAL ── flip LAUNCH_CONFIG.showReveal to true to enable ── */
                                 <motion.div
                                     key="reveal"
                                     initial={{ opacity: 0 }}
@@ -153,7 +160,7 @@ const Home = () => {
                                     transition={{ duration: 1.2, delay: 0.2 }}
                                     className="flex flex-col items-center"
                                 >
-                                    {/* Revealed Official Logo container pop-in */}
+                                    {/* Logo pop-in */}
                                     <motion.div
                                         initial={{ scale: 0.8, opacity: 0, y: 30 }}
                                         animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -163,7 +170,6 @@ const Home = () => {
                                         <div className="absolute inset-0 bg-indigo-500/10 rounded-full blur-2xl animate-pulse duration-3000"></div>
                                         <div className="absolute inset-0 bg-gradient-to-tr from-indigo-400 to-sky-400 rounded-2xl shadow-xl flex items-center justify-center p-[2px]">
                                             <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center relative overflow-hidden">
-                                                {/* Official 'M' symbol */}
                                                 <span className="text-6xl md:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-br from-indigo-600 to-sky-500 relative z-10">
                                                     M
                                                 </span>
@@ -171,8 +177,7 @@ const Home = () => {
                                             </div>
                                         </div>
                                     </motion.div>
-
-                                    {/* Full form staggered reveal */}
+                                    {/* Full form */}
                                     <div className="flex flex-wrap justify-center gap-x-2 gap-y-1 max-w-3xl">
                                         {["Modern", "Innovation", "for", "Next-Gen", "Data-Science", "Society"].map((word, i) => (
                                             <motion.span
@@ -181,14 +186,29 @@ const Home = () => {
                                                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                                                 transition={{ duration: 0.8, delay: 1 + (i * 0.15), ease: "easeOut" }}
                                                 className={`text-xl md:text-3xl lg:text-4xl font-bold tracking-tight ${["Modern", "Innovation", "Next-Gen", "Data-Science", "Society"].includes(word)
-                                                    ? 'text-slate-800'
-                                                    : 'text-slate-400' // 'for'
+                                                        ? 'text-slate-800'
+                                                        : 'text-slate-400'
                                                     }`}
                                             >
                                                 {word}
                                             </motion.span>
                                         ))}
                                     </div>
+                                </motion.div>
+                            ) : (
+                                /* ── PRE-REVEAL PLACEHOLDER (shown after countdown, before official launch) ── */
+                                <motion.div
+                                    key="pre-reveal"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8 }}
+                                    className="flex flex-col items-center gap-4"
+                                >
+                                    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 shadow-sm text-slate-600 text-sm font-semibold">
+                                        <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+                                        The official reveal is coming soon
+                                    </div>
+                                    <p className="text-slate-400 text-sm">Stay tuned for the big announcement.</p>
                                 </motion.div>
                             )}
                         </AnimatePresence>
