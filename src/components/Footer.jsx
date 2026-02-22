@@ -115,12 +115,10 @@ const Footer = () => {
                             <li className="grid grid-cols-2 gap-4">
                                 <div className="flex flex-col">
                                     <span className="text-slate-800 font-bold mb-0.5">Apurba Nandi</span>
-                                    <span className="text-sky-600 font-semibold text-xs uppercase tracking-wider">Logistics Team Lead</span>
                                     <span className="text-slate-500 text-sm mt-1">+91 81797 17349</span>
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-slate-800 font-bold mb-0.5">Sai Prasanna</span>
-                                    <span className="text-sky-600 font-semibold text-xs uppercase tracking-wider">PR & Media Lead</span>
                                     <span className="text-slate-500 text-sm mt-1">+91 81061 10146</span>
                                 </div>
                             </li>

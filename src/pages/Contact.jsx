@@ -94,14 +94,12 @@ const Contact = () => {
                             <ContactCard
                                 icon={<Phone size={24} />}
                                 title="Apurba Nandi"
-                                value="Logistics Team Lead"
-                                subValue="+91 81797 17349"
+                                value="+91 81797 17349"
                             />
                             <ContactCard
                                 icon={<Phone size={24} />}
                                 title="Sai Prasanna"
-                                value="PR & Media Lead"
-                                subValue="+91 81061 10146"
+                                value="+91 81061 10146"
                             />
                         </div>
                     </motion.div>
