@@ -8,7 +8,7 @@ import { fadeInUp, staggerContainer } from '../lib/animations';
 
 const leadership = [
     {
-        name: 'Dr. Kolluru David Raju',
+        name: 'Dr. David Raju Kolluri',
         role: 'Head of Department',
         dept: 'Data Science',
         initials: 'KR',
