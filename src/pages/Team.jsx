@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
@@ -196,6 +197,54 @@ const Team = () => (
                     ))}
                 </motion.div>
             </div>
+
+            {/* ── Core Team Recruitment – Coming Soon ── */}
+            <motion.div
+                className="mt-20 max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+            >
+                <div className="relative rounded-3xl p-px bg-gradient-to-br from-indigo-400 via-sky-400 to-purple-400 shadow-lg shadow-indigo-100">
+                    {/* Inner card */}
+                    <div className="relative bg-white rounded-3xl px-10 py-12 text-center overflow-hidden">
+                        {/* Subtle glow blobs */}
+                        <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-50 rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-sky-50 rounded-full blur-3xl pointer-events-none" />
+
+                        {/* Icon */}
+                        <div className="relative z-10 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 mb-6 shadow-sm">
+                            <Sparkles size={26} strokeWidth={1.8} />
+                        </div>
+
+                        {/* Label */}
+                        <p className="relative z-10 text-xs font-bold uppercase tracking-[0.22em] text-indigo-500 mb-3">
+                            Core Team Recruitment
+                        </p>
+
+                        {/* Title */}
+                        <h2 className="relative z-10 text-2xl md:text-3xl font-black text-slate-800 tracking-tight mb-4">
+                            Something exciting is{' '}
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-sky-500">
+                                coming soon
+                            </span>
+                        </h2>
+
+                        {/* Message */}
+                        <p className="relative z-10 text-slate-500 leading-relaxed max-w-md mx-auto text-base">
+                            We'll be opening doors for passionate students to be part of the MINDS leadership team.
+                            Stay tuned — your opportunity to shape what's next is on the horizon.
+                        </p>
+
+                        {/* Decorative pill */}
+                        <div className="relative z-10 inline-flex items-center gap-2 mt-8 px-5 py-2 rounded-full bg-slate-50 border border-slate-200 text-slate-400 text-sm font-semibold">
+                            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+                            Announcement Coming Soon
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
 
         </div>
     </PageTransition>
