@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Briefcase, Target, Users, ArrowRight } from 'lucide-react';
 import LaunchReveal from '../components/LaunchReveal';
@@ -120,6 +120,20 @@ const Home = () => {
         setShowRevealPanel(false);
     }, []);
 
+    // ── Mouse-follow glow ─────────────────────────────────────────
+    const heroRef = useRef(null);
+    const rawX = useMotionValue(0);
+    const rawY = useMotionValue(0);
+    const glowX = useSpring(rawX, { stiffness: 40, damping: 15 });
+    const glowY = useSpring(rawY, { stiffness: 40, damping: 15 });
+
+    const handleMouseMove = useCallback((e) => {
+        const rect = heroRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        rawX.set(e.clientX - rect.left - rect.width / 2);
+        rawY.set(e.clientY - rect.top - rect.height / 2);
+    }, [rawX, rawY]);
+
     if (!isMounted) return null;
 
     return (
@@ -130,8 +144,33 @@ const Home = () => {
             {/* Pre-launch popup teaser — shown only before launch */}
             {!isLaunched && <Popup />}
 
-            <section className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden px-6 flex items-center justify-center bg-background">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-50 via-background to-background z-0"></div>
+            <section
+                ref={heroRef}
+                onMouseMove={handleMouseMove}
+                className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden px-6 flex items-center justify-center bg-background"
+            >
+                {/* Static radial bg */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-50 via-background to-background z-0" />
+
+                {/* Mouse-follow glow orb */}
+                <motion.div
+                    style={{ x: glowX, y: glowY }}
+                    className="absolute pointer-events-none z-0"
+                    aria-hidden
+                >
+                    <motion.div
+                        animate={{
+                            background: [
+                                'radial-gradient(600px circle, rgba(99,102,241,0.12) 0%, transparent 70%)',
+                                'radial-gradient(600px circle, rgba(14,165,233,0.12) 0%, transparent 70%)',
+                                'radial-gradient(600px circle, rgba(168,85,247,0.10) 0%, transparent 70%)',
+                                'radial-gradient(600px circle, rgba(99,102,241,0.12) 0%, transparent 70%)',
+                            ],
+                        }}
+                        transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+                        className="w-[700px] h-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+                    />
+                </motion.div>
 
                 <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10 w-full h-full justify-center">
 
