@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Linkedin, Instagram, MessageCircle, MapPin, Phone, ArrowUpRight } from 'lucide-react';
 
-const INSTAGRAM_URL = 'https://www.instagram.com/minds_datascience/'; // ← update handle if needed
+const INSTAGRAM_URL = 'https://www.instagram.com/hitam_datascience_club/'; // ← update handle if needed
 
 const Footer = () => {
     return (
