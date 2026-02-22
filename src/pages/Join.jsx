@@ -141,21 +141,25 @@ const Join = () => {
                                 >
                                     <option value="" disabled>Select Branch</option>
                                     <option value="Data Science">Data Science</option>
-                                    <option value="AI & ML">AI & ML</option>
+                                    <option value="AI & ML">AI &amp; ML</option>
                                     <option value="CSE Core">CSE Core</option>
+                                    <option value="CSE-ITP">CSE-ITP</option>
                                     <option value="Cyber Security">Cyber Security</option>
+                                    <option value="ECE">ECE</option>
+                                    <option value="EEE">EEE</option>
+                                    <option value="Mech">Mech</option>
+                                    <option value="MECH-ITP">MECH-ITP</option>
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-semibold text-slate-400">Section</label>
+                                <label className="text-sm font-semibold text-slate-400">Section <span className="text-slate-600 font-normal">(optional)</span></label>
                                 <input
                                     type="text"
                                     name="section"
-                                    required
                                     className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl px-5 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:bg-slate-900/80 transition-all shadow-inner"
-                                    placeholder="e.g. A"
+                                    placeholder="e.g. A (optional)"
                                 />
                             </div>
                         </div>
