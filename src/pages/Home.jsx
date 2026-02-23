@@ -148,16 +148,18 @@ const Home = () => {
             >
                 {/* ── LightRays WebGL animation ── fills entire hero background */}
                 <LightRays
+                    raysOrigin="top-center"
                     raysColor="#a5b4fc"
-                    raysSpeed={0.4}
-                    lightSpread={1.5}
-                    rayLength={6}
-                    fadeDistance={2}
-                    saturation={0.7}
-                    mouseInfluence={0.05}
-                    distortion={0.08}
-                    noiseAmount={0.01}
-                    style={{ zIndex: 0 }}
+                    raysSpeed={1}
+                    lightSpread={0.6}
+                    rayLength={2.5}
+                    fadeDistance={1.2}
+                    saturation={1.8}
+                    followMouse={true}
+                    mouseInfluence={0.15}
+                    pulsating={false}
+                    noiseAmount={0.05}
+                    distortion={0}
                 />
 
                 {/* Subtle hover tint — slight indigo warmth when cursor enters */}
