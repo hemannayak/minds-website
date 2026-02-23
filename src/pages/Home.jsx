@@ -96,6 +96,7 @@ const Home = () => {
     const [isLaunched, setIsLaunched] = useState(false);
     const [showRevealPanel, setShowRevealPanel] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
+    const [isHeroHovered, setIsHeroHovered] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
@@ -147,12 +148,44 @@ const Home = () => {
             <section
                 ref={heroRef}
                 onMouseMove={handleMouseMove}
+                onMouseEnter={() => setIsHeroHovered(true)}
+                onMouseLeave={() => setIsHeroHovered(false)}
                 className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden px-6 flex items-center justify-center bg-background"
             >
-                {/* Static radial bg */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-50 via-background to-background z-0" />
+                {/* Full-bleed base mesh gradient — spans entire section */}
+                <div className="absolute inset-0 z-0"
+                    style={{
+                        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99,102,241,0.18) 0%, rgba(14,165,233,0.10) 40%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 100%, rgba(168,85,247,0.12) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(56,189,248,0.10) 0%, transparent 60%)'
+                    }}
+                />
 
-                {/* Mouse-follow glow orb */}
+                {/* Animated full-section ambient mesh — cycles through colour stops */}
+                <motion.div
+                    className="absolute inset-0 z-0 pointer-events-none"
+                    aria-hidden
+                    animate={{
+                        background: [
+                            'radial-gradient(ellipse 70% 55% at 50% -10%, rgba(99,102,241,0.20) 0%, transparent 65%), radial-gradient(ellipse 55% 45% at 90% 110%, rgba(14,165,233,0.14) 0%, transparent 60%)',
+                            'radial-gradient(ellipse 70% 55% at 50% -10%, rgba(14,165,233,0.18) 0%, transparent 65%), radial-gradient(ellipse 55% 45% at 90% 110%, rgba(168,85,247,0.16) 0%, transparent 60%)',
+                            'radial-gradient(ellipse 70% 55% at 50% -10%, rgba(168,85,247,0.16) 0%, transparent 65%), radial-gradient(ellipse 55% 45% at 90% 110%, rgba(99,102,241,0.14) 0%, transparent 60%)',
+                            'radial-gradient(ellipse 70% 55% at 50% -10%, rgba(99,102,241,0.20) 0%, transparent 65%), radial-gradient(ellipse 55% 45% at 90% 110%, rgba(14,165,233,0.14) 0%, transparent 60%)',
+                        ],
+                    }}
+                    transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                />
+
+                {/* Smooth hover overlay — subtly shifts the gradient on hover */}
+                <motion.div
+                    className="absolute inset-0 z-0 pointer-events-none"
+                    aria-hidden
+                    animate={{
+                        opacity: isHeroHovered ? 1 : 0,
+                        background: 'radial-gradient(ellipse 80% 70% at 50% 40%, rgba(99,102,241,0.13) 0%, rgba(14,165,233,0.08) 40%, transparent 70%)'
+                    }}
+                    transition={{ duration: 0.7, ease: 'easeInOut' }}
+                />
+
+                {/* Mouse-follow glow — soft wide spread, no round clipping */}
                 <motion.div
                     style={{ x: glowX, y: glowY }}
                     className="absolute pointer-events-none z-0"
@@ -161,14 +194,14 @@ const Home = () => {
                     <motion.div
                         animate={{
                             background: [
-                                'radial-gradient(600px circle, rgba(99,102,241,0.12) 0%, transparent 70%)',
-                                'radial-gradient(600px circle, rgba(14,165,233,0.12) 0%, transparent 70%)',
-                                'radial-gradient(600px circle, rgba(168,85,247,0.10) 0%, transparent 70%)',
-                                'radial-gradient(600px circle, rgba(99,102,241,0.12) 0%, transparent 70%)',
+                                'radial-gradient(900px circle, rgba(99,102,241,0.18) 0%, transparent 65%)',
+                                'radial-gradient(900px circle, rgba(14,165,233,0.18) 0%, transparent 65%)',
+                                'radial-gradient(900px circle, rgba(168,85,247,0.15) 0%, transparent 65%)',
+                                'radial-gradient(900px circle, rgba(99,102,241,0.18) 0%, transparent 65%)',
                             ],
                         }}
                         transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-                        className="w-[700px] h-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+                        className="w-[1000px] h-[1000px] -translate-x-1/2 -translate-y-1/2"
                     />
                 </motion.div>
 
