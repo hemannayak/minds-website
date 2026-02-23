@@ -4,22 +4,35 @@ import { Mail, Phone, MapPin, Send, Linkedin, Github, Instagram } from 'lucide-r
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-const ContactCard = ({ icon, title, value, subValue }) => (
-    <motion.div
-        variants={fadeInUp}
-        className="p-8 rounded-3xl bg-white border border-slate-100 hover:border-indigo-100 hover:shadow-lg transition-all flex items-start gap-6 group relative overflow-hidden"
-    >
-        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none group-hover:bg-indigo-100/50 transition-colors"></div>
-        <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 text-sky-500 group-hover:scale-110 group-hover:bg-indigo-50 group-hover:text-indigo-600 group-hover:border-indigo-100 transition-all duration-500">
-            {icon}
-        </div>
-        <div className="flex-1 min-w-0 z-10">
-            <h3 className="text-slate-500 text-sm font-bold tracking-wider uppercase mb-2">{title}</h3>
-            <p className="text-lg md:text-xl font-bold text-slate-800 mb-1 group-hover:text-indigo-600 transition-colors break-words">{value}</p>
-            {subValue && <p className="text-sm text-slate-500 line-clamp-1">{subValue}</p>}
-        </div>
-    </motion.div>
-);
+const ContactCard = ({ icon, title, value, subValue, href }) => {
+    const inner = (
+        <>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none group-hover:bg-indigo-100/50 transition-colors" />
+            <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 text-sky-500 group-hover:scale-110 group-hover:bg-indigo-50 group-hover:text-indigo-600 group-hover:border-indigo-100 transition-all duration-500">
+                {icon}
+            </div>
+            <div className="flex-1 min-w-0 z-10">
+                <h3 className="text-slate-500 text-sm font-bold tracking-wider uppercase mb-2">{title}</h3>
+                <p className="text-lg md:text-xl font-bold text-slate-800 mb-1 group-hover:text-indigo-600 transition-colors break-words">{value}</p>
+                {subValue && <p className="text-sm text-slate-500 line-clamp-1">{subValue}</p>}
+            </div>
+        </>
+    );
+
+    const baseClass = "p-8 rounded-3xl bg-white border border-slate-100 hover:border-indigo-100 hover:shadow-lg transition-all flex items-start gap-6 group relative overflow-hidden";
+
+    return (
+        <motion.div variants={fadeInUp}>
+            {href ? (
+                <a href={href} className={baseClass} target={href.startsWith('mailto') ? '_blank' : undefined} rel="noopener noreferrer">
+                    {inner}
+                </a>
+            ) : (
+                <div className={baseClass}>{inner}</div>
+            )}
+        </motion.div>
+    );
+};
 
 const Contact = () => {
     const [formStatus, setFormStatus] = useState('');
@@ -82,6 +95,7 @@ const Contact = () => {
                             title="Official Email"
                             value="minds.datascience@hitam.org"
                             subValue="For general inquiries and partnerships"
+                            href="mailto:minds.datascience@hitam.org"
                         />
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6">
@@ -90,16 +104,19 @@ const Contact = () => {
                                 title="Ms. Richa Tiwari"
                                 value="Faculty Facilitator"
                                 subValue="+91 91315 39794"
+                                href="tel:+919131539794"
                             />
                             <ContactCard
                                 icon={<Phone size={24} />}
                                 title="Apurba Nandi"
                                 value="+91 81797 17349"
+                                href="tel:+918179717349"
                             />
                             <ContactCard
                                 icon={<Phone size={24} />}
                                 title="Sai Prasanna"
                                 value="+91 81061 10146"
+                                href="tel:+918106110146"
                             />
                         </div>
                     </motion.div>

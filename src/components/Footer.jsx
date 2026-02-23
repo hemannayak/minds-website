@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Linkedin, Instagram, MessageCircle, MapPin, Phone, ArrowUpRight } from 'lucide-react';
+import { Linkedin, Instagram, MessageCircle, MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react';
 
 const INSTAGRAM_URL = 'https://www.instagram.com/hitam_datascience_club/'; // ← update handle if needed
 
@@ -92,11 +92,11 @@ const Footer = () => {
                             <a href="#" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all shadow-sm">
                                 <Linkedin size={18} />
                             </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all shadow-sm">
+                            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-pink-500 hover:border-pink-200 hover:bg-pink-50 transition-all shadow-sm">
                                 <Instagram size={18} />
                             </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all shadow-sm">
-                                <MessageCircle size={18} />
+                            <a href="mailto:minds.datascience@hitam.org" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all shadow-sm" title="Email us">
+                                <Mail size={18} />
                             </a>
                         </div>
                     </div>
@@ -110,16 +110,16 @@ const Footer = () => {
                             <li className="flex flex-col">
                                 <span className="text-slate-800 font-bold mb-0.5">Ms. Richa Tiwari</span>
                                 <span className="text-sky-600 font-semibold text-xs uppercase tracking-wider">Faculty Facilitator</span>
-                                <span className="text-slate-500 text-sm mt-1">+91 91315 39794</span>
+                                <a href="tel:+919131539794" className="text-slate-500 text-sm mt-1 hover:text-indigo-600 transition-colors">+91 91315 39794</a>
                             </li>
                             <li className="grid grid-cols-2 gap-4">
                                 <div className="flex flex-col">
                                     <span className="text-slate-800 font-bold mb-0.5">Apurba Nandi</span>
-                                    <span className="text-slate-500 text-sm mt-1">+91 81797 17349</span>
+                                    <a href="tel:+918179717349" className="text-slate-500 text-sm mt-1 hover:text-indigo-600 transition-colors">+91 81797 17349</a>
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-slate-800 font-bold mb-0.5">Sai Prasanna</span>
-                                    <span className="text-slate-500 text-sm mt-1">+91 81061 10146</span>
+                                    <a href="tel:+918106110146" className="text-slate-500 text-sm mt-1 hover:text-indigo-600 transition-colors">+91 81061 10146</a>
                                 </div>
                             </li>
                         </ul>
