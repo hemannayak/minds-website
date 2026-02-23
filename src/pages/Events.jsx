@@ -6,14 +6,16 @@ import { fadeInUp, staggerContainer } from '../lib/animations';
 
 const upcomingEvents = [
     {
-        title: 'From Campus to Corporate – Master the IT Interview Game',
-        date: '27th February',
-        time: '[Time TBD]',
-        location: 'T19 ET Staff Room',
-        speaker: 'Microsoft Tech Professional',
+        title: 'Inside The Hiring Room: Learn From A Microsoft & L&T MindTree Panel Member',
+        date: '27th February 2026',
+        time: '1:30 PM',
+        location: 'HITAM',
+        speaker: 'Rahul Deo Burman',
+        speakerRole: 'Senior Software Engineer, Microsoft',
         type: 'Career Session',
+        live: true,
         description:
-            'Unlock real interview insights, industry expectations, and career strategies straight from an IT panel expert. Learn what top companies look for and how to stand out.',
+            'An exclusive LIVE Career Readiness Session revealing what actually happens inside the hiring room. Get unfiltered insights from a Microsoft & L&T MindTree panel member — learn how top tech companies evaluate candidates and what it takes to stand out.',
         featured: true,
     },
 ];
@@ -33,10 +35,18 @@ const EventCard = ({ event, onRegisterClick }) => {
                     <ArrowRight size={18} className="-rotate-45 group-hover:rotate-0 transition-transform duration-300" />
                 </div>
 
+                {/* LIVE badge */}
+                {event.live && (
+                    <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-400 text-xs font-bold uppercase tracking-widest w-fit">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                        Live Session
+                    </div>
+                )}
+
                 {/* Event type badge */}
                 <div className="mb-5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-widest w-fit">
                     <Sparkles size={12} />
-                    {event.type}
+                    Exclusive Career Readiness Session
                 </div>
 
                 {/* Title */}
@@ -73,7 +83,12 @@ const EventCard = ({ event, onRegisterClick }) => {
                         <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0">
                             <Mic size={15} />
                         </span>
-                        Session by {event.speaker}
+                        <span>
+                            <span className="text-white font-semibold">{event.speaker}</span>
+                            {event.speakerRole && (
+                                <span className="block text-xs text-slate-400 mt-0.5">{event.speakerRole}</span>
+                            )}
+                        </span>
                     </div>
                 </div>
 
