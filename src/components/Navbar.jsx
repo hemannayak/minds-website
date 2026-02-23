@@ -124,7 +124,7 @@ const Navbar = () => {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed inset-0 top-0 right-0 bg-white/98 backdrop-blur-xl z-40 lg:hidden flex flex-col justify-center px-8 border-l border-gray-100"
+                        className="fixed inset-0 bg-white z-[70] lg:hidden flex flex-col justify-center px-8 border-l border-gray-100 overflow-y-auto"
                     >
                         <div className="flex flex-col gap-8 mt-12">
                             {navLinks.map((link, i) => (
