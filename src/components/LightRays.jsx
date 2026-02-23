@@ -18,73 +18,95 @@ const FRAG = `
 
   uniform vec2  u_resolution;
   uniform float u_time;
-  uniform vec2  u_mouse;       // normalised 0..1
-  uniform vec3  u_color;       // ray colour
+  uniform vec2  u_mouse;
+  uniform vec3  u_color;
   uniform float u_speed;
-  uniform float u_spread;      // angular spread multiplier
-  uniform float u_rayLength;   // length multiplier
-  uniform float u_fade;        // fade distance
-  uniform float u_saturation;  // overall opacity scale
-  uniform float u_mouseInfl;   // mouse influence
+  uniform float u_spread;
+  uniform float u_rayLength;
+  uniform float u_fade;
+  uniform float u_saturation;
+  uniform float u_mouseInfl;
   uniform float u_distortion;
   uniform float u_noise;
 
-  // Hash / value noise helpers
+  /* Gaussian bell curve — the core of soft light rendering.
+     No hard edges: at x=0 value is 1, falls off smoothly to 0. */
+  float gauss(float x, float sigma) {
+    return exp(-0.5 * (x / sigma) * (x / sigma));
+  }
+
+  /* Simple value noise for very subtle shimmer */
   float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
   }
-  float noise(vec2 p) {
+  float vnoise(vec2 p) {
     vec2 i = floor(p);
     vec2 f = fract(p);
-    f = f*f*(3.0-2.0*f);
+    f = f * f * (3.0 - 2.0 * f);
     return mix(
-      mix(hash(i), hash(i+vec2(1,0)), f.x),
-      mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x),
+      mix(hash(i),           hash(i + vec2(1.0, 0.0)), f.x),
+      mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
       f.y
     );
   }
 
   void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
-    // Origin: slightly above centre-top so rays fan downward
-    vec2 origin = vec2(0.5 + u_mouse.x * u_mouseInfl, -0.05);
 
-    vec2 dir = uv - origin;
-    float dist = length(dir);
-    float angle = atan(dir.x * u_spread, dir.y) / 3.14159;
+    /* WebGL Y=0 is bottom; we want origin at TOP so rays fan downward */
+    vec2 uvT = vec2(uv.x, 1.0 - uv.y);
+
+    /* Light origin: top-centre, drifts very slightly with mouse */
+    vec2 origin = vec2(0.5 + u_mouse.x * u_mouseInfl, -0.02);
+    vec2 dir    = uvT - origin;
+    float dist  = length(dir);
+
+    /* Angle from straight-down, in radians — range roughly -PI..PI */
+    float angle = atan(dir.x * u_spread, max(dir.y, 0.0001));
 
     float t = u_time * u_speed;
 
-    // Layer several ray bands
-    float rays = 0.0;
-    for (int i = 0; i < 8; i++) {
-      float fi = float(i);
-      float offset = hash(vec2(fi, 0.0)) * 2.0 - 1.0;
-      float width  = 0.015 + hash(vec2(fi, 1.0)) * 0.025;
-      float speed  = 0.3 + hash(vec2(fi, 2.0)) * 0.4;
-      float bandAngle = angle + offset * 0.55 + sin(t * speed + fi) * 0.04;
-      float band = smoothstep(width, 0.0, abs(fract(bandAngle * 5.0) - 0.5));
+    /* ─── Beam definitions: angle offset + angular sigma + intensity ─────
+       All offsets oscillate with slow, independent sin() drifts so the
+       beams breathe naturally — matched to the reference image style.    */
 
-      // Distortion ripple
-      float ripple = u_distortion * sin(dist * 12.0 - t * 1.5 + fi * 2.1);
-      band *= 1.0 + ripple;
+    /* 1. Central main beam — widest, brightest, barely moves */
+    float a0    = sin(t * 0.13) * 0.04;
+    float beam0 = gauss(angle - a0, 0.55) * 1.0;
 
-      // Noise speckle
-      float speckle = u_noise * noise(uv * 40.0 + vec2(t * 0.4 + fi, fi));
-      band += speckle * 0.3;
+    /* 2. Left secondary beam */
+    float a1    = -0.42 + sin(t * 0.09 + 1.2) * 0.06;
+    float beam1 = gauss(angle - a1, 0.28) * 0.55;
 
-      rays += band * (0.6 + 0.4 * hash(vec2(fi, 3.0)));
-    }
+    /* 3. Right secondary beam */
+    float a2    = 0.42 + sin(t * 0.11 + 2.5) * 0.06;
+    float beam2 = gauss(angle - a2, 0.28) * 0.55;
 
-    // Distance-based fade: rays fall off quickly below the origin
-    float lenFade = 1.0 - smoothstep(0.0, u_fade * 0.35, dist / u_rayLength);
-    // Extra fade toward bottom of screen for a clean transition
-    float bottomFade = 1.0 - smoothstep(0.35, 0.85, uv.y);
-    // Soft vignette on sides
-    float sideFade = 1.0 - smoothstep(0.3, 0.5, abs(uv.x - 0.5 - u_mouse.x * u_mouseInfl * 0.5));
+    /* 4. Broad ambient halo — fills the full cone softly */
+    float beam3 = gauss(angle, 1.1 * u_spread) * 0.25;
 
-    float alpha = rays * lenFade * bottomFade * sideFade * u_saturation;
-    alpha = clamp(alpha, 0.0, 1.0);
+    /* Sum all beams */
+    float rays = beam0 + beam1 + beam2 + beam3;
+
+    /* Very subtle shimmer — just enough to break uniformity */
+    float shimmer = vnoise(uvT * 6.0 + vec2(t * 0.15, 0.0)) * u_noise * 0.4;
+    rays += shimmer;
+
+    /* ─── Falloff layers ─────────────────────────────────────────────── */
+
+    /* Radial: exponential decay from origin — fills hero width */
+    float radialFade = exp(-dist / max(u_rayLength * 0.28, 0.01));
+
+    /* Vertical: light vanishes smoothly before the section bottom */
+    float bottomFade = 1.0 - smoothstep(0.18, 0.82, uvT.y);
+
+    /* Horizontal: wide Gaussian keeps rays centred, edges breathe out */
+    float sideWidth  = 0.48 * u_spread;
+    float sideFade   = gauss(uvT.x - 0.5 - u_mouse.x * u_mouseInfl * 0.4, sideWidth);
+
+    /* Combine and scale — kept very low for the light SaaS background */
+    float alpha = rays * radialFade * bottomFade * sideFade * u_saturation;
+    alpha = clamp(alpha, 0.0, 1.0) * 0.28;
 
     gl_FragColor = vec4(u_color * alpha, alpha);
   }
