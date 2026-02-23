@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
-import GooeyNav from './GooeyNav';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 
 const LAUNCH_DATE = new Date('2026-02-27T16:15:00+05:30').getTime();
 
@@ -43,16 +42,6 @@ const Navbar = () => {
         { name: 'Contact', path: '/contact' }
     ];
 
-    const gooeyItems = navLinks.map((l) => ({ label: l.name, href: l.path }));
-
-    // Derive active index from current route
-    const activeIndex = useMemo(() => {
-        const idx = navLinks.findIndex((l) =>
-            l.path === '/' ? location.pathname === '/' : location.pathname.startsWith(l.path)
-        );
-        return idx >= 0 ? idx : 0;
-    }, [location.pathname]);
-
     return (
         <motion.nav
             initial={{ y: -100 }}
@@ -88,18 +77,29 @@ const Navbar = () => {
                     )}
                 </Link>
 
-                {/* Desktop Links — GooeyNav */}
-                <div className="hidden lg:flex items-center gap-4">
-                    <GooeyNav
-                        items={gooeyItems}
-                        initialActiveIndex={activeIndex}
-                        particleCount={15}
-                        particleDistances={[90, 10]}
-                        particleR={100}
-                        animationTime={600}
-                        timeVariance={300}
-                        colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-                    />
+                {/* Desktop Links */}
+                <div className="hidden lg:flex items-center gap-8">
+                    {navLinks.map((link) => (
+                        <NavLink
+                            key={link.name}
+                            to={link.path}
+                            className={({ isActive }) =>
+                                `relative text-sm font-bold tracking-wide transition-colors group py-2 ${isActive ? 'text-primary' : 'text-slate-600 hover:text-indigo-600'
+                                }`
+                            }
+                        >
+                            {({ isActive }) => (
+                                <>
+                                    {link.name}
+                                    {/* Hover/Active Underline Animation */}
+                                    <span
+                                        className={`absolute left-0 bottom-0 h-[2px] bg-gradient-to-r from-indigo-500 to-blue-500 transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                                            }`}
+                                    ></span>
+                                </>
+                            )}
+                        </NavLink>
+                    ))}
 
                     {/* Join Us CTA */}
                     <Link to="/join" className="relative px-6 py-2.5 rounded-full font-bold text-sm text-white transition-transform duration-300 hover:scale-105 active:scale-95 ml-2 bg-gradient-to-r from-indigo-600 to-blue-600 shadow-[0_0_15px_rgba(79,70,229,0.3)] hover:shadow-[0_0_25px_rgba(79,70,229,0.5)]">
