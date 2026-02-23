@@ -11,6 +11,9 @@ const Navbar = () => {
     const [isLaunched, setIsLaunched] = useState(false);
     const location = useLocation();
 
+    // True when sitting on the dark hero (home page, not yet scrolled)
+    const isHeroDark = location.pathname === '/' && !scrolled;
+
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
@@ -48,8 +51,10 @@ const Navbar = () => {
             animate={{ y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-                ? 'bg-white/80 backdrop-blur-md border-b border-gray-100 h-[70px] shadow-sm'
-                : 'bg-transparent h-[90px]'
+                    ? 'bg-white/80 backdrop-blur-md border-b border-gray-100 h-[70px] shadow-sm'
+                    : isHeroDark
+                        ? 'bg-transparent h-[90px]'
+                        : 'bg-transparent h-[90px]'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 md:px-8 h-full flex items-center justify-between">
@@ -60,18 +65,21 @@ const Navbar = () => {
                     className="flex flex-col justify-center cursor-pointer group"
                     onClick={() => setMobileMenuOpen(false)}
                 >
-                    <span className="text-2xl font-black tracking-tighter text-slate-800 leading-none">MINDS</span>
+                    <span className={`text-2xl font-black tracking-tighter leading-none transition-colors duration-300 ${isHeroDark ? 'text-white' : 'text-slate-800'
+                        }`}>MINDS</span>
                     {isLaunched ? (
                         <motion.span
                             initial={{ opacity: 0, y: 4 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, ease: 'easeOut' }}
-                            className="text-[0.55rem] sm:text-[0.6rem] font-semibold tracking-wide text-indigo-500 mt-0.5 uppercase hidden sm:block"
+                            className={`text-[0.55rem] sm:text-[0.6rem] font-semibold tracking-wide mt-0.5 uppercase hidden sm:block transition-colors duration-300 ${isHeroDark ? 'text-indigo-300' : 'text-indigo-500'
+                                }`}
                         >
                             Modern Innovation · Next-Gen Data-Science Society
                         </motion.span>
                     ) : (
-                        <span className="text-[0.6rem] sm:text-xs font-semibold tracking-wide text-slate-500 mt-1 uppercase hidden sm:block">
+                        <span className={`text-[0.6rem] sm:text-xs font-semibold tracking-wide mt-1 uppercase hidden sm:block transition-colors duration-300 ${isHeroDark ? 'text-slate-400' : 'text-slate-500'
+                            }`}>
                             Official Club of Data Science Department, HITAM
                         </span>
                     )}
@@ -84,7 +92,9 @@ const Navbar = () => {
                             key={link.name}
                             to={link.path}
                             className={({ isActive }) =>
-                                `relative text-sm font-bold tracking-wide transition-colors group py-2 ${isActive ? 'text-primary' : 'text-slate-600 hover:text-indigo-600'
+                                `relative text-sm font-bold tracking-wide transition-colors group py-2 ${isActive
+                                    ? isHeroDark ? 'text-indigo-300' : 'text-primary'
+                                    : isHeroDark ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-indigo-600'
                                 }`
                             }
                         >
@@ -109,7 +119,8 @@ const Navbar = () => {
 
                 {/* Mobile Hamburger Toggle */}
                 <button
-                    className="lg:hidden relative z-50 p-2 text-slate-600 hover:text-slate-900 transition-colors"
+                    className={`lg:hidden relative z-50 p-2 transition-colors ${isHeroDark ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                        }`}
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
                     {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}

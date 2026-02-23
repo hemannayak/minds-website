@@ -153,7 +153,7 @@ const Home = () => {
                     lightSpread={1.5}
                     rayLength={6}
                     fadeDistance={2}
-                    saturation={0.9}
+                    saturation={2.8}
                     mouseInfluence={0.05}
                     distortion={0.08}
                     noiseAmount={0.01}

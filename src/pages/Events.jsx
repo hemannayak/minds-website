@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, Clock, Mic, Sparkles, ArrowRight, X, Linkedin, CheckCircle, MessageCircle } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
@@ -119,32 +119,31 @@ const EventCard = ({ event, onRegisterClick }) => {
 
 const Events = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isRegistered, setIsRegistered] = useState(false);
+    const [formSubmitted, setFormSubmitted] = useState(false);
     const [activeEvent, setActiveEvent] = useState(null);
-    const successRef = useRef(null);
 
     useEffect(() => {
         document.body.style.overflow = isModalOpen ? 'hidden' : 'unset';
         return () => { document.body.style.overflow = 'unset'; };
     }, [isModalOpen]);
 
-    // Scroll to success section after registration confirmed
-    useEffect(() => {
-        if (isRegistered && successRef.current) {
-            setTimeout(() => {
-                successRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 200);
-        }
-    }, [isRegistered]);
-
     const handleOpenModal = (event) => {
         setActiveEvent(event);
+        setFormSubmitted(false); // reset each time
         setIsModalOpen(true);
     };
 
-    const handleDoneRegistering = () => {
+    const handleDone = () => {
+        setFormSubmitted(true); // switch modal to WhatsApp screen
+    };
+
+    const handleCloseModal = () => {
         setIsModalOpen(false);
-        setIsRegistered(true);
+        setFormSubmitted(false);
+    };
+
+    const handleJoinWhatsApp = (link) => {
+        window.open(link, '_blank', 'noopener,noreferrer');
     };
 
     return (
@@ -181,71 +180,6 @@ const Events = () => {
                 </motion.div>
             </div>
 
-            {/* ── Post-registration success + WhatsApp card ── */}
-            <AnimatePresence>
-                {isRegistered && activeEvent && (
-                    <motion.div
-                        ref={successRef}
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, ease: 'easeOut' }}
-                        className="max-w-2xl mx-auto mt-10 px-4"
-                    >
-                        {/* Success banner */}
-                        <div className="rounded-2xl bg-emerald-950/60 border border-emerald-500/30 p-6 flex items-start gap-4 mb-6">
-                            <CheckCircle size={28} className="text-emerald-400 shrink-0 mt-0.5" />
-                            <div>
-                                <h3 className="text-emerald-300 font-bold text-lg mb-1">You're Registered! 🎉</h3>
-                                <p className="text-emerald-400/80 text-sm leading-relaxed">
-                                    Thanks for registering for <span className="font-semibold text-emerald-300">Inside The Hiring Room</span>.
-                                    Join our WhatsApp group below to get event updates, reminders, and session details.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* WhatsApp join section */}
-                        {activeEvent.whatsappLink && (
-                            <div className="rounded-2xl bg-slate-800/60 border border-slate-700 p-6">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <MessageCircle size={18} className="text-green-400" />
-                                    <h4 className="text-white font-bold">Join the WhatsApp Group</h4>
-                                </div>
-                                <p className="text-slate-400 text-sm mb-5 leading-relaxed">
-                                    Stay updated with session reminders, speaker notes, and campus announcements.
-                                </p>
-                                <a
-                                    href={activeEvent.whatsappLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center justify-center gap-3 w-full py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 transition-all duration-300 shadow-lg shadow-green-900/30 text-sm"
-                                >
-                                    <MessageCircle size={18} />
-                                    Join WhatsApp Group
-                                    <ArrowRight size={16} />
-                                </a>
-                                <p className="text-slate-500 text-xs text-center mt-3">
-                                    Or scan the QR code below using your phone camera
-                                </p>
-                                {/* QR code placeholder — replace with actual QR image */}
-                                <div className="mt-4 flex justify-center">
-                                    <div className="w-40 h-40 rounded-xl bg-white flex items-center justify-center overflow-hidden border border-slate-200 shadow">
-                                        <img
-                                            src="/whatsapp-qr.png"
-                                            alt="WhatsApp Group QR Code"
-                                            className="w-full h-full object-cover"
-                                            onError={(e) => {
-                                                e.target.style.display = 'none';
-                                                e.target.parentElement.innerHTML = '<p class="text-slate-400 text-xs text-center px-3">QR code coming soon</p>';
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
             {/* Registration Modal */}
             <AnimatePresence>
                 {isModalOpen && (
@@ -254,7 +188,7 @@ const Events = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4 bg-slate-950/70 backdrop-blur-sm"
-                        onClick={() => setIsModalOpen(false)}
+                        onClick={handleCloseModal}
                     >
                         <motion.div
                             initial={{ scale: 0.95, opacity: 0, y: 40 }}
@@ -266,44 +200,102 @@ const Events = () => {
                         >
                             {/* Modal header — sticky */}
                             <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900 shrink-0 z-10">
-                                <h3 className="text-white font-bold text-base sm:text-lg tracking-wide">Event Registration</h3>
-                                <button
-                                    onClick={() => setIsModalOpen(false)}
-                                    className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full transition-colors"
-                                >
+                                <h3 className="text-white font-bold text-base sm:text-lg tracking-wide">
+                                    {formSubmitted ? 'Join the WhatsApp Group' : 'Event Registration'}
+                                </h3>
+                                <button onClick={handleCloseModal} className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full transition-colors">
                                     <X size={20} />
                                 </button>
                             </div>
 
-                            {/* Scrollable iframe area */}
-                            <div className="flex-1 w-full bg-slate-50 overflow-y-auto -webkit-overflow-scrolling-touch">
-                                <iframe
-                                    src="https://docs.google.com/forms/d/e/1FAIpQLScJza2go3FKlI2OcFPOMvHp0TqQP0yTupx27T-nc5E4kQSYCQ/viewform?embedded=true"
-                                    width="100%"
-                                    height="100%"
-                                    frameBorder="0"
-                                    marginHeight="0"
-                                    marginWidth="0"
-                                    className="w-full min-h-[2200px]"
-                                    title="Event Registration Form"
-                                >
-                                    Loading…
-                                </iframe>
-                            </div>
+                            <AnimatePresence mode="wait">
+                                {!formSubmitted ? (
+                                    /* ── Google Form view ── */
+                                    <motion.div
+                                        key="form"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="flex flex-col flex-1 overflow-hidden"
+                                    >
+                                        {/* Scrollable iframe */}
+                                        <div className="flex-1 w-full bg-slate-50 overflow-y-auto">
+                                            <iframe
+                                                src="https://docs.google.com/forms/d/e/1FAIpQLScJza2go3FKlI2OcFPOMvHp0TqQP0yTupx27T-nc5E4kQSYCQ/viewform?embedded=true"
+                                                width="100%"
+                                                height="100%"
+                                                frameBorder="0"
+                                                marginHeight="0"
+                                                marginWidth="0"
+                                                className="w-full min-h-[2200px]"
+                                                title="Event Registration Form"
+                                            >
+                                                Loading…
+                                            </iframe>
+                                        </div>
+                                        {/* Sticky done bar */}
+                                        <div className="shrink-0 px-4 py-3 bg-slate-900 border-t border-slate-700">
+                                            <p className="text-slate-500 text-xs text-center mb-2">Submitted the form above? Tap below to get WhatsApp details.</p>
+                                            <button
+                                                onClick={handleDone}
+                                                className="w-full py-3 rounded-xl font-bold text-white text-sm bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
+                                            >
+                                                <CheckCircle size={18} />
+                                                Done — Get WhatsApp Group Link
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                ) : (
+                                    /* ── WhatsApp join screen ── */
+                                    <motion.div
+                                        key="whatsapp"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                                        className="flex-1 flex flex-col items-center justify-center px-6 py-8 gap-6 overflow-y-auto"
+                                    >
+                                        {/* Success tick */}
+                                        <div className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
+                                            <CheckCircle size={32} className="text-emerald-400" />
+                                        </div>
+                                        <div className="text-center">
+                                            <h4 className="text-white font-bold text-xl mb-2">Registration Successful! 🎉</h4>
+                                            <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
+                                                Thank you for registering. Join the WhatsApp group for event updates and reminders.
+                                            </p>
+                                        </div>
 
-                            {/* Sticky bottom bar — always visible, tap after submitting form */}
-                            <div className="shrink-0 px-4 py-3 bg-slate-900 border-t border-slate-700">
-                                <p className="text-slate-400 text-xs text-center mb-2">
-                                    Submitted the form above? Tap below to continue.
-                                </p>
-                                <button
-                                    onClick={handleDoneRegistering}
-                                    className="w-full py-3 rounded-xl font-bold text-white text-sm bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
-                                >
-                                    <CheckCircle size={18} />
-                                    Done — Join WhatsApp Group
-                                </button>
-                            </div>
+                                        {/* WhatsApp button */}
+                                        {activeEvent?.whatsappLink && (
+                                            <>
+                                                <button
+                                                    onClick={() => handleJoinWhatsApp(activeEvent.whatsappLink)}
+                                                    className="flex items-center justify-center gap-3 w-full max-w-sm py-4 rounded-2xl font-bold text-white text-base bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 transition-all duration-300 shadow-xl shadow-green-900/30 active:scale-95"
+                                                >
+                                                    <MessageCircle size={22} />
+                                                    Join WhatsApp Group
+                                                </button>
+
+                                                {/* QR code */}
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <p className="text-slate-500 text-xs">Or scan QR with your phone camera</p>
+                                                    <div className="w-44 h-44 rounded-2xl bg-white flex items-center justify-center overflow-hidden border border-slate-700 shadow-lg p-2">
+                                                        <img
+                                                            src="/whatsapp-qr.png"
+                                                            alt="WhatsApp QR Code"
+                                                            className="w-full h-full object-contain"
+                                                            onError={(e) => {
+                                                                e.target.style.display = 'none';
+                                                                e.target.parentElement.innerHTML = '<p class="text-slate-400 text-xs text-center px-3">Scan code<br/>coming soon</p>';
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
                     </motion.div>
                 )}
