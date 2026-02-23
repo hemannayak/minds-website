@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Briefcase, Target, Users, ArrowRight } from 'lucide-react';
 import LaunchReveal from '../components/LaunchReveal';
 import Popup from '../components/Popup';
+import LightRays from '../components/LightRays';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
 // Target Launch Date: 27 February 2026, 4:15 PM IST
@@ -121,19 +122,12 @@ const Home = () => {
         setShowRevealPanel(false);
     }, []);
 
-    // ── Mouse-follow glow ─────────────────────────────────────────
+    // ── Hero ref (for hover tracking) ────────────────────────────
     const heroRef = useRef(null);
-    const rawX = useMotionValue(0);
-    const rawY = useMotionValue(0);
-    const glowX = useSpring(rawX, { stiffness: 40, damping: 15 });
-    const glowY = useSpring(rawY, { stiffness: 40, damping: 15 });
 
-    const handleMouseMove = useCallback((e) => {
-        const rect = heroRef.current?.getBoundingClientRect();
-        if (!rect) return;
-        rawX.set(e.clientX - rect.left - rect.width / 2);
-        rawY.set(e.clientY - rect.top - rect.height / 2);
-    }, [rawX, rawY]);
+    const handleMouseMove = useCallback(() => {
+        // Mouse position is tracked directly inside the LightRays shader
+    }, []);
 
     if (!isMounted) return null;
 
@@ -152,58 +146,31 @@ const Home = () => {
                 onMouseLeave={() => setIsHeroHovered(false)}
                 className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden px-6 flex items-center justify-center bg-background"
             >
-                {/* Full-bleed base mesh gradient — spans entire section */}
-                <div className="absolute inset-0 z-0"
-                    style={{
-                        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99,102,241,0.18) 0%, rgba(14,165,233,0.10) 40%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 100%, rgba(168,85,247,0.12) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(56,189,248,0.10) 0%, transparent 60%)'
-                    }}
+                {/* ── LightRays WebGL animation ── fills entire hero background */}
+                <LightRays
+                    raysColor="#818CF8"
+                    raysSpeed={0.4}
+                    lightSpread={1.5}
+                    rayLength={6}
+                    fadeDistance={2}
+                    saturation={0.9}
+                    mouseInfluence={0.05}
+                    distortion={0.08}
+                    noiseAmount={0.01}
+                    style={{ zIndex: 0 }}
                 />
 
-                {/* Animated full-section ambient mesh — cycles through colour stops */}
+                {/* Subtle hover tint — slight indigo warmth when cursor enters */}
                 <motion.div
-                    className="absolute inset-0 z-0 pointer-events-none"
+                    className="absolute inset-0 pointer-events-none"
                     aria-hidden
-                    animate={{
-                        background: [
-                            'radial-gradient(ellipse 70% 55% at 50% -10%, rgba(99,102,241,0.20) 0%, transparent 65%), radial-gradient(ellipse 55% 45% at 90% 110%, rgba(14,165,233,0.14) 0%, transparent 60%)',
-                            'radial-gradient(ellipse 70% 55% at 50% -10%, rgba(14,165,233,0.18) 0%, transparent 65%), radial-gradient(ellipse 55% 45% at 90% 110%, rgba(168,85,247,0.16) 0%, transparent 60%)',
-                            'radial-gradient(ellipse 70% 55% at 50% -10%, rgba(168,85,247,0.16) 0%, transparent 65%), radial-gradient(ellipse 55% 45% at 90% 110%, rgba(99,102,241,0.14) 0%, transparent 60%)',
-                            'radial-gradient(ellipse 70% 55% at 50% -10%, rgba(99,102,241,0.20) 0%, transparent 65%), radial-gradient(ellipse 55% 45% at 90% 110%, rgba(14,165,233,0.14) 0%, transparent 60%)',
-                        ],
-                    }}
-                    transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                />
-
-                {/* Smooth hover overlay — subtly shifts the gradient on hover */}
-                <motion.div
-                    className="absolute inset-0 z-0 pointer-events-none"
-                    aria-hidden
-                    animate={{
-                        opacity: isHeroHovered ? 1 : 0,
-                        background: 'radial-gradient(ellipse 80% 70% at 50% 40%, rgba(99,102,241,0.13) 0%, rgba(14,165,233,0.08) 40%, transparent 70%)'
-                    }}
+                    animate={{ opacity: isHeroHovered ? 1 : 0 }}
                     transition={{ duration: 0.7, ease: 'easeInOut' }}
+                    style={{
+                        zIndex: 1,
+                        background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(99,102,241,0.07) 0%, rgba(14,165,233,0.04) 50%, transparent 70%)'
+                    }}
                 />
-
-                {/* Mouse-follow glow — soft wide spread, no round clipping */}
-                <motion.div
-                    style={{ x: glowX, y: glowY }}
-                    className="absolute pointer-events-none z-0"
-                    aria-hidden
-                >
-                    <motion.div
-                        animate={{
-                            background: [
-                                'radial-gradient(900px circle, rgba(99,102,241,0.18) 0%, transparent 65%)',
-                                'radial-gradient(900px circle, rgba(14,165,233,0.18) 0%, transparent 65%)',
-                                'radial-gradient(900px circle, rgba(168,85,247,0.15) 0%, transparent 65%)',
-                                'radial-gradient(900px circle, rgba(99,102,241,0.18) 0%, transparent 65%)',
-                            ],
-                        }}
-                        transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-                        className="w-[1000px] h-[1000px] -translate-x-1/2 -translate-y-1/2"
-                    />
-                </motion.div>
 
                 <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10 w-full h-full justify-center">
 
