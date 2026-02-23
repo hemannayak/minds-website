@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Clock, Mic, Sparkles, ArrowRight, X } from 'lucide-react';
+import { Calendar, MapPin, Clock, Mic, Sparkles, ArrowRight, X, Linkedin } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
@@ -84,7 +84,10 @@ const EventCard = ({ event, onRegisterClick }) => {
                             <Mic size={15} />
                         </span>
                         <span>
-                            <span className="text-white font-semibold">{event.speaker}</span>
+                            <span className="inline-flex items-center gap-1.5 text-white font-semibold">
+                                <Linkedin size={13} className="text-sky-400" />
+                                {event.speaker}
+                            </span>
                             {event.speakerRole && (
                                 <span className="block text-xs text-slate-400 mt-0.5">{event.speakerRole}</span>
                             )}
