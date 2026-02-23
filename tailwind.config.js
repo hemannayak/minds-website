@@ -10,7 +10,7 @@ export default {
         sans: ['Inter', 'sans-serif'],
       },
       colors: {
-        background: '#F8FAFC', // Slate 50
+        background: '#F5F7FF', // Indigo-white tint (custom)
         surface: '#FFFFFF',    // White
         card: '#F1F5F9',       // Slate 100
         primary: '#4F46E5',    // Indigo 600
