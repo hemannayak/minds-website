@@ -44,7 +44,7 @@ const teams = [
         accentBorder: 'border-indigo-100',
         gradient: 'from-indigo-500 to-sky-500',
         lead: { name: 'Hemanth Nayak', initials: 'HN' },
-        members: ['Deepnitha', 'Siddarth', 'Gowtham'],
+        members: ['Deepnitha', 'Siddhartha Varma', 'Gowtham'],
     },
     {
         label: 'Logistics Team',

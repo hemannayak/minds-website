@@ -91,7 +91,7 @@ const EventCard = ({ event, onRegisterClick }) => {
                         </span>
                         {/* LinkedIn icon — top-right of the speaker row */}
                         <a
-                            href="#"
+                            href="https://www.linkedin.com/in/rahul-deo-burman"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="self-start mt-0.5 p-1.5 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400 hover:bg-sky-500/20 hover:text-sky-300 transition-all duration-200"
