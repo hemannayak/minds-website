@@ -79,19 +79,26 @@ const EventCard = ({ event, onRegisterClick }) => {
                         </span>
                         {event.time}
                     </div>
-                    <div className="flex items-center gap-3 text-sm text-slate-300 font-medium">
-                        <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0">
+                    <div className="relative flex items-start gap-3 text-sm text-slate-300 font-medium">
+                        <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0 mt-0.5">
                             <Mic size={15} />
                         </span>
-                        <span>
-                            <span className="inline-flex items-center gap-1.5 text-white font-semibold">
-                                <Linkedin size={13} className="text-sky-400" />
-                                {event.speaker}
-                            </span>
+                        <span className="flex-1">
+                            <span className="text-white font-semibold">{event.speaker}</span>
                             {event.speakerRole && (
                                 <span className="block text-xs text-slate-400 mt-0.5">{event.speakerRole}</span>
                             )}
                         </span>
+                        {/* LinkedIn icon — top-right of the speaker row */}
+                        <a
+                            href="#"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="self-start mt-0.5 p-1.5 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400 hover:bg-sky-500/20 hover:text-sky-300 transition-all duration-200"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <Linkedin size={13} />
+                        </a>
                     </div>
                 </div>
 
