@@ -17,8 +17,7 @@ const upcomingEvents = [
         description:
             'An exclusive LIVE Career Readiness Session revealing what actually happens inside the hiring room. Get unfiltered insights from a Microsoft & L&T MindTree panel member — learn how top tech companies evaluate candidates and what it takes to stand out.',
         featured: true,
-        /* ↓ Update this with the actual WhatsApp group invite link */
-        whatsappLink: 'https://chat.whatsapp.com/REPLACE_WITH_ACTUAL_LINK',
+        whatsappLink: 'https://chat.whatsapp.com/Es3FANT2PTe6ywtaMYW3rX',
     },
 ];
 
