@@ -91,154 +91,187 @@ const FRAG = `
 `;
 
 function hexToRgb(hex) {
-    const r = parseInt(hex.slice(1, 3), 16) / 255;
-    const g = parseInt(hex.slice(3, 5), 16) / 255;
-    const b = parseInt(hex.slice(5, 7), 16) / 255;
-    return [r, g, b];
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  return [r, g, b];
 }
 
 const LightRays = ({
-    raysColor = '#818CF8',   // indigo-400
-    raysSpeed = 0.4,
-    lightSpread = 1.5,
-    rayLength = 6,
-    fadeDistance = 2,
-    saturation = 0.9,
-    mouseInfluence = 0.05,
-    distortion = 0.08,
-    noiseAmount = 0.01,
-    /* pulsating is intentionally ignored — not needed for light theme */
-    className = '',
-    style = {},
+  raysColor = '#818CF8',   // indigo-400
+  raysSpeed = 0.4,
+  lightSpread = 1.5,
+  rayLength = 6,
+  fadeDistance = 2,
+  saturation = 0.9,
+  mouseInfluence = 0.05,
+  distortion = 0.08,
+  noiseAmount = 0.01,
+  /* pulsating is intentionally ignored — not needed for light theme */
+  className = '',
+  style = {},
 }) => {
-    const canvasRef = useRef(null);
-    const mouseRef = useRef({ x: 0, y: 0 });
-    const rafRef = useRef(null);
+  const canvasRef = useRef(null);
+  const mouseRef = useRef({ x: 0, y: 0 });
+  const rafRef = useRef(null);
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-        const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
-        if (!gl) return; // graceful fallback — canvas stays transparent
+    const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
+    if (!gl) return; // graceful fallback — canvas stays transparent
 
-        // ── compile shaders ────────────────────────────────────────────────
-        const compile = (type, src) => {
-            const s = gl.createShader(type);
-            gl.shaderSource(s, src);
-            gl.compileShader(s);
-            return s;
-        };
-        const prog = gl.createProgram();
-        gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
-        gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
-        gl.linkProgram(prog);
-        gl.useProgram(prog);
+    // ── compile shaders ────────────────────────────────────────────────
+    const compile = (type, src) => {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
 
-        // Full-screen quad
-        const buf = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-        gl.bufferData(gl.ARRAY_BUFFER,
-            new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
-            gl.STATIC_DRAW
-        );
-        const aPos = gl.getAttribLocation(prog, 'a_position');
-        gl.enableVertexAttribArray(aPos);
-        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-        // Uniform locations
-        const uRes = gl.getUniformLocation(prog, 'u_resolution');
-        const uTime = gl.getUniformLocation(prog, 'u_time');
-        const uMouse = gl.getUniformLocation(prog, 'u_mouse');
-        const uColor = gl.getUniformLocation(prog, 'u_color');
-        const uSpeed = gl.getUniformLocation(prog, 'u_speed');
-        const uSpread = gl.getUniformLocation(prog, 'u_spread');
-        const uRayLen = gl.getUniformLocation(prog, 'u_rayLength');
-        const uFade = gl.getUniformLocation(prog, 'u_fade');
-        const uSat = gl.getUniformLocation(prog, 'u_saturation');
-        const uMInfl = gl.getUniformLocation(prog, 'u_mouseInfl');
-        const uDist = gl.getUniformLocation(prog, 'u_distortion');
-        const uNoise = gl.getUniformLocation(prog, 'u_noise');
-
-        const [r, g, b] = hexToRgb(raysColor);
-        gl.uniform3f(uColor, r, g, b);
-        gl.uniform1f(uSpeed, raysSpeed);
-        gl.uniform1f(uSpread, lightSpread);
-        gl.uniform1f(uRayLen, rayLength);
-        gl.uniform1f(uFade, fadeDistance);
-        gl.uniform1f(uSat, saturation);
-        gl.uniform1f(uMInfl, mouseInfluence);
-        gl.uniform1f(uDist, distortion);
-        gl.uniform1f(uNoise, noiseAmount);
-
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-        // ── resize ────────────────────────────────────────────────────────
-        const resize = () => {
-            const { offsetWidth: w, offsetHeight: h } = canvas.parentElement || canvas;
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            canvas.style.width = `${w}px`;
-            canvas.style.height = `${h}px`;
-            gl.viewport(0, 0, canvas.width, canvas.height);
-            gl.uniform2f(uRes, canvas.width, canvas.height);
-        };
-        resize();
-        const ro = new ResizeObserver(resize);
-        ro.observe(canvas.parentElement || canvas);
-
-        // ── mouse tracking ─────────────────────────────────────────────────
-        const parent = canvas.parentElement;
-        const onMove = (e) => {
-            if (!parent) return;
-            const rect = parent.getBoundingClientRect();
-            mouseRef.current.x = (e.clientX - rect.left) / rect.width - 0.5;
-            mouseRef.current.y = (e.clientY - rect.top) / rect.height - 0.5;
-        };
-        if (parent) parent.addEventListener('mousemove', onMove, { passive: true });
-
-        // ── render loop ────────────────────────────────────────────────────
-        const start = performance.now();
-        const draw = () => {
-            const t = (performance.now() - start) / 1000;
-            gl.uniform1f(uTime, t);
-            gl.uniform2f(uMouse, mouseRef.current.x, mouseRef.current.y);
-            gl.clearColor(0, 0, 0, 0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-            rafRef.current = requestAnimationFrame(draw);
-        };
-        rafRef.current = requestAnimationFrame(draw);
-
-        return () => {
-            cancelAnimationFrame(rafRef.current);
-            ro.disconnect();
-            if (parent) parent.removeEventListener('mousemove', onMove);
-            gl.deleteProgram(prog);
-            gl.deleteBuffer(buf);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [raysColor, raysSpeed, lightSpread, rayLength, fadeDistance,
-        saturation, mouseInfluence, distortion, noiseAmount]);
-
-    return (
-        <canvas
-            ref={canvasRef}
-            aria-hidden
-            className={className}
-            style={{
-                display: 'block',
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                pointerEvents: 'none',
-                ...style,
-            }}
-        />
+    // Full-screen quad
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
+      gl.STATIC_DRAW
     );
+    const aPos = gl.getAttribLocation(prog, 'a_position');
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+    // Uniform locations
+    const uRes = gl.getUniformLocation(prog, 'u_resolution');
+    const uTime = gl.getUniformLocation(prog, 'u_time');
+    const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+    const uColor = gl.getUniformLocation(prog, 'u_color');
+    const uSpeed = gl.getUniformLocation(prog, 'u_speed');
+    const uSpread = gl.getUniformLocation(prog, 'u_spread');
+    const uRayLen = gl.getUniformLocation(prog, 'u_rayLength');
+    const uFade = gl.getUniformLocation(prog, 'u_fade');
+    const uSat = gl.getUniformLocation(prog, 'u_saturation');
+    const uMInfl = gl.getUniformLocation(prog, 'u_mouseInfl');
+    const uDist = gl.getUniformLocation(prog, 'u_distortion');
+    const uNoise = gl.getUniformLocation(prog, 'u_noise');
+
+    const [r, g, b] = hexToRgb(raysColor);
+    gl.uniform3f(uColor, r, g, b);
+    gl.uniform1f(uSpeed, raysSpeed);
+    gl.uniform1f(uSpread, lightSpread);
+    gl.uniform1f(uRayLen, rayLength);
+    gl.uniform1f(uFade, fadeDistance);
+    gl.uniform1f(uSat, saturation);
+    gl.uniform1f(uMInfl, mouseInfluence);
+    gl.uniform1f(uDist, distortion);
+    gl.uniform1f(uNoise, noiseAmount);
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    // ── resize — handles both element reflow & orientation changes ────────
+    const resize = () => {
+      const target = canvas.parentElement || canvas;
+      const w = target.offsetWidth;
+      const h = target.offsetHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+    };
+    resize();
+
+    // ResizeObserver: element-level size changes (flex reflow etc.)
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas.parentElement || canvas);
+
+    // window resize: catches iOS/Android orientation switches
+    window.addEventListener('resize', resize, { passive: true });
+
+    // ── pointer tracking — mouse (desktop) + touch (mobile/tablet) ────────
+    const parent = canvas.parentElement;
+
+    const onMove = (e) => {
+      if (!parent) return;
+      const rect = parent.getBoundingClientRect();
+      mouseRef.current.x = (e.clientX - rect.left) / rect.width - 0.5;
+      mouseRef.current.y = (e.clientY - rect.top) / rect.height - 0.5;
+    };
+
+    // Touch: read first finger, same normalised coordinate system
+    const onTouch = (e) => {
+      if (!parent || !e.touches.length) return;
+      const t0 = e.touches[0];
+      const rect = parent.getBoundingClientRect();
+      mouseRef.current.x = (t0.clientX - rect.left) / rect.width - 0.5;
+      mouseRef.current.y = (t0.clientY - rect.top) / rect.height - 0.5;
+    };
+
+    if (parent) {
+      parent.addEventListener('mousemove', onMove, { passive: true });
+      parent.addEventListener('touchmove', onTouch, { passive: true });
+      parent.addEventListener('touchstart', onTouch, { passive: true });
+    }
+
+    // ── render loop — pauses when tab/app is hidden (saves mobile battery)
+    let paused = false;
+    const onVisibility = () => { paused = document.hidden; };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    const start = performance.now();
+    const draw = () => {
+      rafRef.current = requestAnimationFrame(draw);
+      if (paused) return;                         // skip GPU work when hidden
+      const ts = (performance.now() - start) / 1000;
+      gl.uniform1f(uTime, ts);
+      gl.uniform2f(uMouse, mouseRef.current.x, mouseRef.current.y);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
+    rafRef.current = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      ro.disconnect();
+      window.removeEventListener('resize', resize);
+      document.removeEventListener('visibilitychange', onVisibility);
+      if (parent) {
+        parent.removeEventListener('mousemove', onMove);
+        parent.removeEventListener('touchmove', onTouch);
+        parent.removeEventListener('touchstart', onTouch);
+      }
+      gl.deleteProgram(prog);
+      gl.deleteBuffer(buf);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [raysColor, raysSpeed, lightSpread, rayLength, fadeDistance,
+    saturation, mouseInfluence, distortion, noiseAmount]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden
+      className={className}
+      style={{
+        display: 'block',
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        ...style,
+      }}
+    />
+  );
 };
 
 export default LightRays;
