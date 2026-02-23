@@ -44,7 +44,7 @@ const teams = [
         accentBorder: 'border-indigo-100',
         gradient: 'from-indigo-500 to-sky-500',
         lead: { name: 'Hemanth Nayak', initials: 'HN' },
-        members: ['Deepnitha', 'Siddhartha Varma', 'Gowtham'],
+        members: ['Deepnitha', 'Siddhartha Varma', 'Goutham'],
     },
     {
         label: 'Logistics Team',
@@ -62,7 +62,7 @@ const teams = [
         accentBorder: 'border-pink-100',
         gradient: 'from-pink-500 to-purple-500',
         lead: { name: 'Sai Prasanna', initials: 'SP' },
-        members: ['Sarika', 'Nootan', 'Keerthana', 'Harshitha', 'Sindhu', 'Karthik', 'Lakshmi'],
+        members: ['Sarika', 'Nootan', 'Vikas', 'Mourya', 'Keerthana', 'Harshitha', 'Sindhu', 'Karthik', 'Lakshmi'],
     },
 ];
 
