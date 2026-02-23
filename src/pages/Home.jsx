@@ -20,8 +20,8 @@ const LAUNCH_CONFIG = {
 const CountdownUnit = ({ value, label }) => {
     return (
         <div className="flex flex-col items-center">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-white rounded-xl flex items-center justify-center border border-gray-100 relative shadow-sm group">
-                <div className="absolute inset-0 bg-indigo-500/5 rounded-xl blur-md group-hover:bg-indigo-500/10 transition-all duration-300"></div>
+            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-white/5 rounded-xl flex items-center justify-center border border-white/10 relative shadow-lg group">
+                <div className="absolute inset-0 bg-indigo-500/10 rounded-xl blur-md group-hover:bg-indigo-500/20 transition-all duration-300"></div>
                 <AnimatePresence mode="popLayout">
                     <motion.span
                         key={value}
@@ -29,13 +29,13 @@ const CountdownUnit = ({ value, label }) => {
                         animate={{ y: 0, opacity: 1, scale: 1 }}
                         exit={{ y: -15, opacity: 0, scale: 0.8 }}
                         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                        className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-blue-300 to-cyan-400 relative z-10 font-mono tracking-tighter"
+                        className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-indigo-300 to-sky-400 relative z-10 font-mono tracking-tighter"
                     >
                         {value.toString().padStart(2, '0')}
                     </motion.span>
                 </AnimatePresence>
             </div>
-            <span className="text-gray-400 text-xs sm:text-sm mt-3 uppercase tracking-widest font-semibold">{label}</span>
+            <span className="text-slate-500 text-xs sm:text-sm mt-3 uppercase tracking-widest font-semibold">{label}</span>
         </div>
     );
 };
@@ -82,11 +82,11 @@ const LaunchCountdown = ({ onComplete }) => {
             <p className="text-slate-500 text-sm tracking-[0.2em] uppercase mb-6 font-semibold">Launching In</p>
             <div className="flex gap-4 sm:gap-6">
                 <CountdownUnit value={timeLeft.days} label="Days" />
-                <span className="text-2xl sm:text-4xl text-slate-300 font-light mt-4 sm:mt-5">:</span>
+                <span className="text-2xl sm:text-4xl text-slate-600 font-light mt-4 sm:mt-5">:</span>
                 <CountdownUnit value={timeLeft.hours} label="Hours" />
-                <span className="text-2xl sm:text-4xl text-slate-300 font-light mt-4 sm:mt-5">:</span>
+                <span className="text-2xl sm:text-4xl text-slate-600 font-light mt-4 sm:mt-5">:</span>
                 <CountdownUnit value={timeLeft.minutes} label="Mins" />
-                <span className="text-2xl sm:text-4xl text-slate-300 font-light mt-4 sm:mt-5">:</span>
+                <span className="text-2xl sm:text-4xl text-slate-600 font-light mt-4 sm:mt-5">:</span>
                 <CountdownUnit value={timeLeft.seconds} label="Secs" />
             </div>
         </motion.div>
@@ -144,11 +144,11 @@ const Home = () => {
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => setIsHeroHovered(true)}
                 onMouseLeave={() => setIsHeroHovered(false)}
-                className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden px-6 flex items-center justify-center bg-background"
+                className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden px-6 flex items-center justify-center bg-slate-950"
             >
                 {/* ── LightRays WebGL animation ── fills entire hero background */}
                 <LightRays
-                    raysColor="#818CF8"
+                    raysColor="#a5b4fc"
                     raysSpeed={0.4}
                     lightSpread={1.5}
                     rayLength={6}
@@ -180,7 +180,7 @@ const Home = () => {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8 }}
-                            className="inline-flex items-center px-4 py-2 rounded-full bg-white/50 border border-gray-200 text-sm font-semibold text-indigo-600 mb-8 backdrop-blur-sm shadow-sm"
+                            className="inline-flex items-center px-4 py-2 rounded-full bg-white/8 border border-white/10 text-sm font-semibold text-indigo-300 mb-8 backdrop-blur-sm shadow-sm"
                         >
                             <span className="relative flex h-2 w-2 mr-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
@@ -191,7 +191,7 @@ const Home = () => {
 
                         <motion.h1
                             layout
-                            className={`font-black tracking-tighter text-slate-800 transition-all duration-1000
+                            className={`font-black tracking-tighter text-white transition-all duration-1000
                     ${isLaunched ? 'text-6xl md:text-8xl lg:text-9xl mb-4' : 'text-7xl md:text-[8rem] lg:text-[10rem] mb-2'}`
                             }
                         >
@@ -200,7 +200,7 @@ const Home = () => {
 
                         <motion.p
                             layout
-                            className="text-lg md:text-xl text-slate-500 font-medium tracking-wide max-w-2xl"
+                            className="text-lg md:text-xl text-slate-400 font-medium tracking-wide max-w-2xl"
                         >
                             Official Club of the Data Science Department, HITAM
                         </motion.p>
@@ -264,11 +264,11 @@ const Home = () => {
                                     transition={{ duration: 0.8 }}
                                     className="flex flex-col items-center gap-4"
                                 >
-                                    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 shadow-sm text-slate-600 text-sm font-semibold">
+                                    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 shadow-sm text-slate-300 text-sm font-semibold">
                                         <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
                                         The official reveal is coming soon
                                     </div>
-                                    <p className="text-slate-400 text-sm">Stay tuned for the big announcement.</p>
+                                    <p className="text-slate-600 text-sm">Stay tuned for the big announcement.</p>
                                 </motion.div>
                             )}
                         </AnimatePresence>
