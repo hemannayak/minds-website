@@ -97,16 +97,18 @@ const FRAG = `
     /* Radial: exponential decay from origin — fills hero width */
     float radialFade = exp(-dist / max(u_rayLength * 0.28, 0.01));
 
-    /* Vertical: light vanishes smoothly before the section bottom */
-    float bottomFade = 1.0 - smoothstep(0.18, 0.82, uvT.y);
+    /* Vertical: fades out approaching section bottom — extended to 0.95
+       so rays visibly cover the full hero including central content */
+    float bottomFade = 1.0 - smoothstep(0.15, 0.95, uvT.y);
 
     /* Horizontal: wide Gaussian keeps rays centred, edges breathe out */
     float sideWidth  = 0.48 * u_spread;
     float sideFade   = gauss(uvT.x - 0.5 - u_mouse.x * u_mouseInfl * 0.4, sideWidth);
 
-    /* Combine and scale — kept very low for the light SaaS background */
-    float alpha = rays * radialFade * bottomFade * sideFade * u_saturation;
-    alpha = clamp(alpha, 0.0, 1.0) * 0.28;
+    /* Combine — u_saturation fully controls final alpha.
+       For light bg use ~0.22; for dark bg use ~0.7 */
+    float alpha = rays * radialFade * bottomFade * sideFade;
+    alpha = clamp(alpha * u_saturation, 0.0, 1.0);
 
     gl_FragColor = vec4(u_color * alpha, alpha);
   }
