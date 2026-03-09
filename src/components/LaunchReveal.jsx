@@ -75,20 +75,11 @@ const LaunchReveal = ({ show, onComplete }) => {
                             className="relative w-36 h-36 md:w-44 md:h-44 rounded-3xl flex items-center justify-center"
                             style={{
                                 background: 'linear-gradient(135deg, #4f46e5, #0ea5e9)',
-                                boxShadow: '0 0 60px rgba(99,102,241,0.5), 0 0 120px rgba(56,189,248,0.2)',
+                                boxShadow: '0 0 60px rgba(15,23,42,0.5), 0 0 120px rgba(56,189,248,0.2)',
                             }}
                         >
-                            <div className="w-[calc(100%-3px)] h-[calc(100%-3px)] rounded-[calc(1.5rem-2px)] bg-[#080c18] flex items-center justify-center">
-                                <span
-                                    className="text-7xl md:text-8xl font-black tracking-tighter"
-                                    style={{
-                                        background: 'linear-gradient(135deg, #818cf8, #38bdf8)',
-                                        WebkitBackgroundClip: 'text',
-                                        WebkitTextFillColor: 'transparent',
-                                    }}
-                                >
-                                    M
-                                </span>
+                            <div className="w-[calc(100%-3px)] h-[calc(100%-3px)] rounded-[calc(1.5rem-2px)] bg-[#030712] flex items-center justify-center overflow-hidden">
+                                <img src="/LOGO.png" alt="MINDS Logo" className="w-full h-full object-cover scale-[1.35]" />
                             </div>
                         </motion.div>
 
@@ -102,7 +93,7 @@ const LaunchReveal = ({ show, onComplete }) => {
                             <p className="text-3xl md:text-4xl font-black tracking-tight text-white mb-1">
                                 MINDS
                             </p>
-                            <p className="text-xs md:text-sm font-semibold tracking-[0.2em] uppercase text-indigo-300/70">
+                            <p className="text-xs md:text-sm font-semibold tracking-[0.2em] uppercase text-slate-400/70">
                                 Modern Innovation for Next-Gen Data-Science Society
                             </p>
                         </motion.div>

@@ -1,154 +1,260 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Target, Users, BookOpen, TrendingUp, Lightbulb, ArrowRight } from 'lucide-react';
+import { ArrowRight, Zap, Users, Globe, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-const pillars = [
-    { title: 'Industry Experts', icon: Users, color: 'bg-indigo-50 text-indigo-600' },
-    { title: 'Workshops', icon: BookOpen, color: 'bg-sky-50 text-sky-600' },
-    { title: 'Datathons', icon: Target, color: 'bg-emerald-50 text-emerald-600' },
-    { title: 'Real-world Projects', icon: TrendingUp, color: 'bg-purple-50 text-purple-600' },
-];
-
-const values = [
+const philosophy = [
     {
-        icon: Lightbulb,
-        title: 'Born from a Problem',
-        body: 'We recognized that while academic foundations are crucial, mastery of Data Science requires hands-on exposure, networking, and real-world complexity.',
-        accent: 'from-amber-400 to-orange-500',
-        iconBg: 'bg-amber-50 text-amber-600',
+        icon: Zap,
+        label: '01',
+        title: 'Born from Frustration.',
+        body: 'Most college clubs talk. We decided to build. MINDS was created because students kept graduating with theory but zero real-world readiness — and that needed to change.',
     },
     {
         icon: Users,
-        title: 'Built Collaboratively',
-        body: 'MINDS was shaped by students and faculty working together — a club that represents the community it serves, not just a top-down initiative.',
-        accent: 'from-indigo-400 to-blue-500',
-        iconBg: 'bg-indigo-50 text-indigo-600',
+        label: '02',
+        title: 'Shaped by Students.',
+        body: 'Not a top-down initiative. Not a faculty project. MINDS was designed by the students who needed it most — and it stays that way.',
+    },
+    {
+        icon: Globe,
+        label: '03',
+        title: 'Open to Every Branch.',
+        body: 'Data science isn\'t a CS-only career. If curiosity brought you here, you belong here. We welcome every department, every background.',
     },
     {
         icon: TrendingUp,
-        title: 'Focused on Growth',
-        body: 'Every program, session, and event is designed with one goal: accelerating your journey from learner to practitioner.',
-        accent: 'from-emerald-400 to-teal-500',
-        iconBg: 'bg-emerald-50 text-emerald-600',
+        label: '04',
+        title: 'Obsessed with Outcomes.',
+        body: 'Every session, every workshop, every datathon has one question attached: did it move you forward? If not, we don\'t do it.',
     },
 ];
 
 const About = () => {
     return (
         <PageTransition>
-            <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto">
+            <div className="w-full">
 
-                {/* ── Hero heading ── */}
-                <motion.div
-                    className="max-w-3xl mx-auto text-center mb-20"
-                    initial="hidden"
-                    animate="show"
-                    variants={staggerContainer}
-                >
-                    <motion.div
-                        variants={fadeInUp}
-                        className="inline-block px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-sm font-semibold mb-6 shadow-sm"
-                    >
-                        Our Journey
-                    </motion.div>
-
-                    <motion.h1
-                        variants={fadeInUp}
-                        className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight text-slate-900 leading-tight"
-                    >
-                        Bridging the gap between{' '}
-                        <br className="hidden md:block" />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-sky-500">
-                            Academia &amp; Industry
-                        </span>
-                    </motion.h1>
-
-                    <motion.p variants={fadeInUp} className="text-lg text-slate-500 leading-relaxed mb-12">
-                        MINDS didn't happen overnight. Born nearly a year ago from a singular objective —
-                        to provide students with unparalleled industry exposure, real-world skills, and a
-                        community that pushes them to grow.
-                    </motion.p>
-
-                    {/* Pillars */}
-                    <motion.div
-                        variants={fadeInUp}
-                        className="grid grid-cols-2 md:grid-cols-4 gap-4"
-                    >
-                        {pillars.map((p) => {
-                            const Icon = p.icon;
-                            return (
-                                <div
-                                    key={p.title}
-                                    className="flex flex-col items-center p-5 bg-white border border-slate-100 rounded-2xl hover:shadow-md hover:-translate-y-1 transition-all duration-300 group"
-                                >
-                                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-3 ${p.color} group-hover:scale-110 transition-transform duration-300`}>
-                                        <Icon size={20} />
-                                    </div>
-                                    <span className="font-semibold text-sm text-slate-700 text-center">{p.title}</span>
-                                </div>
-                            );
-                        })}
-                    </motion.div>
-                </motion.div>
-
-                {/* ── Divider ── */}
-                <div className="flex items-center gap-4 mb-20">
-                    <div className="h-px bg-slate-200 flex-1" />
-                    <span className="text-xs font-bold tracking-[0.2em] uppercase text-slate-400">Our Philosophy</span>
-                    <div className="h-px bg-slate-200 flex-1" />
-                </div>
-
-                {/* ── Values grid ── */}
-                <motion.div
-                    className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-20"
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, margin: '-80px' }}
-                    variants={staggerContainer}
-                >
-                    {values.map((v) => {
-                        const Icon = v.icon;
-                        return (
-                            <motion.div
-                                key={v.title}
-                                variants={fadeInUp}
-                                className="group bg-white border border-slate-100 rounded-3xl p-8 hover:shadow-xl hover:-translate-y-1 hover:border-indigo-100 transition-all duration-300 relative overflow-hidden"
-                            >
-                                <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br ${v.accent} -mr-10 -mt-10 pointer-events-none`} />
-                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${v.iconBg}`}>
-                                    <Icon size={22} />
-                                </div>
-                                <h3 className="text-lg font-bold text-slate-800 mb-3">{v.title}</h3>
-                                <p className="text-slate-500 text-sm leading-relaxed">{v.body}</p>
+                {/* ── Page Hero ── */}
+                <section className="pt-36 pb-24 px-6 bg-white grid-texture border-b border-slate-100">
+                    <div className="max-w-7xl mx-auto">
+                        <motion.div
+                            initial="hidden"
+                            animate="show"
+                            variants={staggerContainer}
+                            className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-12"
+                        >
+                            {/* Left: heading */}
+                            <motion.div variants={fadeInUp} className="max-w-2xl">
+                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-5">About MINDS</p>
+                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 tracking-[-0.02em] leading-[1.05]">
+                                    We exist so you<br />
+                                    don't have to{' '}
+                                    <span className="relative inline-block">
+                                        figure it out
+                                        <span className="absolute bottom-1 left-0 right-0 h-[3px] bg-slate-900 rounded-full" />
+                                    </span>
+                                    {' '}alone.
+                                </h1>
                             </motion.div>
-                        );
-                    })}
-                </motion.div>
 
-                {/* ── CTA ── */}
-                <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="max-w-2xl mx-auto text-center bg-gradient-to-br from-indigo-50 to-sky-50 border border-indigo-100 rounded-3xl p-10"
-                >
-                    <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-3 tracking-tight">
-                        Ready to be part of it?
-                    </h2>
-                    <p className="text-slate-500 mb-8 leading-relaxed">
-                        Join a community redefining what it means to be a Data Science student.
-                    </p>
-                    <Link
-                        to="/join"
-                        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
-                    >
-                        Join MINDS <ArrowRight size={18} />
-                    </Link>
-                </motion.div>
+                            {/* Right: 2-line context */}
+                            <motion.div variants={fadeInUp} className="max-w-sm lg:pb-2">
+                                <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                                    MINDS is the official student initiative of the Data Science Department, HITAM — built for anyone who wants to make data science their career, regardless of what branch they're from.
+                                </p>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-[3px] h-10 bg-slate-900 rounded-full shrink-0" />
+                                    <p className="text-sm text-slate-500 font-medium leading-snug">
+                                        Chapter 01 · Open to all departments · HITAM, Hyderabad
+                                    </p>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    </div>
+                </section>
+
+                {/* ── Dark Manifesto Strip ── */}
+                <section className="bg-slate-900 grid-texture-dark py-16 px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                            className="flex flex-col md:flex-row md:items-center justify-between gap-8"
+                        >
+                            <p className="text-2xl md:text-3xl font-bold text-white tracking-tight max-w-2xl leading-snug">
+                                "The gap between knowing data science and{' '}
+                                <span className="text-slate-400">doing</span>{' '}
+                                data science — that's what we close."
+                            </p>
+                            <div className="shrink-0 flex flex-col gap-2 text-right">
+                                <span className="text-slate-400 text-sm font-medium">— The MINDS Founding Team</span>
+                                <span className="text-slate-600 text-xs tracking-wide">Data Science Dept, HITAM</span>
+                            </div>
+                        </motion.div>
+                    </div>
+                </section>
+
+                {/* ── Origin Story — asymmetric 2+1 grid ── */}
+                <section className="py-28 px-6 bg-white grid-texture border-b border-slate-100">
+                    <div className="max-w-7xl mx-auto">
+                        <motion.div
+                            initial="hidden"
+                            whileInView="show"
+                            viewport={{ once: true, margin: '-80px' }}
+                            variants={staggerContainer}
+                            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+                        >
+                            {/* Wide left card */}
+                            <motion.div
+                                variants={fadeInUp}
+                                className="lg:col-span-2 bg-white rounded-[14px] ring-1 ring-slate-900/5 p-10 relative overflow-hidden flex flex-col justify-between min-h-[300px]"
+                                style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
+                            >
+                                <div className="absolute inset-x-0 top-0 h-[3px] bg-slate-900 rounded-t-[14px]" />
+                                <div>
+                                    <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-4">The Origin</p>
+                                    <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mb-5">
+                                        A year of planning.<br />One clear mission.
+                                    </h2>
+                                    <p className="text-slate-600 leading-relaxed text-sm max-w-lg">
+                                        MINDS didn't start with a logo or a committee. It started with a question nobody had a good answer to: <em>"How do students at HITAM actually get ready for a data science career?"</em> That question became our founding document.
+                                    </p>
+                                </div>
+                                <div className="mt-8 flex gap-8">
+                                    {[
+                                        { v: 'Ch.01', l: 'Inaugural Chapter' },
+                                        { v: 'All', l: 'Depts Welcome' },
+                                        { v: '∞', l: 'Learning Paths' },
+                                    ].map(s => (
+                                        <div key={s.l}>
+                                            <div className="text-3xl font-black text-slate-900 tracking-tighter leading-none">{s.v}</div>
+                                            <div className="text-xs text-slate-500 mt-1 font-medium">{s.l}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </motion.div>
+
+                            {/* Narrow right dark card */}
+                            <motion.div
+                                variants={fadeInUp}
+                                className="bg-slate-900 rounded-[14px] ring-1 ring-slate-900/5 p-10 flex flex-col justify-between min-h-[300px]"
+                                style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
+                            >
+                                <div>
+                                    <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-500 mb-4">Our Belief</p>
+                                    <h3 className="text-xl font-bold text-white mb-5 leading-snug">
+                                        Curiosity is the only prerequisite.
+                                    </h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">
+                                        You don't need to be a coder. You don't need to be from CS. You need to want it badly enough to show up.
+                                    </p>
+                                </div>
+                                <Link
+                                    to="/join"
+                                    className="mt-8 inline-flex items-center gap-2 px-5 py-2.5 rounded-[10px] font-medium text-sm text-slate-900 bg-white hover:bg-slate-50 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] group self-start"
+                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}
+                                >
+                                    Join Us
+                                    <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                                </Link>
+                            </motion.div>
+                        </motion.div>
+                    </div>
+                </section>
+
+                {/* ── Philosophy — horizontal cards with left accent ── */}
+                <section className="py-28 px-6 bg-slate-50 grid-texture border-b border-slate-100">
+                    <div className="max-w-7xl mx-auto">
+                        <motion.div
+                            initial="hidden"
+                            whileInView="show"
+                            viewport={{ once: true, margin: '-80px' }}
+                            variants={staggerContainer}
+                        >
+                            <motion.div variants={fadeInUp} className="mb-14">
+                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-4">Our Philosophy</p>
+                                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-[-0.02em]">
+                                    Four things we refuse to compromise on.
+                                </h2>
+                            </motion.div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                {philosophy.map((p) => {
+                                    const Icon = p.icon;
+                                    return (
+                                        <motion.div
+                                            key={p.title}
+                                            variants={fadeInUp}
+                                            className="bg-white rounded-[14px] ring-1 ring-slate-900/5 p-8 flex gap-6 relative overflow-hidden transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] group"
+                                            style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
+                                        >
+                                            {/* Left accent bar */}
+                                            <div className="absolute left-0 inset-y-0 w-[3px] bg-slate-900 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                                            {/* Number label */}
+                                            <div className="shrink-0 w-10 h-10 rounded-[10px] bg-slate-50 border border-slate-200 flex items-center justify-center text-xs font-black text-slate-400 tracking-tight group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all duration-300">
+                                                {p.label}
+                                            </div>
+
+                                            <div>
+                                                <h3 className="text-base font-bold text-slate-900 mb-2 tracking-tight">{p.title}</h3>
+                                                <p className="text-slate-600 text-sm leading-relaxed">{p.body}</p>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
+                            </div>
+                        </motion.div>
+                    </div>
+                </section>
+
+                {/* ── CTA — horizontal split bar ── */}
+                <section className="py-24 px-6 bg-white grid-texture">
+                    <div className="max-w-7xl mx-auto">
+                        <motion.div
+                            initial={{ opacity: 0, y: 24 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                            className="bg-slate-900 rounded-[14px] p-10 md:p-14 flex flex-col md:flex-row md:items-center justify-between gap-10 relative overflow-hidden"
+                        >
+                            {/* subtle top line */}
+                            <div className="absolute inset-x-0 top-0 h-px bg-white/10" />
+
+                            <div className="max-w-xl">
+                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-500 mb-4">What's Next</p>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white tracking-[-0.02em] mb-3">
+                                    Your curiosity found the right room.
+                                </h2>
+                                <p className="text-slate-400 text-sm leading-relaxed">
+                                    Fill out the form, join the community. There's no better time than now.
+                                </p>
+                            </div>
+
+                            <div className="flex flex-col gap-3 shrink-0">
+                                <Link
+                                    to="/join"
+                                    className="px-6 py-3 rounded-[10px] font-medium text-sm text-slate-900 bg-white hover:bg-slate-50 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] flex items-center justify-center gap-2 group"
+                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}
+                                >
+                                    Join MINDS
+                                    <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                                </Link>
+                                <Link
+                                    to="/events"
+                                    className="px-6 py-3 rounded-[10px] font-medium text-sm text-slate-300 hover:text-white ring-1 ring-white/10 hover:ring-white/20 hover:bg-white/5 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] flex items-center justify-center"
+                                >
+                                    See our events
+                                </Link>
+                            </div>
+                        </motion.div>
+                    </div>
+                </section>
 
             </div>
         </PageTransition>

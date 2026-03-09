@@ -1,39 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NavLink, Link, useLocation } from 'react-router-dom';
-
-const LAUNCH_DATE = new Date('2026-02-27T16:15:00+05:30').getTime();
+import { NavLink, Link } from 'react-router-dom';
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [isLaunched, setIsLaunched] = useState(false);
-    const location = useLocation();
-
-    // True when sitting on the dark hero (home page, not yet scrolled)
-    const isHeroDark = location.pathname === '/' && !scrolled;
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
-
-        // Check launch state on mount
-        const checkLaunch = () => {
-            const pastDate = new Date().getTime() >= LAUNCH_DATE;
-            const hasFlag = !!localStorage.getItem('minds_launched');
-            setIsLaunched(pastDate || hasFlag);
-        };
-        checkLaunch();
-
-        // Listen for the flag being set (reveal panel fires it)
-        const onStorage = (e) => { if (e.key === 'minds_launched') checkLaunch(); };
-        window.addEventListener('storage', onStorage);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-            window.removeEventListener('storage', onStorage);
-        };
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     const navLinks = [
@@ -51,10 +28,8 @@ const Navbar = () => {
             animate={{ y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-                    ? 'bg-white/80 backdrop-blur-md border-b border-gray-100 h-[70px] shadow-sm'
-                    : isHeroDark
-                        ? 'bg-transparent h-[90px]'
-                        : 'bg-transparent h-[90px]'
+                ? 'bg-white/80 backdrop-blur-md border-b border-slate-100 h-[70px] shadow-sm'
+                : 'bg-transparent h-[90px]'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 md:px-8 h-full flex items-center justify-between">
@@ -62,27 +37,20 @@ const Navbar = () => {
                 {/* Logo */}
                 <Link
                     to="/"
-                    className="flex flex-col justify-center cursor-pointer group"
+                    className="flex items-center gap-3 cursor-pointer group"
                     onClick={() => setMobileMenuOpen(false)}
                 >
-                    <span className={`text-2xl font-black tracking-tighter leading-none transition-colors duration-300 ${isHeroDark ? 'text-white' : 'text-slate-800'
-                        }`}>MINDS</span>
-                    {isLaunched ? (
-                        <motion.span
-                            initial={{ opacity: 0, y: 4 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, ease: 'easeOut' }}
-                            className={`text-[0.55rem] sm:text-[0.6rem] font-semibold tracking-wide mt-0.5 uppercase hidden sm:block transition-colors duration-300 ${isHeroDark ? 'text-indigo-300' : 'text-indigo-500'
-                                }`}
-                        >
-                            Modern Innovation · Next-Gen Data-Science Society
-                        </motion.span>
-                    ) : (
-                        <span className={`text-[0.6rem] sm:text-xs font-semibold tracking-wide mt-1 uppercase hidden sm:block transition-colors duration-300 ${isHeroDark ? 'text-slate-400' : 'text-slate-500'
-                            }`}>
-                            Official Club of Data Science Department, HITAM
+                    <div className="w-10 h-10 md:w-11 md:h-11 overflow-hidden rounded-xl border border-slate-200 shadow-sm flex items-center justify-center shrink-0 bg-white transition-colors duration-300">
+                        <img src="/Club_Logo-bg.png" alt="MINDS Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                        <span className="text-2xl font-black tracking-tighter leading-none text-slate-900 transition-colors duration-300">
+                            MINDS
                         </span>
-                    )}
+                        <span className="text-[0.6rem] sm:text-[0.65rem] font-semibold tracking-wide mt-1 uppercase hidden sm:block text-slate-500 transition-colors duration-300">
+                            Official Club of Data Science, HITAM
+                        </span>
+                    </div>
                 </Link>
 
                 {/* Desktop Links */}
@@ -93,8 +61,8 @@ const Navbar = () => {
                             to={link.path}
                             className={({ isActive }) =>
                                 `relative text-sm font-bold tracking-wide transition-colors group py-2 ${isActive
-                                    ? isHeroDark ? 'text-indigo-300' : 'text-primary'
-                                    : isHeroDark ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-indigo-600'
+                                    ? 'text-slate-900'
+                                    : 'text-slate-600 hover:text-slate-900'
                                 }`
                             }
                         >
@@ -103,7 +71,7 @@ const Navbar = () => {
                                     {link.name}
                                     {/* Hover/Active Underline Animation */}
                                     <span
-                                        className={`absolute left-0 bottom-0 h-[2px] bg-gradient-to-r from-indigo-500 to-blue-500 transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                                        className={`absolute left-0 bottom-0 h-[2px] bg-slate-900 transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
                                             }`}
                                     ></span>
                                 </>
@@ -112,22 +80,25 @@ const Navbar = () => {
                     ))}
 
                     {/* Join Us CTA */}
-                    <Link to="/join" className="relative px-6 py-2.5 rounded-full font-bold text-sm text-white transition-transform duration-300 hover:scale-105 active:scale-95 ml-2 bg-gradient-to-r from-indigo-600 to-blue-600 shadow-[0_0_15px_rgba(79,70,229,0.3)] hover:shadow-[0_0_25px_rgba(79,70,229,0.5)]">
+                    <Link
+                        to="/join"
+                        className="relative px-5 py-2 rounded-[10px] font-medium text-sm text-white bg-slate-900 hover:bg-slate-800 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] ml-2"
+                        style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08),0 4px 12px rgba(15,23,42,0.15)' }}
+                    >
                         Join Us
                     </Link>
                 </div>
 
                 {/* Mobile Hamburger Toggle */}
                 <button
-                    className={`lg:hidden relative z-50 p-2 transition-colors ${isHeroDark ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900'
-                        }`}
+                    className="lg:hidden relative z-50 p-2 transition-colors text-slate-600 hover:text-slate-900"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
                     {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
                 </button>
             </div>
 
-            {/* Mobile Slide-in Drawer with Framer Motion */}
+            {/* Mobile Slide-in Drawer */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div
@@ -149,7 +120,7 @@ const Navbar = () => {
                                         to={link.path}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className={({ isActive }) =>
-                                            `text-4xl font-bold relative w-fit group py-1 block transition-colors ${isActive ? 'text-primary' : 'text-slate-600 hover:text-indigo-600'
+                                            `text-4xl font-bold relative w-fit group py-1 block transition-colors ${isActive ? 'text-slate-900' : 'text-slate-600 hover:text-slate-900'
                                             }`
                                         }
                                     >
@@ -157,7 +128,7 @@ const Navbar = () => {
                                             <>
                                                 {link.name}
                                                 <span
-                                                    className={`absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-indigo-500 to-blue-500 transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                                                    className={`absolute -bottom-2 left-0 h-1 bg-slate-900 transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
                                                         }`}
                                                 ></span>
                                             </>
@@ -175,7 +146,8 @@ const Navbar = () => {
                                 <Link
                                     to="/join"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="px-8 py-4 rounded-full font-bold text-lg text-white bg-gradient-to-r from-indigo-600 to-blue-600 shadow-[0_0_30px_rgba(79,70,229,0.4)] w-full max-w-xs transition-transform duration-300 active:scale-95 text-center flex items-center justify-center justify-self-start"
+                                    className="px-8 py-4 rounded-[10px] font-medium text-lg text-white bg-slate-900 hover:bg-slate-800 w-full max-w-xs transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] text-center flex items-center justify-center"
+                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08),0 4px 12px rgba(15,23,42,0.15)' }}
                                 >
                                     Join Us
                                 </Link>

@@ -12,6 +12,7 @@ import Contact from './pages/Contact';
 import Join from './pages/Join';
 import Welcome from './pages/Welcome';
 import PageTransition from './components/PageTransition';
+import RecruitmentPopup from './components/RecruitmentPopup';
 
 function App() {
   const location = useLocation();
@@ -37,6 +38,7 @@ function App() {
           </Route>
         </Routes>
       </AnimatePresence>
+      <RecruitmentPopup />
     </>
   );
 }
