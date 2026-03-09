@@ -1,148 +1,176 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Linkedin, Instagram, MessageCircle, MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react';
+import { Linkedin, Instagram, Mail, MapPin, Phone, ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-const INSTAGRAM_URL = 'https://www.instagram.com/hitam_datascience_club/'; // ← update handle if needed
+const INSTAGRAM_URL = 'https://www.instagram.com/hitam_datascience_club/';
+
+const navLinks = [
+    { label: 'About', to: '/about' },
+    { label: 'Journey', to: '/journey' },
+    { label: 'Events', to: '/events' },
+    { label: 'Team', to: '/team' },
+    { label: 'Contact', to: '/contact' },
+    { label: 'Join', to: '/join' },
+];
 
 const Footer = () => {
     return (
-        <footer className="relative z-10 bg-slate-50 border-t border-slate-200">
+        <footer className="relative z-10 bg-slate-900 grid-texture-dark border-t border-slate-800">
 
-            {/* ── Stay Connected ──────────────────────────────── */}
-            <div className="py-16 px-6 border-b border-slate-200">
-                <div className="max-w-xl mx-auto text-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.55, ease: 'easeOut' }}
-                    >
-                        <p className="text-xs font-bold uppercase tracking-[0.22em] text-indigo-500 mb-3">Follow Us</p>
-                        <h2 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight mb-3">
-                            Stay{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-sky-500">
-                                Connected
-                            </span>
-                        </h2>
-                        <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-sm mx-auto">
-                            Follow us on Instagram for the latest updates, event announcements, and behind-the-scenes moments from MINDS Club.
+            {/* ── Main footer grid ── */}
+            <div className="max-w-7xl mx-auto px-6 pt-20 pb-12">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-slate-800">
+
+                    {/* Brand Column */}
+                    <div className="md:col-span-5">
+                        <div className="flex items-center gap-2.5 mb-6">
+                            <div className="w-9 h-9 rounded-[10px] bg-white flex items-center justify-center font-black text-slate-900 text-base shadow-sm">M</div>
+                            <span className="text-xl font-bold tracking-tight text-white">MINDS</span>
+                        </div>
+                        <p className="text-slate-400 text-sm leading-relaxed max-w-xs mb-8">
+                            Official student initiative of the Data Science Department, HITAM.<br />
+                            Chapter 01 — open to every department.
                         </p>
 
-                        {/* QR + Link row */}
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
-                            {/* QR code */}
+                        {/* Social row */}
+                        <div className="flex items-center gap-3">
+                            <a
+                                href="#"
+                                className="w-9 h-9 rounded-[8px] bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-200"
+                                aria-label="LinkedIn"
+                            >
+                                <Linkedin size={16} />
+                            </a>
                             <a
                                 href={INSTAGRAM_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="group block"
+                                className="w-9 h-9 rounded-[8px] bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-pink-400 hover:bg-pink-500/10 hover:border-pink-500/20 transition-all duration-200"
+                                aria-label="Instagram"
                             >
-                                <div className="w-36 h-36 rounded-2xl overflow-hidden border border-slate-200 shadow-md group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300">
-                                    <img
-                                        src="/instagram-qr.png"
-                                        alt="Scan to follow MINDS Club on Instagram"
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                                <p className="text-xs text-slate-400 mt-2 text-center">Scan to follow</p>
+                                <Instagram size={16} />
                             </a>
-
-                            {/* Divider */}
-                            <div className="hidden sm:flex flex-col items-center gap-1">
-                                <div className="h-12 w-px bg-slate-200" />
-                                <span className="text-xs text-slate-400 font-medium">or</span>
-                                <div className="h-12 w-px bg-slate-200" />
-                            </div>
-                            <span className="sm:hidden text-xs text-slate-400 font-medium">or</span>
-
-                            {/* Instagram button */}
-                            <div className="flex flex-col items-center gap-3">
-                                <a
-                                    href={INSTAGRAM_URL}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="group inline-flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-pink-200 hover:-translate-y-0.5 transition-all duration-300"
-                                >
-                                    <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-500 via-rose-500 to-orange-400 flex items-center justify-center shadow group-hover:scale-110 transition-transform duration-300">
-                                        <Instagram size={18} className="text-white" />
-                                    </span>
-                                    <span className="font-semibold text-slate-700 text-sm group-hover:text-pink-600 transition-colors">
-                                        @minds_datascience
-                                    </span>
-                                    <ArrowUpRight size={15} className="text-slate-400 group-hover:text-pink-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-                                </a>
-                                <p className="text-xs text-slate-400">Click to open profile</p>
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
-            </div>
-
-            <div className="max-w-7xl mx-auto pt-16 pb-10 px-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 mb-16">
-                    <div className="col-span-1 md:col-span-1 lg:col-span-4">
-                        <div className="flex items-center gap-2 mb-6">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-sky-400 flex items-center justify-center font-bold text-white shadow-sm">M</div>
-                            <span className="text-xl font-bold tracking-tight text-slate-900">MINDS</span>
-                        </div>
-                        <p className="text-slate-500 max-w-sm mb-8 leading-relaxed">
-                            Official initiative of the Data Science Department, HITAM. Bridging the gap between academic theory and industry practice.
-                        </p>
-                        <div className="flex gap-4">
-                            <a href="#" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all shadow-sm">
-                                <Linkedin size={18} />
-                            </a>
-                            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-pink-500 hover:border-pink-200 hover:bg-pink-50 transition-all shadow-sm">
-                                <Instagram size={18} />
-                            </a>
-                            <a href="mailto:minds.datascience@hitam.org" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all shadow-sm" title="Email us">
-                                <Mail size={18} />
+                            <a
+                                href="mailto:minds.datascience@hitam.org"
+                                className="w-9 h-9 rounded-[8px] bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-200"
+                                aria-label="Email"
+                            >
+                                <Mail size={16} />
                             </a>
                         </div>
                     </div>
 
-                    <div className="col-span-1 md:col-span-1 lg:col-span-5 lg:pl-10">
-                        <h4 className="text-slate-900 font-semibold mb-6 flex items-center gap-2">
-                            <Phone size={18} className="text-indigo-500" />
-                            Direct Contacts
-                        </h4>
+                    {/* Nav links column */}
+                    <div className="md:col-span-2">
+                        <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-slate-500 mb-5">Pages</p>
+                        <ul className="space-y-3">
+                            {navLinks.map(l => (
+                                <li key={l.label}>
+                                    <Link
+                                        to={l.to}
+                                        className="text-sm text-slate-400 hover:text-white transition-colors duration-200 font-medium"
+                                    >
+                                        {l.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Contacts column */}
+                    <div className="md:col-span-3">
+                        <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-slate-500 mb-5 flex items-center gap-2">
+                            <Phone size={11} /> Contacts
+                        </p>
                         <ul className="space-y-5">
-                            <li className="flex flex-col">
-                                <span className="text-slate-800 font-bold mb-0.5">Ms. Richa Tiwari</span>
-                                <span className="text-sky-600 font-semibold text-xs uppercase tracking-wider">Faculty Facilitator</span>
-                                <a href="tel:+919131539794" className="text-slate-500 text-sm mt-1 hover:text-indigo-600 transition-colors">+91 91315 39794</a>
+                            <li>
+                                <span className="text-white text-sm font-semibold block">Ms. Richa Tiwari</span>
+                                <span className="text-slate-500 text-xs block mb-1">Faculty Facilitator</span>
+                                <a href="tel:+919131539794" className="text-slate-400 text-sm hover:text-white transition-colors">+91 91315 39794</a>
                             </li>
                             <li className="grid grid-cols-2 gap-4">
-                                <div className="flex flex-col">
-                                    <span className="text-slate-800 font-bold mb-0.5">Apurba Nandi</span>
-                                    <a href="tel:+918179717349" className="text-slate-500 text-sm mt-1 hover:text-indigo-600 transition-colors">+91 81797 17349</a>
+                                <div>
+                                    <span className="text-white text-sm font-semibold block">Apurba Nandi</span>
+                                    <a href="tel:+918179717349" className="text-slate-400 text-sm hover:text-white transition-colors">+91 81797 17349</a>
                                 </div>
-                                <div className="flex flex-col">
-                                    <span className="text-slate-800 font-bold mb-0.5">Sai Prasanna</span>
-                                    <a href="tel:+918106110146" className="text-slate-500 text-sm mt-1 hover:text-indigo-600 transition-colors">+91 81061 10146</a>
+                                <div>
+                                    <span className="text-white text-sm font-semibold block">Sai Prasanna</span>
+                                    <a href="tel:+918106110146" className="text-slate-400 text-sm hover:text-white transition-colors">+91 81061 10146</a>
                                 </div>
                             </li>
                         </ul>
                     </div>
 
-                    <div className="col-span-1 md:col-span-2 lg:col-span-3">
-                        <h4 className="text-slate-900 font-semibold mb-6 flex items-center gap-2">
-                            <MapPin size={18} className="text-indigo-500" />
-                            Locate Us
-                        </h4>
-                        <address className="text-slate-500 not-italic leading-loose font-medium">
-                            Room No: T19 <br />
-                            ET Staff Room <br />
-                            Department of Data Science <br />
-                            HITAM
+                    {/* Location column */}
+                    <div className="md:col-span-2">
+                        <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-slate-500 mb-5 flex items-center gap-2">
+                            <MapPin size={11} /> Location
+                        </p>
+                        <address className="not-italic text-slate-400 text-sm leading-relaxed">
+                            Room No: T19<br />
+                            ET Staff Room<br />
+                            Dept. of Data Science<br />
+                            HITAM, Hyderabad
                         </address>
                     </div>
                 </div>
 
-                <div className="pt-8 border-t border-slate-200 mt-12 flex flex-col items-center justify-center gap-4">
-                    <p className="text-sm text-slate-500">
-                        © {new Date().getFullYear()} MINDS Club. All rights reserved.
+                {/* ── Instagram follow strip ── */}
+                <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="py-10 flex flex-col sm:flex-row items-center justify-between gap-8 border-b border-slate-800"
+                >
+                    {/* QR code */}
+                    <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="group shrink-0">
+                        <div className="w-28 h-28 rounded-[12px] overflow-hidden bg-white p-2 ring-1 ring-white/10 group-hover:-translate-y-0.5 transition-transform duration-200">
+                            <img
+                                src="/instagram-qr.png"
+                                alt="Scan to follow MINDS on Instagram"
+                                className="w-full h-full object-contain"
+                                onError={e => { e.target.parentElement.innerHTML = '<p class="text-slate-400 text-[9px] text-center h-full flex items-center justify-center p-2">QR Coming Soon</p>'; }}
+                            />
+                        </div>
+                        <p className="text-slate-600 text-[10px] mt-2 text-center">Scan to follow</p>
+                    </a>
+
+                    {/* Divider */}
+                    <div className="hidden sm:flex flex-col items-center gap-1 shrink-0">
+                        <div className="h-10 w-px bg-slate-800" />
+                        <span className="text-slate-600 text-[10px] font-medium">or</span>
+                        <div className="h-10 w-px bg-slate-800" />
+                    </div>
+
+                    {/* Copy + button */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 flex-1">
+                        <div>
+                            <p className="text-white font-semibold text-base mb-1">Follow us on Instagram</p>
+                            <p className="text-slate-500 text-sm">Updates, announcements, and behind-the-scenes.</p>
+                        </div>
+                        <a
+                            href={INSTAGRAM_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group inline-flex items-center gap-3 px-5 py-2.5 rounded-[10px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-200 shrink-0"
+                        >
+                            <span className="w-7 h-7 rounded-[7px] bg-gradient-to-br from-pink-500 via-rose-500 to-orange-400 flex items-center justify-center">
+                                <Instagram size={14} className="text-white" />
+                            </span>
+                            <span className="text-slate-300 text-sm font-medium group-hover:text-white transition-colors">@minds_datascience</span>
+                            <ArrowUpRight size={13} className="text-slate-500 group-hover:text-slate-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                        </a>
+                    </div>
+                </motion.div>
+
+                {/* ── Bottom bar ── */}
+                <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p className="text-slate-600 text-xs">
+                        © {new Date().getFullYear()} MINDS — Data Science Department, HITAM. All rights reserved.
                     </p>
+                    <p className="text-slate-700 text-xs">Chapter 01 · Hyderabad</p>
                 </div>
             </div>
         </footer>

@@ -22,7 +22,7 @@ const testimonials = [
         author: "Elena Rodriguez",
         role: "CTO, FinTech Global",
         initials: "ER",
-        color: "from-indigo-400 to-blue-500"
+        color: "from-slate-600 to-blue-500"
     }
 ];
 

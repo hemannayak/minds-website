@@ -33,7 +33,7 @@ const Welcome = () => {
     return (
         <PageTransition>
             <div className="min-h-screen pt-32 pb-24 px-6 flex flex-col items-center justify-center bg-slate-50 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/50 to-white z-0 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-b from-slate-50/50 to-white z-0 pointer-events-none" />
 
                 <div className="relative z-10 w-full max-w-xl flex flex-col gap-6">
 
@@ -127,7 +127,7 @@ const Welcome = () => {
                     <div className="text-center">
                         <Link
                             to="/"
-                            className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors duration-300"
+                            className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 hover:text-slate-800 transition-colors duration-300"
                         >
                             Return to Homepage <ArrowRight size={16} />
                         </Link>

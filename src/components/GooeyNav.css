@@ -1,12 +1,12 @@
 /* ─── Project colour tokens for GooeyNav particles ─────────────────────────
-   colour-1 → indigo-500   colour-2 → sky-400
+   colour-1 → slate-800   colour-2 → slate-600
    colour-3 → violet-500   colour-4 → slate-400
    ─────────────────────────────────────────────────────────────────────────── */
 .gooey-nav-container {
   --gooey-color-1: #6366f1;
-  /* indigo-500  */
+  /* slate-800  */
   --gooey-color-2: #38bdf8;
-  /* sky-400     */
+  /* slate-600     */
   --gooey-color-3: #8b5cf6;
   /* violet-500  */
   --gooey-color-4: #94a3b8;
@@ -81,7 +81,7 @@
 
 .gooey-nav-container nav ul li:hover {
   color: #4f46e5;
-  /* indigo-600 */
+  /* slate-900 */
 }
 
 .gooey-nav-container nav ul li:focus-within:has(:focus-visible) {

@@ -1,362 +1,270 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Briefcase, Target, Users, ArrowRight } from 'lucide-react';
-import LaunchReveal from '../components/LaunchReveal';
-import Popup from '../components/Popup';
-import LightRays from '../components/LightRays';
+
 import { fadeInUp, staggerContainer } from '../lib/animations';
-
-// Target Launch Date: 27 February 2026, 4:15 PM IST
-const LAUNCH_DATE = new Date("2026-02-27T16:15:00+05:30").getTime();
-
-// ─── Launch Config ───────────────────────────────────────────────
-// Set showReveal to true ONLY on the day of official launch.
-// This gates the logo pop-in and full-form expansion from appearing.
-const LAUNCH_CONFIG = {
-    showReveal: false, // ← flip to true on launch day
-};
-
-const CountdownUnit = ({ value, label }) => {
-    return (
-        <div className="flex flex-col items-center">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-white/5 rounded-xl flex items-center justify-center border border-white/10 relative shadow-lg group">
-                <div className="absolute inset-0 bg-indigo-500/10 rounded-xl blur-md group-hover:bg-indigo-500/20 transition-all duration-300"></div>
-                <AnimatePresence mode="popLayout">
-                    <motion.span
-                        key={value}
-                        initial={{ y: 15, opacity: 0, scale: 0.8 }}
-                        animate={{ y: 0, opacity: 1, scale: 1 }}
-                        exit={{ y: -15, opacity: 0, scale: 0.8 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                        className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-indigo-300 to-sky-400 relative z-10 font-mono tracking-tighter"
-                    >
-                        {value.toString().padStart(2, '0')}
-                    </motion.span>
-                </AnimatePresence>
-            </div>
-            <span className="text-slate-500 text-xs sm:text-sm mt-3 uppercase tracking-widest font-semibold">{label}</span>
-        </div>
-    );
-};
-
-const LaunchCountdown = ({ onComplete }) => {
-    const [timeLeft, setTimeLeft] = useState({
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0
-    });
-
-    useEffect(() => {
-        const calculateTimeLeft = () => {
-            const difference = LAUNCH_DATE - new Date().getTime();
-
-            if (difference <= 0) {
-                onComplete();
-                return;
-            }
-
-            setTimeLeft({
-                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                minutes: Math.floor((difference / 1000 / 60) % 60),
-                seconds: Math.floor((difference / 1000) % 60)
-            });
-        };
-
-        calculateTimeLeft(); // initial calc
-        const timer = setInterval(calculateTimeLeft, 1000);
-
-        return () => clearInterval(timer);
-    }, [onComplete]);
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="flex flex-col items-center mt-12"
-        >
-            <p className="text-slate-500 text-sm tracking-[0.2em] uppercase mb-6 font-semibold">Launching In</p>
-            <div className="flex gap-4 sm:gap-6">
-                <CountdownUnit value={timeLeft.days} label="Days" />
-                <span className="text-2xl sm:text-4xl text-slate-600 font-light mt-4 sm:mt-5">:</span>
-                <CountdownUnit value={timeLeft.hours} label="Hours" />
-                <span className="text-2xl sm:text-4xl text-slate-600 font-light mt-4 sm:mt-5">:</span>
-                <CountdownUnit value={timeLeft.minutes} label="Mins" />
-                <span className="text-2xl sm:text-4xl text-slate-600 font-light mt-4 sm:mt-5">:</span>
-                <CountdownUnit value={timeLeft.seconds} label="Secs" />
-            </div>
-        </motion.div>
-    );
-};
+import HeroMesh from '../components/HeroMesh';
 
 const Home = () => {
-    const [isLaunched, setIsLaunched] = useState(false);
-    const [showRevealPanel, setShowRevealPanel] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
-    const [isHeroHovered, setIsHeroHovered] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
-        if (new Date().getTime() >= LAUNCH_DATE) {
-            setIsLaunched(true);
-            // Only fire reveal panel once (not on every refresh after launch)
-            const hasRevealed = localStorage.getItem('minds_launched');
-            if (!hasRevealed) {
-                setShowRevealPanel(true);
-                localStorage.setItem('minds_launched', '1');
-            }
-        }
-    }, []);
-
-    const handleCountdownComplete = useCallback(() => {
-        setIsLaunched(true);
-        setShowRevealPanel(true);
-        localStorage.setItem('minds_launched', '1');
-    }, []);
-
-    const handleRevealComplete = useCallback(() => {
-        setShowRevealPanel(false);
-    }, []);
-
-    // ── Hero ref (for hover tracking) ────────────────────────────
-    const heroRef = useRef(null);
-
-    const handleMouseMove = useCallback(() => {
-        // Mouse position is tracked directly inside the LightRays shader
     }, []);
 
     if (!isMounted) return null;
 
     return (
         <main className="w-full">
-            {/* Launch reveal panel — fires once when countdown hits zero */}
-            <LaunchReveal show={showRevealPanel} onComplete={handleRevealComplete} />
-
-            {/* Pre-launch popup teaser — shown only before launch */}
-            {!isLaunched && <Popup />}
-
             <section
-                ref={heroRef}
-                onMouseMove={handleMouseMove}
-                onMouseEnter={() => setIsHeroHovered(true)}
-                onMouseLeave={() => setIsHeroHovered(false)}
-                className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden px-6 flex items-center justify-center bg-slate-950"
+                className="relative min-h-[90vh] pt-32 pb-20 overflow-hidden px-6 flex items-center justify-center bg-white"
             >
-                {/* ── LightRays WebGL animation ── fills entire hero background */}
-                <LightRays
-                    raysOrigin="top-center"
-                    raysColor="#a5b4fc"
-                    raysSpeed={1}
-                    lightSpread={0.6}
-                    rayLength={2.5}
-                    fadeDistance={1.2}
-                    saturation={1.8}
-                    followMouse={true}
-                    mouseInfluence={0.15}
-                    pulsating={false}
-                    noiseAmount={0.05}
-                    distortion={0}
-                />
+                {/* ── PART 1: DATA GRID BACKGROUND ── */}
+                <div
+                    className="absolute inset-0 z-0 pointer-events-none overflow-hidden origin-top"
+                >
+                    <div
+                        className="absolute w-full h-[200%] -top-[50%] will-change-transform"
+                        style={{
+                            backgroundImage: `
+                                linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+                                linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px)
+                            `,
+                            backgroundSize: '40px 40px',
+                            animation: 'gridDrift 40s linear infinite'
+                        }}
+                    ></div>
+                    {/* Fades to blend into background */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white z-0 pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,white_100%)] z-0 pointer-events-none"></div>
+                </div>
 
-                {/* Subtle hover tint — slight indigo warmth when cursor enters */}
-                <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    aria-hidden
-                    animate={{ opacity: isHeroHovered ? 1 : 0 }}
-                    transition={{ duration: 0.7, ease: 'easeInOut' }}
-                    style={{
-                        zIndex: 1,
-                        background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(99,102,241,0.07) 0%, rgba(14,165,233,0.04) 50%, transparent 70%)'
-                    }}
-                />
+                <style>{`
+                    @keyframes gridDrift {
+                        0% { transform: translateY(0px); }
+                        100% { transform: translateY(40px); }
+                    }
+                `}</style>
 
-                <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10 w-full h-full justify-center">
+                {/* ── PART 3: HERO STRUCTURE ── */}
+                <div className="max-w-7xl mx-auto flex flex-col relative z-10 w-full h-full justify-center">
 
-                    {/* Pre-Launch Content: Always visible, but might move slightly */}
-                    <motion.div layout className="flex flex-col items-center z-20">
+                    {/* Top: Centered Headline */}
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="text-center w-full mb-12 sm:mb-16 mt-8"
+                    >
                         <motion.div
-                            initial={{ opacity: 0, y: -20 }}
+                            initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8 }}
-                            className="inline-flex items-center px-4 py-2 rounded-full bg-white/8 border border-white/10 text-sm font-semibold text-indigo-300 mb-8 backdrop-blur-sm shadow-sm"
+                            transition={{ duration: 0.8, delay: 0.1 }}
+                            className="inline-flex items-center px-4 py-2 rounded-full bg-slate-50 border border-slate-200 text-sm font-semibold text-slate-900 mb-6 shadow-sm ring-1 ring-slate-900/5"
                         >
                             <span className="relative flex h-2 w-2 mr-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-600 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-800"></span>
                             </span>
-                            A New Chapter Begins Soon
+                            Official Club of Data Science
                         </motion.div>
 
                         <motion.h1
-                            layout
-                            className={`font-black tracking-tighter text-white transition-all duration-1000
-                    ${isLaunched ? 'text-6xl md:text-8xl lg:text-9xl mb-4' : 'text-7xl md:text-[8rem] lg:text-[10rem] mb-2'}`
-                            }
+                            className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-[-0.03em] mb-4 leading-none cursor-default select-none"
+                            style={{ color: '#0f172a' }}
+                            whileHover={{ color: '#94a3b8' }}
+                            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                         >
                             MINDS
                         </motion.h1>
 
                         <motion.p
-                            layout
-                            className="text-lg md:text-xl text-slate-400 font-medium tracking-wide max-w-2xl"
+                            className="text-lg md:text-xl text-slate-500 font-medium tracking-wide max-w-2xl mx-auto"
                         >
-                            Official Club of the Data Science Department, HITAM
+                            Modern Innovation · Next-Gen Data-Science Society
                         </motion.p>
                     </motion.div>
 
-                    {/* Dynamic Launch Area */}
-                    <div className="mt-8 relative w-full flex justify-center min-h-[250px] items-center">
-                        <AnimatePresence mode="wait">
-                            {!isLaunched ? (
-                                <LaunchCountdown key="countdown" onComplete={handleCountdownComplete} />
-                            ) : LAUNCH_CONFIG.showReveal ? (
-                                /* ── OFFICIAL LAUNCH REVEAL ── flip LAUNCH_CONFIG.showReveal to true to enable ── */
-                                <motion.div
-                                    key="reveal"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ duration: 1.2, delay: 0.2 }}
-                                    className="flex flex-col items-center"
-                                >
-                                    {/* Logo pop-in */}
-                                    <motion.div
-                                        initial={{ scale: 0.8, opacity: 0, y: 30 }}
-                                        animate={{ scale: 1, opacity: 1, y: 0 }}
-                                        transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.5 }}
-                                        className="relative mb-10 w-32 h-32 md:w-40 md:h-40"
-                                    >
-                                        <div className="absolute inset-0 bg-indigo-500/10 rounded-full blur-2xl animate-pulse duration-3000"></div>
-                                        <div className="absolute inset-0 bg-gradient-to-tr from-indigo-400 to-sky-400 rounded-2xl shadow-xl flex items-center justify-center p-[2px]">
-                                            <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center relative overflow-hidden">
-                                                <span className="text-6xl md:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-br from-indigo-600 to-sky-500 relative z-10">
-                                                    M
-                                                </span>
-                                                <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-500/10 rounded-full blur-xl mix-blend-multiply"></div>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                    {/* Full form */}
-                                    <div className="flex flex-wrap justify-center gap-x-2 gap-y-1 max-w-3xl">
-                                        {["Modern", "Innovation", "for", "Next-Gen", "Data-Science", "Society"].map((word, i) => (
-                                            <motion.span
-                                                key={i}
-                                                initial={{ opacity: 0, y: 10, filter: "blur(5px)" }}
-                                                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                                                transition={{ duration: 0.8, delay: 1 + (i * 0.15), ease: "easeOut" }}
-                                                className={`text-xl md:text-3xl lg:text-4xl font-bold tracking-tight ${["Modern", "Innovation", "Next-Gen", "Data-Science", "Society"].includes(word)
-                                                    ? 'text-slate-800'
-                                                    : 'text-slate-400'
-                                                    }`}
-                                            >
-                                                {word}
-                                            </motion.span>
-                                        ))}
-                                    </div>
-                                </motion.div>
-                            ) : (
-                                /* ── PRE-REVEAL PLACEHOLDER (shown after countdown, before official launch) ── */
-                                <motion.div
-                                    key="pre-reveal"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.8 }}
-                                    className="flex flex-col items-center gap-4"
-                                >
-                                    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 shadow-sm text-slate-300 text-sm font-semibold">
-                                        <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
-                                        The official reveal is coming soon
-                                    </div>
-                                    <p className="text-slate-600 text-sm">Stay tuned for the big announcement.</p>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                    {/* Below: Split Layout */}
+                    <div className="flex flex-col-reverse md:flex-row items-center w-full min-h-[300px]">
+
+                        {/* Left: Subtext & CTAs */}
+                        <motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left pr-0 md:pr-10 z-10 mt-8 md:mt-0"
+                        >
+                            <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-md font-normal">
+                                Join a thriving community of builders creating the next generation of data-driven solutions. Participate in industry sessions, practical workshops, and datathons.
+                            </p>
+
+                            <div className="flex flex-col sm:flex-row gap-3 items-center w-full justify-center md:justify-start">
+                                <Link
+                                    to="/join"
+                                    className="px-6 py-3 rounded-[10px] font-medium text-sm text-white bg-slate-900 hover:bg-slate-800 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] flex items-center justify-center gap-2 group"
+                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08),0 4px 12px rgba(15,23,42,0.15)' }}>
+                                    Join the Club
+                                    <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                                </Link>
+                                <Link
+                                    to="/events"
+                                    className="px-6 py-3 rounded-[10px] font-medium text-sm text-slate-700 bg-white ring-1 ring-slate-300 hover:bg-slate-50 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] flex items-center justify-center"
+                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}>
+                                    Explore Events
+                                </Link>
+                            </div>
+                        </motion.div>
+
+                        {/* Right: Wireframe Mesh (PART 2) */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                            className="w-full md:w-1/2 flex justify-center items-center relative min-h-[250px] md:min-h-[400px] pointer-events-none mt-10 md:mt-16"
+                        >
+                            <HeroMesh />
+                        </motion.div>
+
                     </div>
                 </div>
             </section>
 
-            {/* Intro & Features Section */}
-            <section className="py-24 px-6 bg-white relative z-10 border-t border-slate-100">
+            {/* ── Built for Builders ── */}
+            <section className="py-28 px-6 bg-white relative z-10 border-t border-slate-100">
                 <div className="max-w-7xl mx-auto">
+
+                    {/* Asymmetric header: left-aligned text, right-aligned stat cluster */}
                     <motion.div
                         initial="hidden"
                         whileInView="show"
-                        viewport={{ once: true, margin: "-100px" }}
-                        variants={fadeInUp}
-                        className="text-center max-w-3xl mx-auto mb-20"
+                        viewport={{ once: true, margin: "-80px" }}
+                        variants={staggerContainer}
+                        className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-20"
                     >
-                        <h2 className="text-3xl md:text-5xl font-black mb-6 text-slate-800 tracking-tight">
-                            More Than Just a <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-sky-500">Club</span>
-                        </h2>
-                        <p className="text-lg md:text-xl text-slate-500 leading-relaxed">
-                            MINDS is the official initiative of the Data Science Department at HITAM.
-                            Built after 1 year of planning and structuring. Aimed at providing industry exposure,
-                            expert sessions, workshops, datathons and student growth opportunities.
-                        </p>
+                        <motion.div variants={fadeInUp} className="max-w-xl">
+                            <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-900 mb-4">What we do</p>
+                            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 tracking-[-0.02em] leading-[1.1]">
+                                Open to <span className="text-slate-900">Everyone.</span>
+                            </h2>
+                            <p className="mt-5 text-lg text-slate-600 leading-relaxed max-w-md">
+                                No matter your department — if data science is where you want to go, MINDS is where you start. We welcome students from every discipline who want to learn, build, and grow in the world of data.
+                            </p>
+                        </motion.div>
+
+                        {/* Stat row */}
+                        <motion.div variants={fadeInUp} className="flex gap-10 shrink-0">
+                            {[
+                                { value: 'Ch.01', label: 'Chapter 01 — Just Launched' },
+                                { value: 'All', label: 'Departments Welcome' },
+                                { value: '∞', label: 'Paths in Data Science' },
+                            ].map((stat) => (
+                                <div key={stat.label} className="flex flex-col">
+                                    <span className="text-4xl font-black text-slate-900 tracking-tighter leading-none">{stat.value}</span>
+                                    <span className="text-xs text-slate-500 mt-1.5 font-medium max-w-[7rem] leading-snug">{stat.label}</span>
+                                </div>
+                            ))}
+                        </motion.div>
                     </motion.div>
 
+                    {/* Staggered 2+2 grid — intentionally asymmetric padding */}
                     <motion.div
                         initial="hidden"
                         whileInView="show"
-                        viewport={{ once: true, margin: "-100px" }}
+                        viewport={{ once: true, margin: "-80px" }}
                         variants={staggerContainer}
-                        className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
                     >
-                        <motion.div variants={fadeInUp} className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group">
-                            <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                                <Briefcase size={28} strokeWidth={2} />
+                        {/* Card 1 — taller on desktop */}
+                        <motion.div
+                            variants={fadeInUp}
+                            className="lg:col-span-2 bg-white rounded-[14px] ring-1 ring-slate-900/5 p-8 transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] group flex flex-col gap-4"
+                            style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
+                        >
+                            <div className="w-10 h-10 bg-slate-50 text-slate-900 rounded-[10px] flex items-center justify-center border border-slate-100 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                                <Briefcase size={19} strokeWidth={2} />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-3">Industry Exposure</h3>
-                            <p className="text-slate-500 leading-relaxed">Direct interaction with industry leaders, tech companies, and real-world case studies to bridge the academic gap.</p>
+                            <div>
+                                <h3 className="text-lg font-semibold text-slate-900 mb-2 tracking-tight">Industry Sessions</h3>
+                                <p className="text-slate-600 text-sm leading-relaxed">Real conversations with professionals — not textbook theory. We bring the industry to your campus so you understand what the job actually looks like.</p>
+                            </div>
                         </motion.div>
 
-                        <motion.div variants={fadeInUp} className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group">
-                            <div className="w-14 h-14 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-sky-500 group-hover:text-white transition-colors">
-                                <Target size={28} strokeWidth={2} />
+                        {/* Card 2 — narrow */}
+                        <motion.div
+                            variants={fadeInUp}
+                            className="bg-slate-900 rounded-[14px] ring-1 ring-slate-900/5 p-8 transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] group flex flex-col gap-4"
+                            style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
+                        >
+                            <div className="w-10 h-10 bg-white/10 text-white rounded-[10px] flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                                <Target size={19} strokeWidth={2} />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-3">Real-World Learning</h3>
-                            <p className="text-slate-500 leading-relaxed">Practical workshops, datathons, and hands-on projects designed to build skills that matter in the workplace.</p>
+                            <div>
+                                <h3 className="text-base font-semibold text-white mb-2 tracking-tight">Datathons</h3>
+                                <p className="text-slate-400 text-sm leading-relaxed">Compete. Fail fast. Learn faster. High-pressure, high-reward challenges built to push your limits.</p>
+                            </div>
                         </motion.div>
 
-                        <motion.div variants={fadeInUp} className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group">
-                            <div className="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                                <Users size={28} strokeWidth={2} />
+                        {/* Card 3 — narrow */}
+                        <motion.div
+                            variants={fadeInUp}
+                            className="bg-white rounded-[14px] ring-1 ring-slate-900/5 p-8 transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] group flex flex-col gap-4"
+                            style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
+                        >
+                            <div className="w-10 h-10 bg-slate-50 text-slate-900 rounded-[10px] flex items-center justify-center border border-slate-100 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                                <Users size={19} strokeWidth={2} />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-3">Innovation & Collaboration</h3>
-                            <p className="text-slate-500 leading-relaxed">A thriving community of like-minded peers focused on building the next generation of data-driven solutions.</p>
+                            <div>
+                                <h3 className="text-base font-semibold text-slate-900 mb-2 tracking-tight">Workshops</h3>
+                                <p className="text-slate-600 text-sm leading-relaxed">Hands-on. Practical. Directly applicable. No filler — just skills you can use from day one.</p>
+                            </div>
                         </motion.div>
                     </motion.div>
                 </div>
             </section>
 
-            {/* CTA Section */}
+            {/* ── Where Learning Meets Doing — CTA ── */}
             <section className="py-24 px-6 bg-slate-50 relative z-10 border-t border-slate-100">
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.6 }}
-                    className="max-w-4xl mx-auto bg-white border border-slate-200 rounded-[2.5rem] p-10 md:p-16 text-center shadow-lg relative overflow-hidden"
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                    className="max-w-4xl mx-auto"
                 >
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-sky-50 rounded-full blur-[80px] -ml-32 -mb-32 pointer-events-none"></div>
+                    {/* Two-column: left copy, right buttons */}
+                    <div className="bg-white rounded-[14px] ring-1 ring-slate-900/5 p-10 md:p-14 relative overflow-hidden flex flex-col md:flex-row md:items-center gap-10"
+                        style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}>
 
-                    <h2 className="text-3xl md:text-4xl font-black text-slate-800 mb-6 relative z-10">Ready to Join the Revolution?</h2>
-                    <p className="text-lg text-slate-500 mb-10 max-w-2xl mx-auto relative z-10">
-                        Explore our roadmap or see what's happening next in our upcoming events.
-                    </p>
+                        {/* Teal left accent bar */}
+                        <div className="absolute left-0 inset-y-0 w-[3px] bg-slate-900 rounded-full" />
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
-                        <Link to="/journey" className="px-8 py-4 rounded-full font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                            Explore Journey
-                            <ArrowRight size={18} strokeWidth={2.5} />
-                        </Link>
-                        <Link to="/events" className="px-8 py-4 rounded-full font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 transition-all flex items-center justify-center gap-2">
-                            View Events
-                        </Link>
+                        <div className="flex-1 pl-4">
+                            <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-900 mb-3">Where Learning Meets Doing</p>
+                            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-[-0.02em] mb-3">
+                                Your journey starts here.
+                            </h2>
+                            <p className="text-slate-600 leading-relaxed text-sm max-w-sm">
+                                See the roadmap that shaped MINDS — or jump straight into our upcoming events.
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col gap-3 shrink-0 md:items-end">
+                            <Link
+                                to="/journey"
+                                className="px-6 py-3 rounded-[10px] font-medium text-sm text-white bg-slate-900 hover:bg-slate-800 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] flex items-center justify-center gap-2 group/btn w-full md:w-auto"
+                                style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08),0 4px 12px rgba(15,23,42,0.15)' }}>
+                                Explore Journey
+                                <ArrowRight size={15} strokeWidth={2} className="group-hover/btn:translate-x-0.5 transition-transform duration-200" />
+                            </Link>
+                            <Link
+                                to="/events"
+                                className="px-6 py-3 rounded-[10px] font-medium text-sm text-slate-700 bg-white ring-1 ring-slate-300 hover:bg-slate-50 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] flex items-center justify-center w-full md:w-auto"
+                                style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}>
+                                View Events
+                            </Link>
+                        </div>
                     </div>
                 </motion.div>
             </section>

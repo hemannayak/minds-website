@@ -1,250 +1,265 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-/* ─────────────────────────────── Data ─────────────────────────── */
-
+/* ── Data ── */
 const leadership = [
     {
         name: 'Dr. David Raju Kolluri',
         role: 'Head of Department',
-        dept: 'Data Science',
-        initials: 'KR',
-        gradient: 'from-blue-500 to-indigo-600',
-        iconBg: 'bg-blue-50',
-        iconText: 'text-blue-600',
+        dept: 'Data Science, HITAM',
+        initials: 'DK',
+        tag: 'HOD',
     },
     {
         name: 'Mr. Bhaskar Das',
         role: 'Program Head',
         dept: 'MINDS Tech Initiative',
         initials: 'BD',
-        gradient: 'from-indigo-500 to-violet-600',
-        iconBg: 'bg-indigo-50',
-        iconText: 'text-indigo-600',
+        tag: 'Program Head',
     },
     {
         name: 'Ms. Richa Tiwari',
         role: 'Faculty Facilitator',
         dept: 'MINDS Club',
         initials: 'RT',
-        gradient: 'from-emerald-500 to-teal-600',
-        iconBg: 'bg-emerald-50',
-        iconText: 'text-emerald-600',
+        tag: 'Facilitator',
     },
 ];
 
 const teams = [
     {
-        label: 'Registration Team',
-        accentBg: 'bg-indigo-50',
-        accentText: 'text-indigo-600',
-        accentBorder: 'border-indigo-100',
-        gradient: 'from-indigo-500 to-sky-500',
-        lead: { name: 'Hemanth Nayak', initials: 'HN' },
+        label: 'Registration',
+        lead: 'Hemanth Nayak',
         members: ['Deepnitha', 'Siddhartha Varma', 'Goutham'],
+        dark: false,
     },
     {
-        label: 'Logistics Team',
-        accentBg: 'bg-amber-50',
-        accentText: 'text-amber-600',
-        accentBorder: 'border-amber-100',
-        gradient: 'from-amber-500 to-orange-500',
-        lead: { name: 'Apurba Nandi', initials: 'AN' },
+        label: 'Logistics',
+        lead: 'Apurba Nandi',
         members: ['Sohan', 'Charlson', 'Dhanudeep', 'Akanksha', 'Bhuvana'],
+        dark: true,
     },
     {
         label: 'PR & Media',
-        accentBg: 'bg-pink-50',
-        accentText: 'text-pink-600',
-        accentBorder: 'border-pink-100',
-        gradient: 'from-pink-500 to-purple-500',
-        lead: { name: 'Sai Prasanna', initials: 'SP' },
+        lead: 'Sai Prasanna',
         members: ['Sarika', 'Nootan', 'Vikas', 'Mourya', 'Keerthana', 'Harshitha', 'Sindhu', 'Karthik', 'Lakshmi'],
+        dark: false,
     },
 ];
 
-/* helpers */
 const initials = (name) =>
     name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
 
-/* ──────────────────────────── Faculty Card ────────────────────── */
-
-const FacultyCard = ({ member }) => (
-    <motion.div
-        variants={fadeInUp}
-        className="group relative bg-white border border-slate-100 rounded-3xl p-8 flex flex-col items-center text-center hover:-translate-y-2 hover:shadow-xl hover:border-indigo-100 transition-all duration-300"
-    >
-        {/* hover glow */}
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-indigo-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-        {/* Avatar */}
-        <div className={`relative w-20 h-20 rounded-2xl bg-gradient-to-br ${member.gradient} flex items-center justify-center mb-6 shadow-lg`}>
-            <span className="text-2xl font-black text-white tracking-tight">{member.initials}</span>
-        </div>
-
-        <h3 className="text-xl font-bold text-slate-800 mb-1.5 group-hover:text-indigo-600 transition-colors leading-snug">
-            {member.name}
-        </h3>
-        <p className={`text-xs font-bold uppercase tracking-widest ${member.iconText} mb-1`}>{member.role}</p>
-        <p className="text-slate-400 text-sm">{member.dept}</p>
-    </motion.div>
-);
-
-/* ──────────────────────────── Organising Card ─────────────────── */
-
-const OrganisingCard = ({ team }) => (
-    <motion.div
-        variants={fadeInUp}
-        className="group bg-white border border-slate-100 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-xl hover:border-slate-200 transition-all duration-300 flex flex-col"
-    >
-        {/* Category badge */}
-        <div className={`inline-flex items-center self-start px-3 py-1 rounded-full ${team.accentBg} ${team.accentBorder} border ${team.accentText} text-xs font-bold uppercase tracking-widest mb-7`}>
-            {team.label}
-        </div>
-
-        {/* Lead */}
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 mb-2">Lead</p>
-        <div className="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3 mb-6">
-            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${team.gradient} flex items-center justify-center shadow`}>
-                <span className="text-xs font-black text-white">{team.lead.initials}</span>
-            </div>
-            <div>
-                <p className="text-slate-800 font-bold text-sm leading-none mb-0.5">{team.lead.name}</p>
-                <p className={`text-xs font-semibold ${team.accentText}`}>{team.label} Coordinator</p>
-            </div>
-        </div>
-
-        {/* Members */}
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 mb-3">Members</p>
-        <div className="grid grid-cols-2 gap-2 mt-auto">
-            {team.members.map((name) => (
-                <div
-                    key={name}
-                    className="flex items-center gap-2.5 bg-slate-50 rounded-xl px-3 py-2.5 hover:bg-slate-100 transition-colors"
-                >
-                    <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${team.gradient} flex items-center justify-center shrink-0`}>
-                        <span className="text-[10px] font-bold text-white">{initials(name)}</span>
-                    </div>
-                    <span className="text-slate-600 text-sm font-medium truncate">{name}</span>
-                </div>
-            ))}
-        </div>
-    </motion.div>
-);
-
-/* ─────────────────────────────── Page ─────────────────────────── */
-
+/* ── Team page ── */
 const Team = () => (
     <PageTransition>
-        <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto">
+        <div className="w-full">
 
-            {/* Page heading — matches About / Events style */}
-            <div className="text-center max-w-3xl mx-auto mb-20">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight text-slate-900 leading-tight pb-1">
-                    Meet the{' '}
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-sky-500">
-                        Minds
-                    </span>{' '}
-                    Behind MINDS
-                </h1>
-                <p className="text-lg text-slate-500 leading-relaxed">
-                    Faculty leadership and a dedicated student organizing team working tirelessly
-                    to deliver an impactful event experience.
-                </p>
-            </div>
+            {/* ── Page Hero ── */}
+            <section className="pt-36 pb-24 px-6 bg-white grid-texture border-b border-slate-100">
+                <div className="max-w-7xl mx-auto">
+                    <motion.div
+                        initial="hidden"
+                        animate="show"
+                        variants={staggerContainer}
+                        className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-12"
+                    >
+                        <motion.div variants={fadeInUp} className="max-w-2xl">
+                            <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-5">The Team</p>
+                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 tracking-[-0.02em] leading-[1.05]">
+                                The people<br />
+                                who made it{' '}
+                                <span className="relative inline-block">
+                                    happen.
+                                    <span className="absolute bottom-1 left-0 right-0 h-[3px] bg-slate-900 rounded-full" />
+                                </span>
+                            </h1>
+                        </motion.div>
+                        <motion.div variants={fadeInUp} className="max-w-sm lg:pb-2">
+                            <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                                Faculty who believed in the vision, and students who showed up every day to build it — this is the MINDS team.
+                            </p>
+                            <div className="flex items-center gap-3">
+                                <div className="w-[3px] h-10 bg-slate-900 rounded-full shrink-0" />
+                                <p className="text-sm text-slate-500 font-medium leading-snug">
+                                    3 Faculty · 3 Teams · {teams.reduce((acc, t) => acc + t.members.length + 1, 0)} Student Members
+                                </p>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                </div>
+            </section>
 
             {/* ── Faculty Leadership ── */}
-            <div className="mb-20">
-                <div className="flex items-center gap-4 mb-10">
-                    <div className="h-px bg-slate-200 flex-1" />
-                    <h2 className="text-xs font-bold tracking-[0.2em] uppercase text-slate-400">Faculty Leadership</h2>
-                    <div className="h-px bg-slate-200 flex-1" />
-                </div>
+            <section className="py-24 px-6 bg-slate-50 grid-texture border-b border-slate-100">
+                <div className="max-w-7xl mx-auto">
+                    <motion.div
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, margin: '-80px' }}
+                        variants={staggerContainer}
+                    >
+                        <motion.div variants={fadeInUp} className="mb-14">
+                            <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-4">Faculty</p>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-[-0.02em]">
+                                Leadership that made MINDS official.
+                            </h2>
+                        </motion.div>
 
-                <motion.div
-                    className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, margin: '-80px' }}
-                    variants={staggerContainer}
-                >
-                    {leadership.map((m) => (
-                        <FacultyCard key={m.name} member={m} />
-                    ))}
-                </motion.div>
-            </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            {leadership.map((m, i) => (
+                                <motion.div
+                                    key={m.name}
+                                    variants={fadeInUp}
+                                    className="bg-white rounded-[14px] ring-1 ring-slate-900/5 p-8 flex gap-5 items-start transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] group relative overflow-hidden"
+                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
+                                >
+                                    <div className="absolute left-0 inset-y-0 w-[3px] bg-slate-900 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-            {/* ── Event Organising Team ── */}
-            <div>
-                <div className="flex items-center gap-4 mb-10">
-                    <div className="h-px bg-slate-200 flex-1" />
-                    <h2 className="text-xs font-bold tracking-[0.2em] uppercase text-slate-400">Event Organizing Team</h2>
-                    <div className="h-px bg-slate-200 flex-1" />
-                </div>
+                                    {/* Avatar */}
+                                    <div className="w-12 h-12 rounded-[10px] bg-slate-900 flex items-center justify-center shrink-0 text-white text-sm font-black tracking-tight">
+                                        {m.initials}
+                                    </div>
 
-                <motion.div
-                    className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, margin: '-60px' }}
-                    variants={staggerContainer}
-                >
-                    {teams.map((team) => (
-                        <OrganisingCard key={team.label} team={team} />
-                    ))}
-                </motion.div>
-            </div>
-
-            {/* ── Core Team Recruitment – Coming Soon ── */}
-            <motion.div
-                className="mt-20 max-w-2xl mx-auto"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-            >
-                <div className="relative rounded-3xl p-px bg-gradient-to-br from-indigo-400 via-sky-400 to-purple-400 shadow-lg shadow-indigo-100">
-                    {/* Inner card */}
-                    <div className="relative bg-white rounded-3xl px-10 py-12 text-center overflow-hidden">
-                        {/* Subtle glow blobs */}
-                        <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-50 rounded-full blur-3xl pointer-events-none" />
-                        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-sky-50 rounded-full blur-3xl pointer-events-none" />
-
-                        {/* Icon */}
-                        <div className="relative z-10 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 mb-6 shadow-sm">
-                            <Sparkles size={26} strokeWidth={1.8} />
+                                    <div className="min-w-0">
+                                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 block mb-1">{m.tag}</span>
+                                        <h3 className="text-base font-bold text-slate-900 leading-snug mb-1">{m.name}</h3>
+                                        <p className="text-sm font-medium text-slate-700">{m.role}</p>
+                                        <p className="text-xs text-slate-400 mt-0.5">{m.dept}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
                         </div>
-
-                        {/* Label */}
-                        <p className="relative z-10 text-xs font-bold uppercase tracking-[0.22em] text-indigo-500 mb-3">
-                            Core Team Recruitment
-                        </p>
-
-                        {/* Title */}
-                        <h2 className="relative z-10 text-2xl md:text-3xl font-black text-slate-800 tracking-tight mb-4">
-                            Something exciting is{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-sky-500">
-                                coming soon
-                            </span>
-                        </h2>
-
-                        {/* Message */}
-                        <p className="relative z-10 text-slate-500 leading-relaxed max-w-md mx-auto text-base">
-                            We'll be opening doors for passionate students to be part of the MINDS leadership team.
-                            Stay tuned — your opportunity to shape what's next is on the horizon.
-                        </p>
-
-                        {/* Decorative pill */}
-                        <div className="relative z-10 inline-flex items-center gap-2 mt-8 px-5 py-2 rounded-full bg-slate-50 border border-slate-200 text-slate-400 text-sm font-semibold">
-                            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
-                            Announcement Coming Soon
-                        </div>
-                    </div>
+                    </motion.div>
                 </div>
-            </motion.div>
+            </section>
+
+            {/* ── Core Committee Recruitment Banner ── */}
+            <section className="px-6 py-8 bg-white grid-texture border-b border-slate-100">
+                <div className="max-w-7xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative bg-slate-900 grid-texture-dark rounded-[14px] overflow-hidden"
+                        style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 16px 48px rgba(0,0,0,0.12)' }}
+                    >
+                        {/* Subtle shimmer top line */}
+                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+
+                        <div className="px-8 py-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div className="flex items-start gap-5">
+                                {/* Icon */}
+                                <div className="w-11 h-11 rounded-[10px] bg-white/10 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                                    <Sparkles size={18} className="text-white" />
+                                </div>
+
+                                <div>
+                                    <div className="flex items-center gap-2 mb-1.5">
+                                        <span className="text-[10px] font-bold tracking-[0.16em] uppercase text-slate-500">Next Batch</span>
+                                        <span className="w-1 h-1 rounded-full bg-slate-700" />
+                                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.1em] uppercase text-emerald-400">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                            We're Recruiting
+                                        </span>
+                                    </div>
+                                    <h3 className="text-white font-bold text-lg md:text-xl leading-snug mb-1">
+                                        Core Committee spots are opening up. 🚀
+                                    </h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed max-w-lg">
+                                        Want to run events, lead teams, and actually build something? Applications for the MINDS Core Committee open soon — be first in line.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Right side status */}
+                            <div className="shrink-0 flex flex-col items-start md:items-end gap-2">
+                                <div className="px-4 py-2 rounded-[8px] bg-white/5 border border-white/10 text-center">
+                                    <p className="text-white font-black text-2xl leading-none">B02</p>
+                                    <p className="text-slate-500 text-[10px] font-semibold tracking-wide uppercase mt-0.5">Batch</p>
+                                </div>
+                                <p className="text-slate-500 text-xs">Announcement dropping soon</p>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* ── Organizing Teams ── */}
+            <section className="py-24 px-6 bg-white grid-texture border-b border-slate-100">
+                <div className="max-w-7xl mx-auto">
+                    <motion.div
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, margin: '-80px' }}
+                        variants={staggerContainer}
+                    >
+                        <motion.div variants={fadeInUp} className="mb-14">
+                            <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-4">Student Organizers</p>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-[-0.02em]">
+                                Inauguration Organizing Teams
+                            </h2>
+                        </motion.div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            {teams.map((team, i) => (
+                                <motion.div
+                                    key={team.label}
+                                    variants={fadeInUp}
+                                    className={`rounded-[14px] ring-1 ring-slate-900/5 overflow-hidden flex flex-col transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] ${team.dark ? 'bg-slate-900' : 'bg-white'}`}
+                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
+                                >
+                                    {/* Card header */}
+                                    <div className={`px-7 pt-7 pb-5 border-b ${team.dark ? 'border-white/8' : 'border-slate-100'}`}>
+                                        <span className={`text-[10px] font-bold tracking-[0.16em] uppercase mb-3 block ${team.dark ? 'text-slate-500' : 'text-slate-400'}`}>
+                                            Team
+                                        </span>
+                                        <h3 className={`text-xl font-bold tracking-tight mb-4 ${team.dark ? 'text-white' : 'text-slate-900'}`}>
+                                            {team.label}
+                                        </h3>
+
+                                        {/* Lead */}
+                                        <div className={`flex items-center gap-3 rounded-[10px] px-4 py-3 ${team.dark ? 'bg-white/8 border border-white/10' : 'bg-slate-50 border border-slate-100'}`}>
+                                            <div className={`w-8 h-8 rounded-[8px] flex items-center justify-center text-[11px] font-black shrink-0 ${team.dark ? 'bg-white text-slate-900' : 'bg-slate-900 text-white'}`}>
+                                                {initials(team.lead)}
+                                            </div>
+                                            <div>
+                                                <p className={`text-sm font-bold leading-none mb-0.5 ${team.dark ? 'text-white' : 'text-slate-900'}`}>{team.lead}</p>
+                                                <p className={`text-[11px] ${team.dark ? 'text-slate-500' : 'text-slate-400'}`}>Team Lead</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Members grid */}
+                                    <div className="px-7 py-5 flex-1">
+                                        <p className={`text-[10px] font-bold tracking-[0.14em] uppercase mb-4 ${team.dark ? 'text-slate-600' : 'text-slate-400'}`}>
+                                            {team.members.length} Members
+                                        </p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {team.members.map((name) => (
+                                                <div
+                                                    key={name}
+                                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${team.dark ? 'bg-white/5 border border-white/10 text-slate-300' : 'bg-slate-50 border border-slate-100 text-slate-700'}`}
+                                                >
+                                                    <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${team.dark ? 'bg-white/10 text-white' : 'bg-slate-200 text-slate-700'}`}>
+                                                        {initials(name)}
+                                                    </span>
+                                                    {name}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
 
         </div>
     </PageTransition>
