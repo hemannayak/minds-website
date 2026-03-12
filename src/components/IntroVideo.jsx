@@ -1,11 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Detect if the user is on a mobile/touch device.
-// iOS Safari blocks unmuted programmatic play — we stay muted on mobile.
-const isMobile = () =>
-  /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
-
 const IntroVideo = ({ onComplete }) => {
   const videoRef = useRef(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -14,20 +9,10 @@ const IntroVideo = ({ onComplete }) => {
     const video = videoRef.current;
     if (!video) return;
 
-    const mobile = isMobile();
-
-    // Always start muted — this guarantees autoplay on all browsers/devices.
-    video.muted = true;
-
-    video.play().then(() => {
-      // On desktop: immediately unmute so sound plays.
-      // On mobile (iOS/Android): keep muted — browsers block unmuted autoplay.
-      if (!mobile) {
-        video.muted = false;
-      }
-    }).catch(err => {
+    // Always muted — guarantees autoplay works on ALL browsers and devices
+    // (iOS Safari, Android Chrome, desktop Chrome/Firefox/Safari).
+    video.play().catch(err => {
       console.error('Autoplay blocked:', err);
-      // If even muted play fails, skip the intro gracefully.
       skipIntro();
     });
   }, []);
