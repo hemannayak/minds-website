@@ -231,18 +231,18 @@ const Contact = () => {
                                             animate={{ opacity: 1, scale: 1 }}
                                             className="flex flex-col items-center text-center py-12 px-4 gap-5"
                                         >
-                                            <div className="w-14 h-14 rounded-[14px] bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                                                <CheckCircle size={24} className="text-emerald-500" />
+                                            <div className="w-14 h-14 rounded-[14px] bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                                <CheckCircle size={24} className="text-emerald-400" />
                                             </div>
                                             <div>
-                                                <h3 className="text-slate-900 font-bold text-xl mb-2">Message sent!</h3>
-                                                <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
+                                                <h3 className="text-white font-bold text-xl mb-2">Message sent!</h3>
+                                                <p className="text-white/60 text-sm leading-relaxed max-w-sm">
                                                     Thanks for reaching out. We'll get back to you at your email within 24 hours.
                                                 </p>
                                             </div>
                                             <button
                                                 onClick={() => setFormStatus('idle')}
-                                                className="text-sm font-semibold text-slate-900 hover:text-slate-600 underline-offset-4 hover:underline transition-all"
+                                                className="text-sm font-semibold text-white/80 hover:text-white underline-offset-4 hover:underline transition-all"
                                             >
                                                 Send another message
                                             </button>
