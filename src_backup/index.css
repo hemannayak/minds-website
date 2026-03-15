@@ -21,9 +21,8 @@
     overflow-x: hidden;
     line-height: 1.6;
     background-image:
-      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-    background-size: 40px 40px;
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size: 32px 32px;
     background-attachment: fixed;
   }
 
@@ -51,12 +50,6 @@
     transition-duration: 300ms;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
-}
-
-/* ── Keyframes ───────────────────────────────────────────── */
-@keyframes navSlideDown {
-  from { transform: translateY(-100%); opacity: 0; }
-  to   { transform: translateY(0);     opacity: 1; }
 }
 
 /* ── Selection ───────────────────────────────────────────── */
@@ -113,9 +106,8 @@
 
   .grid-texture-dark {
     background-image:
-      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-    background-size: 40px 40px;
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size: 32px 32px;
   }
 
   /* Glow on hero MINDS text */
@@ -127,69 +119,4 @@
     text-shadow: 0 0 40px rgba(255,255,255,0.9), 0 0 80px rgba(110,231,247,0.4), 0 0 120px rgba(110,231,247,0.2);
     color: #ffffff !important;
   }
-}
-/* ── Premium accent word highlight ─────────────────────── */
-@layer utilities {
-  .accent-word {
-    position: relative;
-    display: inline;
-    /* slightly brighter white vs normal text */
-    color: #ffffff;
-    /* padding so the background has breathing room */
-    padding: 0 0.25em;
-    margin: 0 -0.05em;
-    border-radius: 5px;
-    /* background highlight injected via ::before */
-  }
-
-  /* The highlight "paint" that sweeps in from left */
-  .accent-word::before {
-    content: '';
-    position: absolute;
-    inset: 0.05em -0.1em;
-    border-radius: 5px;
-    background: linear-gradient(135deg,
-      rgba(255,255,255,0.13) 0%,
-      rgba(255,255,255,0.07) 100%
-    );
-    border: 1px solid rgba(255,255,255,0.10);
-    transform-origin: left center;
-    transform: scaleX(0);
-    animation: accentReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
-    transition: background 0.3s ease, border-color 0.3s ease;
-    z-index: -1;
-  }
-
-  .accent-word:hover::before {
-    background: linear-gradient(135deg,
-      rgba(255,255,255,0.18) 0%,
-      rgba(255,255,255,0.10) 100%
-    );
-    border-color: rgba(255,255,255,0.18);
-  }
-
-  /* Thin shimmer underline */
-  .accent-word::after {
-    content: '';
-    position: absolute;
-    left: 0.1em;
-    right: 0.1em;
-    bottom: 0.04em;
-    height: 1px;
-    border-radius: 99px;
-    background: linear-gradient(90deg,
-      transparent,
-      rgba(255,255,255,0.50) 40%,
-      rgba(255,255,255,0.50) 60%,
-      transparent
-    );
-    transform-origin: left center;
-    transform: scaleX(0);
-    animation: accentReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
-  }
-}
-
-@keyframes accentReveal {
-  from { transform: scaleX(0); opacity: 0; }
-  to   { transform: scaleX(1); opacity: 1; }
 }

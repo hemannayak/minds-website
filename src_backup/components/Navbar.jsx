@@ -23,11 +23,13 @@ const Navbar = () => {
     ];
 
     return (
-        <nav
-            style={{ animation: 'navSlideDown 0.6s cubic-bezier(0.22, 1, 0.36, 1) both' }}
+        <motion.nav
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-                ? 'bg-black/85 backdrop-blur-md border-b border-white/[0.06] h-[70px]'
-                : 'bg-gradient-to-b from-black/60 to-transparent h-[90px]'
+                ? 'bg-black/80 backdrop-blur-md border-b border-white/[0.06] h-[70px]'
+                : 'bg-transparent h-[90px]'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 md:px-8 h-full flex items-center justify-between">
@@ -39,7 +41,7 @@ const Navbar = () => {
                     onClick={() => setMobileMenuOpen(false)}
                 >
                     <div className="w-10 h-10 md:w-11 md:h-11 overflow-hidden rounded-xl border border-white/10 flex items-center justify-center shrink-0 bg-white/5 transition-colors duration-300 group-hover:border-white/20">
-                        <img src="/Logo-light_theme.png" alt="MINDS Logo" className="w-full h-full object-contain" />
+                        <img src="/Club_Logo-bg.png" alt="MINDS Logo" className="w-full h-full object-contain" />
                     </div>
                     <div className="flex flex-col justify-center">
                         <span className="text-2xl font-black tracking-tighter leading-none text-white transition-colors duration-300">
@@ -152,7 +154,7 @@ const Navbar = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </nav>
+        </motion.nav>
     );
 };
 

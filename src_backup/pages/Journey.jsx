@@ -52,7 +52,7 @@ const Journey = () => {
             <div className="w-full">
 
                 {/* ── Page Hero ── */}
-                <section className="pt-36 pb-24 px-6 bg-[#080808] grid-texture border-b border-white/[0.06]">
+                <section className="pt-36 pb-24 px-6 bg-white grid-texture border-b border-slate-100">
                     <div className="max-w-7xl mx-auto">
                         <motion.div
                             initial="hidden"
@@ -61,19 +61,19 @@ const Journey = () => {
                             className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-12"
                         >
                             <motion.div variants={fadeInUp} className="max-w-2xl">
-                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-5">Our Journey</p>
-                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-[-0.02em] leading-[1.05]">
+                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-5">Our Journey</p>
+                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 tracking-[-0.02em] leading-[1.05]">
                                     A year in<br />
                                     the making.
                                 </h1>
                             </motion.div>
                             <motion.div variants={fadeInUp} className="max-w-sm lg:pb-2">
-                                <p className="text-lg text-white/60 leading-relaxed mb-6">
+                                <p className="text-lg text-slate-600 leading-relaxed mb-6">
                                     MINDS didn't launch overnight. Every milestone below was earned — one decision, one conversation, one confirmation at a time.
                                 </p>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-[3px] h-10 bg-white rounded-full shrink-0" />
-                                    <p className="text-sm text-white/50 font-medium leading-snug">
+                                    <div className="w-[3px] h-10 bg-slate-900 rounded-full shrink-0" />
+                                    <p className="text-sm text-slate-500 font-medium leading-snug">
                                         Early 2025 → 27 Feb 2026 · Official Launch
                                     </p>
                                 </div>
@@ -108,12 +108,12 @@ const Journey = () => {
                 </section>
 
                 {/* ── Timeline ── */}
-                <section className="py-28 px-6 bg-[#080808] grid-texture">
+                <section className="py-28 px-6 bg-white grid-texture">
                     <div className="max-w-5xl mx-auto">
 
                         {/* Vertical spine */}
                         <div className="relative">
-                            <div className="hidden md:block absolute left-[calc(50%-0.5px)] top-0 bottom-0 w-px bg-white/[0.1]" />
+                            <div className="hidden md:block absolute left-[calc(50%-0.5px)] top-0 bottom-0 w-px bg-slate-200" />
 
                             <div className="space-y-6">
                                 {milestones.map((m, i) => {
@@ -131,25 +131,25 @@ const Journey = () => {
                                             {/* Card — takes 45% width on desktop */}
                                             <div className={`w-full md:w-[46%] ${isEven ? 'md:pr-12' : 'md:pl-12'}`}>
                                                 <div
-                                                    className={`rounded-[14px] ring-1 ring-slate-900/5 p-8 transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] group relative overflow-hidden ${m.dark ? 'bg-white/[0.06]' : 'bg-white/[0.04]'}`}
+                                                    className={`rounded-[14px] ring-1 ring-slate-900/5 p-8 transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] group relative overflow-hidden ${m.dark ? 'bg-slate-900' : 'bg-white'}`}
                                                     style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
                                                 >
                                                     {/* Highlight accent bar for key milestone cards */}
                                                     {m.highlight && (
-                                                        <div className={`absolute inset-x-0 top-0 h-[3px] rounded-t-[14px] bg-slate-900 ${m.dark ? 'bg-white/20' : 'bg-white'}`} />
+                                                        <div className={`absolute inset-x-0 top-0 h-[3px] rounded-t-[14px] bg-slate-900 ${m.dark ? 'bg-white/20' : 'bg-slate-900'}`} />
                                                     )}
 
                                                     <div className="flex items-start gap-4">
-                                                        <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0 ${m.dark ? 'bg-white/10 text-white border border-white/15' : 'bg-white/[0.06] text-white border border-white/10'}`}>
+                                                        <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0 ${m.dark ? 'bg-white/10 text-white border border-white/15' : 'bg-slate-50 text-slate-900 border border-slate-200'}`}>
                                                             <Icon size={18} strokeWidth={2} />
                                                         </div>
                                                         <div>
                                                             <div className="flex items-center gap-2 mb-1">
                                                                 <span className={`text-[10px] font-black tracking-[0.15em] uppercase ${m.dark ? 'text-slate-500' : 'text-slate-400'}`}>{m.tag}</span>
                                                             </div>
-                                                            <p className={`text-xs font-semibold tracking-[0.08em] uppercase mb-3 ${m.dark ? 'text-slate-300' : 'text-slate-300'}`}>{m.date}</p>
-                                                            <h3 className={`text-lg font-bold mb-3 tracking-tight ${m.dark ? 'text-white' : 'text-white'}`}>{m.title}</h3>
-                                                            <p className={`text-sm leading-relaxed ${m.dark ? 'text-slate-400' : 'text-slate-400'}`}>{m.description}</p>
+                                                            <p className={`text-xs font-semibold tracking-[0.08em] uppercase mb-3 ${m.dark ? 'text-slate-300' : 'text-slate-900'}`}>{m.date}</p>
+                                                            <h3 className={`text-lg font-bold mb-3 tracking-tight ${m.dark ? 'text-white' : 'text-slate-900'}`}>{m.title}</h3>
+                                                            <p className={`text-sm leading-relaxed ${m.dark ? 'text-slate-400' : 'text-slate-600'}`}>{m.description}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -157,12 +157,12 @@ const Journey = () => {
 
                                             {/* Center dot — visible on md+ */}
                                             <div className="hidden md:flex w-[8%] justify-center items-center shrink-0">
-                                                <div className={`w-4 h-4 rounded-full border-4 z-10 ${m.highlight ? 'bg-white border-white shadow-[0_0_0_4px_rgba(255,255,255,0.12)]' : 'bg-white/30 border-white/20'}`} />
+                                                <div className={`w-4 h-4 rounded-full border-4 z-10 ${m.highlight ? 'bg-slate-900 border-slate-900 shadow-[0_0_0_4px_rgba(15,23,42,0.12)]' : 'bg-white border-slate-300'}`} />
                                             </div>
 
                                             {/* Mobile top dot */}
                                             <div className="md:hidden flex justify-start w-full mb-3 pl-1">
-                                                <div className={`w-3 h-3 rounded-full ${m.highlight ? 'bg-white' : 'bg-slate-500'}`} />
+                                                <div className={`w-3 h-3 rounded-full ${m.highlight ? 'bg-slate-900' : 'bg-slate-300'}`} />
                                             </div>
 
                                             {/* Spacer — empty right side */}
@@ -179,15 +179,15 @@ const Journey = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                            className="mt-16 bg-white/[0.04] rounded-[14px] ring-1 ring-white/10 p-10 flex flex-col md:flex-row md:items-center justify-between gap-8"
+                            className="mt-16 bg-slate-50 rounded-[14px] ring-1 ring-slate-900/5 p-10 flex flex-col md:flex-row md:items-center justify-between gap-8"
                             style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
                         >
                             <div>
                                 <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-3">What's Next</p>
-                                <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight mb-2">
+                                <h2 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight mb-2">
                                     The story is still being written.
                                 </h2>
-                                <p className="text-slate-300 text-sm leading-relaxed max-w-lg">
+                                <p className="text-slate-600 text-sm leading-relaxed max-w-lg">
                                     Chapter 01 has just begun. Events, workshops, datathons, and collaborations — everything on the roadmap is now live and building momentum.
                                 </p>
                             </div>
@@ -202,7 +202,7 @@ const Journey = () => {
                                 </Link>
                                 <Link
                                     to="/join"
-                                    className="px-5 py-2.5 rounded-[10px] font-medium text-sm text-black bg-white ring-1 ring-white/20 hover:bg-white/90 transition-all duration-[250ms] flex items-center"
+                                    className="px-5 py-2.5 rounded-[10px] font-medium text-sm text-slate-700 bg-white ring-1 ring-slate-300 hover:bg-slate-50 transition-all duration-[250ms] flex items-center"
                                     style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
                                 >
                                     Join MINDS

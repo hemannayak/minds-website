@@ -38,7 +38,7 @@ const About = () => {
             <div className="w-full">
 
                 {/* ── Page Hero ── */}
-                <section className="pt-36 pb-24 px-6 bg-[#080808] grid-texture border-b border-white/[0.06]">
+                <section className="pt-36 pb-24 px-6 bg-white grid-texture border-b border-slate-100">
                     <div className="max-w-7xl mx-auto">
                         <motion.div
                             initial="hidden"
@@ -48,12 +48,13 @@ const About = () => {
                         >
                             {/* Left: heading */}
                             <motion.div variants={fadeInUp} className="max-w-2xl">
-                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-5">About MINDS</p>
-                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-[-0.02em] leading-[1.05]">
+                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-5">About MINDS</p>
+                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 tracking-[-0.02em] leading-[1.05]">
                                     We exist so you<br />
                                     don't have to{' '}
-                                    <span className="accent-word">
+                                    <span className="relative inline-block">
                                         figure it out
+                                        <span className="absolute bottom-1 left-0 right-0 h-[3px] bg-slate-900 rounded-full" />
                                     </span>
                                     {' '}alone.
                                 </h1>
@@ -61,12 +62,12 @@ const About = () => {
 
                             {/* Right: 2-line context */}
                             <motion.div variants={fadeInUp} className="max-w-sm lg:pb-2">
-                                <p className="text-lg text-white/60 leading-relaxed mb-6">
+                                <p className="text-lg text-slate-600 leading-relaxed mb-6">
                                     MINDS is the official student initiative of the Data Science Department, HITAM — built for anyone who wants to make data science their career, regardless of what branch they're from.
                                 </p>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-[3px] h-10 bg-white rounded-full shrink-0" />
-                                    <p className="text-sm text-white/50 font-medium leading-snug">
+                                    <div className="w-[3px] h-10 bg-slate-900 rounded-full shrink-0" />
+                                    <p className="text-sm text-slate-500 font-medium leading-snug">
                                         Chapter 01 · Open to all departments · HITAM, Hyderabad
                                     </p>
                                 </div>
@@ -99,7 +100,7 @@ const About = () => {
                 </section>
 
                 {/* ── Origin Story — asymmetric 2+1 grid ── */}
-                <section className="py-28 px-6 bg-[#080808] grid-texture border-b border-white/[0.06]">
+                <section className="py-28 px-6 bg-white grid-texture border-b border-slate-100">
                     <div className="max-w-7xl mx-auto">
                         <motion.div
                             initial="hidden"
@@ -111,16 +112,16 @@ const About = () => {
                             {/* Wide left card */}
                             <motion.div
                                 variants={fadeInUp}
-                                className="lg:col-span-2 bg-white/[0.04] rounded-[14px] ring-1 ring-white/10 p-8 md:p-10 relative overflow-hidden flex flex-col justify-between min-h-[300px]"
-                                style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.4),0 8px 24px rgba(0,0,0,0.3)' }}
+                                className="lg:col-span-2 bg-white rounded-[14px] ring-1 ring-slate-900/5 p-8 md:p-10 relative overflow-hidden flex flex-col justify-between min-h-[300px]"
+                                style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
                             >
-                                <div className="absolute inset-x-0 top-0 h-[3px] bg-white rounded-t-[14px]" />
+                                <div className="absolute inset-x-0 top-0 h-[3px] bg-slate-900 rounded-t-[14px]" />
                                 <div>
-                                    <p className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-4">The Origin</p>
-                                    <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-5">
+                                    <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-4">The Origin</p>
+                                    <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mb-5">
                                         A year of planning.<br />One clear mission.
                                     </h2>
-                                    <p className="text-white/60 leading-relaxed text-sm max-w-lg">
+                                    <p className="text-slate-600 leading-relaxed text-sm max-w-lg">
                                         MINDS didn't start with a logo or a committee. It started with a question nobody had a good answer to: <em>"How do students at HITAM actually get ready for a data science career?"</em> That question became our founding document.
                                     </p>
                                 </div>
@@ -131,8 +132,8 @@ const About = () => {
                                         { v: '∞', l: 'Learning Paths' },
                                     ].map(s => (
                                         <div key={s.l}>
-                                            <div className="text-3xl font-black text-white tracking-tighter leading-none">{s.v}</div>
-                                            <div className="text-xs text-white/50 mt-1 font-medium">{s.l}</div>
+                                            <div className="text-3xl font-black text-slate-900 tracking-tighter leading-none">{s.v}</div>
+                                            <div className="text-xs text-slate-500 mt-1 font-medium">{s.l}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -155,7 +156,7 @@ const About = () => {
                                 </div>
                                 <Link
                                     to="/join"
-                                    className="mt-8 inline-flex items-center gap-2 px-5 py-2.5 rounded-[10px] font-medium text-sm text-black bg-white hover:bg-white/90 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] group self-start"
+                                    className="mt-8 inline-flex items-center gap-2 px-5 py-2.5 rounded-[10px] font-medium text-sm text-slate-900 bg-white hover:bg-slate-50 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] group self-start"
                                     style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}
                                 >
                                     Join Us
@@ -167,7 +168,7 @@ const About = () => {
                 </section>
 
                 {/* ── Philosophy — horizontal cards with left accent ── */}
-                <section className="py-28 px-6 bg-[#0a0a0a] grid-texture border-b border-white/[0.06]">
+                <section className="py-28 px-6 bg-slate-50 grid-texture border-b border-slate-100">
                     <div className="max-w-7xl mx-auto">
                         <motion.div
                             initial="hidden"
@@ -176,8 +177,8 @@ const About = () => {
                             variants={staggerContainer}
                         >
                             <motion.div variants={fadeInUp} className="mb-14">
-                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-4">Our Philosophy</p>
-                                <h2 className="text-3xl md:text-4xl font-bold text-white tracking-[-0.02em]">
+                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-4">Our Philosophy</p>
+                                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-[-0.02em]">
                                     Four things we refuse to compromise on.
                                 </h2>
                             </motion.div>
@@ -189,20 +190,20 @@ const About = () => {
                                         <motion.div
                                             key={p.title}
                                             variants={fadeInUp}
-                                            className="bg-white/[0.04] rounded-[14px] ring-1 ring-white/10 p-6 sm:p-8 flex gap-4 sm:gap-6 relative overflow-hidden transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] group"
+                                            className="bg-white rounded-[14px] ring-1 ring-slate-900/5 p-6 sm:p-8 flex gap-4 sm:gap-6 relative overflow-hidden transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] group"
                                             style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
                                         >
                                             {/* Left accent bar */}
                                             <div className="absolute left-0 inset-y-0 w-[3px] bg-slate-900 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                             {/* Number label */}
-                                            <div className="shrink-0 w-10 h-10 rounded-[10px] bg-white/[0.06] border border-white/10 flex items-center justify-center text-xs font-black text-white/40 tracking-tight group-hover:bg-white group-hover:text-slate-900 group-hover:border-white transition-all duration-300">
+                                            <div className="shrink-0 w-10 h-10 rounded-[10px] bg-slate-50 border border-slate-200 flex items-center justify-center text-xs font-black text-slate-400 tracking-tight group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all duration-300">
                                                 {p.label}
                                             </div>
 
                                             <div>
-                                                <h3 className="text-base font-bold text-white mb-2 tracking-tight">{p.title}</h3>
-                                                <p className="text-white/60 text-sm leading-relaxed">{p.body}</p>
+                                                <h3 className="text-base font-bold text-slate-900 mb-2 tracking-tight">{p.title}</h3>
+                                                <p className="text-slate-600 text-sm leading-relaxed">{p.body}</p>
                                             </div>
                                         </motion.div>
                                     );
@@ -213,7 +214,7 @@ const About = () => {
                 </section>
 
                 {/* ── CTA — horizontal split bar ── */}
-                <section className="py-24 px-6 bg-[#080808] grid-texture">
+                <section className="py-24 px-6 bg-white grid-texture">
                     <div className="max-w-7xl mx-auto">
                         <motion.div
                             initial={{ opacity: 0, y: 24 }}
@@ -238,7 +239,7 @@ const About = () => {
                             <div className="flex flex-col gap-3 shrink-0">
                                 <Link
                                     to="/join"
-                                    className="px-6 py-3 rounded-[10px] font-medium text-sm text-black bg-white hover:bg-white/90 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] flex items-center justify-center gap-2 group"
+                                    className="px-6 py-3 rounded-[10px] font-medium text-sm text-slate-900 bg-white hover:bg-slate-50 transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] flex items-center justify-center gap-2 group"
                                     style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}
                                 >
                                     Join MINDS

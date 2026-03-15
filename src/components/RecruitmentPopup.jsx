@@ -1,88 +1,197 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sparkles, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { X, Sparkles, ArrowRight, ExternalLink } from 'lucide-react';
+
+const FORM_URL = 'https://forms.gle/R6w2dvaduqBZTMyV6';
+// Resolved from forms.gle/R6w2dvaduqBZTMyV6
+const FORM_EMBED_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSekycKn-NS94WEWZzakhkx2cv5uHI5ySLRZtkrNZWsThkA5qA/viewform?embedded=true';
 
 const RecruitmentPopup = () => {
     const [visible, setVisible] = useState(false);
+    const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
-        // Show popup 3 seconds after mount — re-appears every homepage visit
-        const t = setTimeout(() => setVisible(true), 3000);
+        const t = setTimeout(() => setVisible(true), 2500);
         return () => clearTimeout(t);
     }, []);
 
-    const dismiss = () => setVisible(false);
+    const dismiss = () => {
+        setVisible(false);
+        setShowForm(false);
+    };
+
+    const openForm = () => setShowForm(true);
 
     return (
-        <AnimatePresence>
-            {visible && (
-                <motion.div
-                    key="recruit-popup"
-                    initial={{ opacity: 0, y: 40, scale: 0.96 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 24, scale: 0.97 }}
-                    transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-                    className="fixed bottom-6 right-6 z-[200] w-full max-w-sm"
-                    style={{ filter: 'drop-shadow(0 8px 40px rgba(0,0,0,0.18))' }}
-                >
-                    <div className="relative bg-slate-900 grid-texture-dark rounded-[16px] overflow-hidden ring-1 ring-white/10">
-                        {/* shimmer top line */}
-                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
-
-                        {/* Close */}
-                        <button
+        <>
+            {/* ── Announcement popup (centered) ── */}
+            <AnimatePresence>
+                {visible && !showForm && (
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            key="popup-backdrop"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-sm"
                             onClick={dismiss}
-                            aria-label="Dismiss"
-                            className="absolute top-3.5 right-3.5 w-7 h-7 rounded-[7px] bg-white/5 border border-white/10 flex items-center justify-center text-slate-500 hover:text-white hover:bg-white/10 transition-all duration-150"
+                        />
+                        {/* Card */}
+                        <motion.div
+                            key="recruit-popup"
+                            initial={{ opacity: 0, scale: 0.93, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                            transition={{ type: 'spring', damping: 26, stiffness: 260 }}
+                            className="fixed inset-0 z-[210] flex items-center justify-center p-4 pointer-events-none"
                         >
-                            <X size={13} />
-                        </button>
+                            <div
+                                className="relative bg-[#0f0f0f] rounded-[20px] overflow-hidden border border-white/10 w-full max-w-[420px] pointer-events-auto"
+                                style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.8)' }}
+                                onClick={e => e.stopPropagation()}
+                            >
+                                {/* Top shimmer */}
+                                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent z-10" />
 
-                        <div className="p-5 pr-10">
-                            {/* Status pill */}
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-4">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                                <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-emerald-400">Now Recruiting</span>
-                            </div>
-
-                            {/* Icon + heading */}
-                            <div className="flex items-start gap-3 mb-3">
-                                <div className="w-9 h-9 rounded-[9px] bg-white/10 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
-                                    <Sparkles size={16} className="text-white" />
-                                </div>
-                                <div>
-                                    <p className="text-white font-bold text-sm leading-snug">
-                                        Core Committee — New Batch 🚀
-                                    </p>
-                                    <p className="text-slate-400 text-xs mt-1 leading-relaxed">
-                                        We're building the next team. Applications open soon — get ready to be part of what MINDS becomes next.
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* CTA row */}
-                            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/8">
-                                <Link
-                                    to="/team"
-                                    onClick={dismiss}
-                                    className="group flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-[8px] bg-white text-slate-900 text-xs font-bold hover:bg-slate-100 transition-all duration-200"
-                                >
-                                    Learn More
-                                    <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
-                                </Link>
+                                {/* Close */}
                                 <button
                                     onClick={dismiss}
-                                    className="text-xs text-slate-500 hover:text-slate-300 transition-colors font-medium"
+                                    aria-label="Dismiss"
+                                    className="absolute top-3 right-3 z-20 w-7 h-7 rounded-[7px] bg-black/40 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all duration-150"
                                 >
-                                    Dismiss
+                                    <X size={13} />
                                 </button>
+
+                                {/* Banner image — full width, no cropping */}
+                                <div className="w-full overflow-hidden bg-[#0a0a0a]">
+                                    <img
+                                        src="/officialrecritementbanner.jpeg"
+                                        alt="MINDS Core Committee Recruitment"
+                                        className="w-full h-auto object-cover block"
+                                        onError={e => {
+                                            e.target.parentElement.innerHTML = `
+                                                <div class="w-full h-48 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-white/[0.04] to-transparent">
+                                                    <span class="text-3xl">🚀</span>
+                                                    <p class="text-white/40 text-xs font-medium">MINDS Recruitment Banner</p>
+                                                </div>`;
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Content */}
+                                <div className="px-6 pt-4 pb-6">
+                                    {/* Status pill */}
+                                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 mb-3">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                        <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-emerald-400">Applications Open Now</span>
+                                    </div>
+
+                                    <h3 className="text-white font-bold text-base leading-snug mb-1.5">
+                                        Core Committee — First Batch 🚀
+                                    </h3>
+                                    <p className="text-white/40 text-sm leading-relaxed mb-5">
+                                        The official recruitment for MINDS first-ever Core Committee has started. Apply now and help shape what the club becomes.
+                                    </p>
+
+                                    {/* CTA row */}
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={openForm}
+                                            className="group flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-[10px] bg-white text-slate-900 text-sm font-bold hover:bg-slate-100 transition-all duration-200"
+                                        >
+                                            Apply Now
+                                            <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                                        </button>
+                                        <button
+                                            onClick={dismiss}
+                                            className="text-sm text-white/30 hover:text-white/60 transition-colors font-medium px-2"
+                                        >
+                                            Later
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </motion.div>
-            )}
-        </AnimatePresence>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+
+            {/* ── Full-screen form modal ── */}
+            <AnimatePresence>
+                {showForm && (
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            key="form-backdrop"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="fixed inset-0 z-[300] bg-black/80 backdrop-blur-sm"
+                            onClick={dismiss}
+                        />
+
+                        {/* Modal */}
+                        <motion.div
+                            key="form-modal"
+                            initial={{ opacity: 0, scale: 0.96, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.97, y: 12 }}
+                            transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+                            className="fixed inset-4 sm:inset-8 md:inset-[5vh_10vw] z-[310] flex flex-col rounded-[20px] overflow-hidden border border-white/10 bg-[#0f0f0f]"
+                            style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.7)' }}
+                        >
+                            {/* Top shimmer */}
+                            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent z-10" />
+
+                            {/* Modal header */}
+                            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.07] shrink-0">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-[8px] bg-white/10 border border-white/10 flex items-center justify-center">
+                                        <Sparkles size={14} className="text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-white text-sm font-bold leading-none">Core Committee Application</p>
+                                        <p className="text-white/30 text-[10px] mt-0.5">MINDS — First Batch Recruitment</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <a
+                                        href={FORM_URL}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[7px] border border-white/10 bg-white/[0.04] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all duration-200 text-[11px] font-medium"
+                                    >
+                                        <ExternalLink size={11} />
+                                        Open in new tab
+                                    </a>
+                                    <button
+                                        onClick={dismiss}
+                                        aria-label="Close"
+                                        className="w-8 h-8 rounded-[8px] bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all duration-150"
+                                    >
+                                        <X size={15} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Embedded form — fills remaining space */}
+                            <div className="flex-1 overflow-hidden bg-white">
+                                <iframe
+                                    src={FORM_EMBED_URL}
+                                    title="MINDS Core Committee Application Form"
+                                    className="w-full h-full border-0"
+                                    style={{ minHeight: '100%' }}
+                                    allowFullScreen
+                                />
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+        </>
     );
 };
 

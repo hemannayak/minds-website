@@ -82,8 +82,8 @@ const SessionCard = ({ event, index }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white/[0.04] rounded-[14px] ring-1 ring-white/10 overflow-hidden"
-                style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.4),0 8px 24px rgba(0,0,0,0.3)' }}
+                className="bg-white rounded-[14px] ring-1 ring-slate-900/5 overflow-hidden"
+                style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
             >
                 {/* Speaker image hero — full width, hover to enlarge */}
                 {event.image && (
@@ -170,43 +170,43 @@ const PastEventCard = ({ event, onClick }) => (
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
         onClick={onClick}
-        className="group relative bg-white/[0.04] rounded-[14px] ring-1 ring-white/10 p-6 sm:p-8 cursor-pointer transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] overflow-hidden flex flex-col md:flex-row md:items-center gap-6"
-        style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.4),0 8px 24px rgba(0,0,0,0.3)' }}
+        className="group relative bg-white rounded-[14px] ring-1 ring-slate-900/5 p-6 sm:p-8 cursor-pointer transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] overflow-hidden flex flex-col md:flex-row md:items-center gap-6"
+        style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
     >
         {/* Left hover accent bar */}
-        <div className="absolute left-0 inset-y-0 w-[3px] bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute left-0 inset-y-0 w-[3px] bg-slate-900 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {/* Date chip */}
-        <div className="shrink-0 w-20 h-20 rounded-[12px] bg-white/[0.04] border border-white/10 flex flex-col items-center justify-center text-center group-hover:bg-white group-hover:border-white transition-all duration-300">
+        <div className="shrink-0 w-20 h-20 rounded-[12px] bg-slate-50 border border-slate-100 flex flex-col items-center justify-center text-center group-hover:bg-slate-900 group-hover:border-slate-900 transition-all duration-300">
             <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 group-hover:text-slate-500 transition-colors">Feb</span>
-            <span className="text-3xl font-black text-white group-hover:text-slate-900 leading-none transition-colors">27</span>
+            <span className="text-3xl font-black text-slate-900 group-hover:text-white leading-none transition-colors">27</span>
             <span className="text-[10px] font-bold tracking-[0.08em] text-slate-400 group-hover:text-slate-500 transition-colors">2026</span>
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border bg-white/[0.06] text-white border-white/10 tracking-wide">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border bg-slate-50 text-slate-900 border-slate-100 tracking-wide">
                     <Sparkles size={11} />{event.type}
                 </span>
                 {event.subEvents && (
                     <span className="text-xs text-slate-400 font-medium">{event.subEvents.length} sessions</span>
                 )}
             </div>
-            <h3 className="text-lg md:text-xl font-bold text-white leading-snug mb-2 pr-12 md:pr-0">{event.title}</h3>
-            <p className="text-white/50 text-sm leading-relaxed line-clamp-2 mb-4">{event.description}</p>
+            <h3 className="text-lg md:text-xl font-bold text-slate-900 leading-snug mb-2 pr-12 md:pr-0">{event.title}</h3>
+            <p className="text-slate-500 text-sm leading-relaxed line-clamp-2 mb-4">{event.description}</p>
             <div className="flex flex-wrap gap-4">
                 <span className="inline-flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                    <Clock size={11} className="text-white/50" />{event.time}
+                    <Clock size={11} className="text-slate-500" />{event.time}
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                    <MapPin size={11} className="text-white/50" />{event.location}
+                    <MapPin size={11} className="text-slate-500" />{event.location}
                 </span>
             </div>
         </div>
 
         {/* Arrow chip */}
-        <div className="shrink-0 w-10 h-10 rounded-[10px] bg-white/[0.04] border border-white/10 flex items-center justify-center text-white/50 group-hover:bg-white group-hover:border-white group-hover:text-slate-900 transition-all duration-300 self-start md:self-center">
+        <div className="shrink-0 w-10 h-10 rounded-[10px] bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 group-hover:bg-slate-900 group-hover:border-slate-900 group-hover:text-white transition-all duration-300 self-start md:self-center">
             <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform duration-200" />
         </div>
     </motion.div>
@@ -239,7 +239,7 @@ const Events = () => {
             <div className="w-full">
 
                 {/* ── Page Hero ── */}
-                <section className="pt-36 pb-24 px-6 bg-[#080808] grid-texture border-b border-white/[0.06]">
+                <section className="pt-36 pb-24 px-6 bg-white grid-texture border-b border-slate-100">
                     <div className="max-w-7xl mx-auto">
                         <motion.div
                             initial="hidden"
@@ -248,17 +248,18 @@ const Events = () => {
                             className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-12"
                         >
                             <motion.div variants={fadeInUp} className="max-w-2xl">
-                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-5">Events</p>
-                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-[-0.02em] leading-[1.05]">
+                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-5">Events</p>
+                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 tracking-[-0.02em] leading-[1.05]">
                                     Where ideas<br />
                                     come{' '}
-                                    <span className="accent-word">
-                                         alive.
-                                     </span>
+                                    <span className="relative inline-block">
+                                        alive.
+                                        <span className="absolute bottom-1 left-0 right-0 h-[3px] bg-slate-900 rounded-full" />
+                                    </span>
                                 </h1>
                             </motion.div>
                             <motion.div variants={fadeInUp} className="max-w-sm lg:pb-2">
-                                <p className="text-lg text-white/60 leading-relaxed mb-6">
+                                <p className="text-lg text-slate-600 leading-relaxed mb-6">
                                     Industry sessions, datathons, workshops — every MINDS event is built around one goal: moving you forward.
                                 </p>
                                 <div className="flex items-center gap-3">
@@ -273,14 +274,14 @@ const Events = () => {
                 </section>
 
                 {/* ── Content ── */}
-                <section className="py-20 px-6 bg-[#080808] grid-texture">
+                <section className="py-20 px-6 bg-white grid-texture">
                     <div className="max-w-7xl mx-auto space-y-20">
 
                         {/* Upcoming */}
                         <div>
                             <div className="flex items-center gap-3 mb-8">
-                                <div className="w-[3px] h-6 bg-white rounded-full" />
-                                <h2 className="text-xl font-bold text-white tracking-tight">Upcoming Events</h2>
+                                <div className="w-[3px] h-6 bg-slate-900 rounded-full" />
+                                <h2 className="text-xl font-bold text-slate-900 tracking-tight">Upcoming Events</h2>
                             </div>
                             {upcomingEvents.length > 0 ? (
                                 <div className="space-y-4">
@@ -294,7 +295,7 @@ const Events = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.45 }}
                                     className="bg-slate-900 grid-texture-dark rounded-[14px] ring-1 ring-slate-900/5 p-8 md:p-12 flex flex-col md:flex-row md:items-center gap-8"
-                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.4),0 8px 24px rgba(0,0,0,0.3)' }}
+                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}
                                 >
                                     <div className="w-14 h-14 rounded-[12px] bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
                                         <Sparkles size={24} className="text-slate-400" />
@@ -314,7 +315,7 @@ const Events = () => {
                             <div>
                                 <div className="flex items-center gap-3 mb-8">
                                     <div className="w-[3px] h-6 bg-slate-300 rounded-full" />
-                                    <h2 className="text-xl font-bold text-white tracking-tight">Past Events</h2>
+                                    <h2 className="text-xl font-bold text-slate-900 tracking-tight">Past Events</h2>
                                 </div>
                                 <div className="space-y-4">
                                     {pastEvents.map((ev, i) => (
@@ -349,8 +350,8 @@ const Events = () => {
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 30, stiffness: 280 }}
-                            className="fixed right-0 top-0 bottom-0 z-[101] w-full max-w-xl bg-[#0b0b0b] flex flex-col"
-                            style={{ boxShadow: '-4px 0 40px rgba(0,0,0,0.8)', maxHeight: '100dvh' }}
+                            className="fixed right-0 top-0 bottom-0 z-[101] w-full max-w-xl bg-white flex flex-col"
+                            style={{ boxShadow: '-4px 0 40px rgba(0,0,0,0.15)', maxHeight: '100dvh' }}
                             onClick={e => e.stopPropagation()}
                         >
                             {/* ── Dark event header ── */}
@@ -394,7 +395,7 @@ const Events = () => {
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
-                                            className="p-6 bg-[#080808] grid-texture space-y-5 min-h-full"
+                                            className="p-6 bg-slate-50 grid-texture space-y-5 min-h-full"
                                         >
                                             <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-slate-400 mb-2">
                                                 {activeEvent.subEvents.length} Sessions
@@ -410,7 +411,7 @@ const Events = () => {
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
-                                            className="flex flex-col bg-[#080808] relative"
+                                            className="flex flex-col bg-slate-50 relative"
                                         >
                                             <iframe
                                                 src="https://docs.google.com/forms/d/e/1FAIpQLScJza2go3FKlI2OcFPOMvHp0TqQP0yTupx27T-nc5E4kQSYCQ/viewform?embedded=true"
@@ -421,7 +422,7 @@ const Events = () => {
                                                 className="w-full h-[2200px]"
                                                 title="Event Registration Form"
                                             >Loading…</iframe>
-                                            <div className="sticky bottom-0 left-0 w-full px-6 py-5 bg-[#0b0b0b] border-t border-white/[0.06] shadow-[0_-20px_40px_rgba(0,0,0,0.06)]">
+                                            <div className="sticky bottom-0 left-0 w-full px-6 py-5 bg-white border-t border-slate-100 shadow-[0_-20px_40px_rgba(0,0,0,0.06)]">
                                                 <p className="text-slate-400 text-xs text-center mb-3">Submitted the form above? Tap below to get WhatsApp details.</p>
                                                 <button
                                                     onClick={handleDone}
@@ -439,7 +440,7 @@ const Events = () => {
                                             initial={{ opacity: 0, y: 16 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ duration: 0.35 }}
-                                            className="flex flex-col items-center justify-center px-6 py-20 gap-7 bg-[#080808] min-h-[400px]"
+                                            className="flex flex-col items-center justify-center px-6 py-20 gap-7 bg-white min-h-[400px]"
                                         >
                                             <div className="w-14 h-14 rounded-[14px] bg-emerald-50 border border-emerald-100 flex items-center justify-center">
                                                 <CheckCircle size={24} className="text-emerald-500" />
@@ -461,7 +462,7 @@ const Events = () => {
                                                     </button>
                                                     <div className="flex flex-col items-center gap-2">
                                                         <p className="text-slate-400 text-xs">Or scan QR</p>
-                                                        <div className="w-36 h-36 rounded-[14px] bg-[#0d0d0d] border border-white/10 flex items-center justify-center overflow-hidden p-2" style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.4),0 8px 24px rgba(0,0,0,0.3)' }}>
+                                                        <div className="w-36 h-36 rounded-[14px] bg-white border border-slate-200 flex items-center justify-center overflow-hidden p-2" style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)' }}>
                                                             <img
                                                                 src="/whatsapp-qr.png"
                                                                 alt="WhatsApp QR"

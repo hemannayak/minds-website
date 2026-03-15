@@ -1,43 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Mic, Terminal, Wrench } from 'lucide-react';
+import { Briefcase, Target, Users, ArrowRight, Zap } from 'lucide-react';
 
 import { fadeInUp, staggerContainer } from '../lib/animations';
 import HeroMesh from '../components/HeroMesh';
 
 const cards = [
   {
-    num: '01',
-    icon: Mic,
+    icon: Briefcase,
     title: 'Industry Sessions',
     desc: 'Real conversations with professionals — not textbook theory. We bring the industry to your campus so you understand what the job actually looks like.',
-    tag: 'Live talks',
-    accent: '#6ee7f7',
-    accentBg: 'rgba(110,231,247,0.08)',
-    accentBorder: 'rgba(110,231,247,0.2)',
+    accent: 'rgba(110,231,247,0.12)',
+    iconColor: '#6ee7f7',
+    glow: '0 0 30px rgba(110,231,247,0.08)',
     span: 'lg:col-span-2',
   },
   {
-    num: '02',
-    icon: Terminal,
+    icon: Target,
     title: 'Datathons',
     desc: 'Compete. Fail fast. Learn faster. High-pressure, high-reward challenges built to push your limits.',
-    tag: 'Compete',
-    accent: '#a78bfa',
-    accentBg: 'rgba(167,139,250,0.08)',
-    accentBorder: 'rgba(167,139,250,0.2)',
+    accent: 'rgba(167,139,250,0.12)',
+    iconColor: '#a78bfa',
+    glow: '0 0 30px rgba(167,139,250,0.08)',
     span: '',
   },
   {
-    num: '03',
-    icon: Wrench,
+    icon: Users,
     title: 'Workshops',
     desc: 'Hands-on. Practical. Directly applicable. No filler — just skills you can use from day one.',
-    tag: 'Hands-on',
-    accent: '#fbbf24',
-    accentBg: 'rgba(251,191,36,0.08)',
-    accentBorder: 'rgba(251,191,36,0.2)',
+    accent: 'rgba(251,191,36,0.10)',
+    iconColor: '#fbbf24',
+    glow: '0 0 30px rgba(251,191,36,0.06)',
     span: '',
   },
 ];
@@ -60,8 +54,8 @@ const Home = () => {
                     <div
                         className="absolute w-full h-[200%] -top-[50%] will-change-transform"
                         style={{
-                            backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
-                            backgroundSize: '40px 40px',
+                            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0)`,
+                            backgroundSize: '32px 32px',
                             animation: 'gridDrift 40s linear infinite'
                         }}
                     />
@@ -207,51 +201,34 @@ const Home = () => {
                         whileInView="show"
                         viewport={{ once: true, margin: "-80px" }}
                         variants={staggerContainer}
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
                     >
-                        {cards.map((card) => {
-                            const Icon = card.icon;
-                            return (
-                                <motion.div
-                                    key={card.title}
-                                    variants={fadeInUp}
-                                    className={`${card.span} group relative flex flex-col rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 cursor-default`}
-                                    style={{ boxShadow: '0 1px 1px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.4)' }}
-                                    whileHover={{ borderColor: card.accentBorder, boxShadow: `0 2px 4px rgba(0,0,0,0.6), 0 20px 48px rgba(0,0,0,0.5), 0 0 40px ${card.accentBg}` }}
+                        {cards.map((card) => (
+                            <motion.div
+                                key={card.title}
+                                variants={fadeInUp}
+                                className={`${card.span} group flex flex-col gap-5 p-8 rounded-2xl border border-white/[0.07] bg-white/[0.02] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] cursor-default`}
+                                style={{
+                                    boxShadow: '0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3)',
+                                }}
+                                whileHover={{
+                                    borderColor: 'rgba(255,255,255,0.12)',
+                                    boxShadow: `0 2px 4px rgba(0,0,0,0.5), 0 16px 40px rgba(0,0,0,0.5), ${card.glow}`,
+                                }}
+                            >
+                                {/* Icon */}
+                                <div
+                                    className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-white/10 group-hover:scale-110 transition-transform duration-300"
+                                    style={{ background: card.accent }}
                                 >
-                                    {/* Colored top accent strip */}
-                                    <div className="absolute top-0 inset-x-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `linear-gradient(90deg, transparent, ${card.accent}, transparent)` }} />
-
-                                    {/* Subtle corner glow */}
-                                    <div className="absolute -top-16 -right-16 w-32 h-32 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-2xl" style={{ background: card.accentBg }} />
-
-                                    <div className="p-7 flex flex-col gap-6 relative z-10 h-full">
-                                        {/* Top row: number + icon */}
-                                        <div className="flex items-start justify-between">
-                                            <span className="text-[11px] font-black tracking-[0.18em] uppercase" style={{ color: card.accent }}>{card.num}</span>
-                                            <div
-                                                className="w-10 h-10 rounded-[10px] flex items-center justify-center border transition-all duration-300 group-hover:scale-110"
-                                                style={{ background: card.accentBg, borderColor: card.accentBorder }}
-                                            >
-                                                <Icon size={18} strokeWidth={1.8} style={{ color: card.accent }} />
-                                            </div>
-                                        </div>
-
-                                        {/* Text */}
-                                        <div className="flex flex-col gap-2 flex-1">
-                                            <h3 className="text-base font-bold text-white tracking-tight leading-snug">{card.title}</h3>
-                                            <p className="text-white/40 text-sm leading-relaxed">{card.desc}</p>
-                                        </div>
-
-                                        {/* Tag chip */}
-                                        <div className="flex items-center gap-1.5">
-                                            <span className="w-1 h-1 rounded-full" style={{ background: card.accent }} />
-                                            <span className="text-[10px] font-semibold tracking-[0.1em] uppercase" style={{ color: `${card.accent}99` }}>{card.tag}</span>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
+                                    <card.icon size={20} strokeWidth={1.8} style={{ color: card.iconColor }} />
+                                </div>
+                                <div>
+                                    <h3 className="text-base font-semibold text-white mb-2 tracking-tight">{card.title}</h3>
+                                    <p className="text-white/40 text-sm leading-relaxed">{card.desc}</p>
+                                </div>
+                            </motion.div>
+                        ))}
                     </motion.div>
                 </div>
             </section>

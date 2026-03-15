@@ -73,7 +73,7 @@ const Join = () => {
             <div className="w-full">
 
                 {/* ── Page Hero ── */}
-                <section className="pt-36 pb-24 px-6 bg-[#080808] grid-texture border-b border-white/[0.06]">
+                <section className="pt-36 pb-24 px-6 bg-white grid-texture border-b border-slate-100">
                     <div className="max-w-7xl mx-auto">
                         <motion.div
                             initial="hidden"
@@ -82,20 +82,23 @@ const Join = () => {
                             className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-12"
                         >
                             <motion.div variants={fadeInUp} className="max-w-2xl">
-                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-5">Join MINDS</p>
-                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-[-0.02em] leading-[1.05]">
+                                <p className="text-xs font-semibold tracking-[0.12em] uppercase text-slate-400 mb-5">Join MINDS</p>
+                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 tracking-[-0.02em] leading-[1.05]">
                                     Your data journey<br />
                                     starts{' '}
-                                    <span className="accent-word">here.</span>
+                                    <span className="relative inline-block">
+                                        here.
+                                        <span className="absolute bottom-1 left-0 right-0 h-[3px] bg-slate-900 rounded-full" />
+                                    </span>
                                 </h1>
                             </motion.div>
                             <motion.div variants={fadeInUp} className="max-w-sm lg:pb-2">
-                                <p className="text-lg text-white/60 leading-relaxed mb-6">
+                                <p className="text-lg text-slate-600 leading-relaxed mb-6">
                                     Open to every department. Zero cost. Just curiosity and a drive to grow in data science.
                                 </p>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-[3px] h-10 bg-white rounded-full shrink-0" />
-                                    <p className="text-sm text-white/50 font-medium leading-snug">
+                                    <div className="w-[3px] h-10 bg-slate-900 rounded-full shrink-0" />
+                                    <p className="text-sm text-slate-500 font-medium leading-snug">
                                         Chapter 01 is live · Takes 60 seconds to apply
                                     </p>
                                 </div>
@@ -105,7 +108,7 @@ const Join = () => {
                 </section>
 
                 {/* ── Main split layout ── */}
-                <section className="py-20 px-6 bg-[#080808] grid-texture">
+                <section className="py-20 px-6 bg-white grid-texture">
                     <div className="max-w-7xl mx-auto">
                         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
 
@@ -118,11 +121,11 @@ const Join = () => {
                                 className="lg:col-span-2 flex flex-col gap-6"
                             >
                                 <motion.div variants={fadeInUp}>
-                                    <p className="text-xs font-bold tracking-[0.12em] uppercase text-white/40 mb-4">Why MINDS?</p>
-                                    <h2 className="text-2xl md:text-3xl font-bold text-white tracking-[-0.02em] leading-snug mb-5">
+                                    <p className="text-xs font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Why MINDS?</p>
+                                    <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-[-0.02em] leading-snug mb-5">
                                         Not just another college club.
                                     </h2>
-                                    <p className="text-white/50 text-sm leading-relaxed">
+                                    <p className="text-slate-500 text-sm leading-relaxed">
                                         MINDS is the only place in HITAM where you get access to industry professionals, live data science projects, and a community that's serious about building careers — not just attending events.
                                     </p>
                                 </motion.div>

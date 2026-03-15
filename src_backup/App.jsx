@@ -14,7 +14,6 @@ import Welcome from './pages/Welcome';
 import PageTransition from './components/PageTransition';
 import RecruitmentPopup from './components/RecruitmentPopup';
 import IntroVideo from './components/IntroVideo';
-import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   const location = useLocation();
@@ -41,7 +40,6 @@ function App() {
         <div className="absolute bottom-[-10%] right-[-5%] w-[50%] h-[50%] bg-secondary/5 rounded-full blur-[120px]"></div>
       </div>
       <AnimatePresence mode="wait">
-        <ScrollToTop />
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
