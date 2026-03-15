@@ -5,8 +5,18 @@ const WEBSITE_DATA_URL = 'https://minds-ds.vercel.app/website-data.json';
 
 
 function doPost(e) {
+  // Log the event for debugging
+  Logger.log('Event object: ' + JSON.stringify(e));
+  
+  // Check if event object exists
+  if (!e) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'No event object received' }))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader('Access-Control-Allow-Origin', '*');
+  }
+  
   // Handle CORS preflight request
-  if (e.parameters.method === 'OPTIONS') {
+  if (e.parameters && e.parameters.method === 'OPTIONS') {
     return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
       .setMimeType(ContentService.MimeType.JSON)
       .setHeader('Access-Control-Allow-Origin', '*')
@@ -16,16 +26,24 @@ function doPost(e) {
 
   try {
     // 1. Parse JSON data from React frontend
+    Logger.log('postData: ' + JSON.stringify(e.postData));
+    Logger.log('postData.contents: ' + e.postData.contents);
+    Logger.log('parameters: ' + JSON.stringify(e.parameter));
+    
     let data = {};
 
     if (e && e.postData && e.postData.contents) {
       try {
         data = JSON.parse(e.postData.contents);
+        Logger.log('Parsed data: ' + JSON.stringify(data));
       } catch (err) {
+        Logger.log('JSON parse error: ' + err.message);
         data = e.parameter; // fallback for form encoded requests
+        Logger.log('Using parameters: ' + JSON.stringify(data));
       }
     } else {
-      throw new Error("No post data received from request");
+      Logger.log('No postData.contents found, trying parameters');
+      data = e.parameter || {};
     }
 
     const { name, email, year, branch, section, why } = data;
