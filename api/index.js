@@ -149,7 +149,7 @@ async function sendWelcomeEmail(member) {
   const WA_LINK = 'https://chat.whatsapp.com/Hir2hpXuLqAAmW1CoV5qaq?mode=hq1tswa';
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"MINDS - Data Science Club" <${process.env.EMAIL_USER}>`,
     to: member.email,
     subject: '🎉 Welcome to MINDS - Your Data Science Journey Begins!',
     html: `
