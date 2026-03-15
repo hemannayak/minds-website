@@ -68,9 +68,6 @@ const Join = () => {
             // Send data to Google Apps Script
             await fetch(APPS_SCRIPT_URL, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
                 body: JSON.stringify(data)
             });
 

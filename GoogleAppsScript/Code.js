@@ -5,6 +5,15 @@ const WEBSITE_DATA_URL = 'https://minds-ds.vercel.app/website-data.json';
 
 
 function doPost(e) {
+  // Handle CORS preflight request
+  if (e.parameters.method === 'OPTIONS') {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader('Access-Control-Allow-Origin', '*')
+      .setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+      .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
+
   try {
     // 1. Parse JSON data from React frontend
     let data = {};
@@ -89,9 +98,12 @@ function doPost(e) {
     // 5. Send the Welcome Email
     sendWelcomeEmail(name, email, websiteData);
 
-    // 6. Return success response (Note: no-cors mode in React won't be able to read this, but it's good practice)
+    // 6. Return success response
     return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Registration complete' }))
-      .setMimeType(ContentService.MimeType.JSON);
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader('Access-Control-Allow-Origin', '*')
+      .setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+      .setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   } catch (error) {
     // If it fails, email the owner so they know!
@@ -105,7 +117,10 @@ function doPost(e) {
 
     // Return error response
     return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: error.message }))
-      .setMimeType(ContentService.MimeType.JSON);
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader('Access-Control-Allow-Origin', '*')
+      .setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+      .setHeader('Access-Control-Allow-Headers', 'Content-Type');
   }
 }
 
