@@ -5,45 +5,27 @@ const WEBSITE_DATA_URL = 'https://minds-ds.vercel.app/website-data.json';
 
 
 function doPost(e) {
-  // Log the event for debugging
-  Logger.log('Event object: ' + JSON.stringify(e));
-  
-  // Check if event object exists
-  if (!e) {
-    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'No event object received' }))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader('Access-Control-Allow-Origin', '*');
-  }
-  
-  // Handle CORS preflight request
-  if (e.parameters && e.parameters.method === 'OPTIONS') {
-    return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader('Access-Control-Allow-Origin', '*')
-      .setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-      .setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  }
-
   try {
-    // 1. Parse JSON data from React frontend
-    Logger.log('postData: ' + JSON.stringify(e.postData));
-    Logger.log('postData.contents: ' + e.postData.contents);
-    Logger.log('parameters: ' + JSON.stringify(e.parameter));
+    Logger.log('Event received: ' + JSON.stringify(e));
     
+    // 1. Parse JSON data from React frontend
     let data = {};
-
+    
+    // Try to get data from different sources
     if (e && e.postData && e.postData.contents) {
       try {
         data = JSON.parse(e.postData.contents);
-        Logger.log('Parsed data: ' + JSON.stringify(data));
+        Logger.log('Parsed from postData: ' + JSON.stringify(data));
       } catch (err) {
-        Logger.log('JSON parse error: ' + err.message);
-        data = e.parameter; // fallback for form encoded requests
+        Logger.log('JSON parse failed, trying parameters: ' + err.message);
+        data = e.parameter || {};
         Logger.log('Using parameters: ' + JSON.stringify(data));
       }
+    } else if (e && e.parameter) {
+      data = e.parameter;
+      Logger.log('Using parameters: ' + JSON.stringify(data));
     } else {
-      Logger.log('No postData.contents found, trying parameters');
-      data = e.parameter || {};
+      throw new Error("No data received from request");
     }
 
     const { name, email, year, branch, section, why } = data;
@@ -117,11 +99,9 @@ function doPost(e) {
     sendWelcomeEmail(name, email, websiteData);
 
     // 6. Return success response
-    return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Registration complete' }))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader('Access-Control-Allow-Origin', '*')
-      .setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-      .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    const successOutput = ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Registration complete' }));
+    successOutput.setMimeType(ContentService.MimeType.JSON);
+    return successOutput;
 
   } catch (error) {
     // If it fails, email the owner so they know!
@@ -134,11 +114,9 @@ function doPost(e) {
     } catch (e) { }
 
     // Return error response
-    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: error.message }))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader('Access-Control-Allow-Origin', '*')
-      .setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-      .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    const errorOutput = ContentService.createTextOutput(JSON.stringify({ status: 'error', message: error.message }));
+    errorOutput.setMimeType(ContentService.MimeType.JSON);
+    return errorOutput;
   }
 }
 
