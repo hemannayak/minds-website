@@ -23,13 +23,20 @@ function doPost(e) {
     const timestamp = new Date();
 
     // 2. Open spreadsheet and sheet
-    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    // We cannot use getActiveSpreadsheet() in a standalone web app. 
+    // Instead, we search for the file by name, or create it if missing.
+    let spreadsheet;
+    const files = DriveApp.getFilesByName(SHEET_NAME);
+    if (files.hasNext()) {
+      spreadsheet = SpreadsheetApp.open(files.next());
+    } else {
+      spreadsheet = SpreadsheetApp.create(SHEET_NAME);
+    }
 
-    // Create the sheet if it doesn't exist
-    if (!sheet) {
-      sheet = spreadsheet.insertSheet(SHEET_NAME);
-      // Setup headers
+    let sheet = spreadsheet.getSheets()[0];
+    
+    // Setup headers if empty
+    if (sheet.getLastRow() === 0) {
       sheet.appendRow([
         'Timestamp', 
         'Name', 
@@ -74,6 +81,15 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
+    // If it fails, email the owner so they know!
+    try {
+      MailApp.sendEmail({
+        to: Session.getEffectiveUser().getEmail(),
+        subject: "MINDS Join Form Error",
+        body: "There was an error processing the submission: " + error.message + "\n\nStack: " + error.stack
+      });
+    } catch (e) {}
+
     // Return error response
     return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: error.message }))
       .setMimeType(ContentService.MimeType.JSON);
