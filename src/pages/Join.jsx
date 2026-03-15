@@ -268,7 +268,12 @@ const Join = () => {
                                             {/* Name + Email */}
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                                 <Field id="name" label="Full Name" type="text" name="name" required placeholder="Your full name" />
-                                                <Field id="email" label="College Email" type="email" name="email" required placeholder="roll@hitam.org" />
+                                                <div>
+                                                    <Field id="email" label="College Email" type="email" name="email" required placeholder="roll@hitam.org" />
+                                                    <p className="text-xs text-slate-500 mt-1.5">
+                                                        College email preferred for faster verification
+                                                    </p>
+                                                </div>
                                             </div>
 
                                             {/* Academic info */}
