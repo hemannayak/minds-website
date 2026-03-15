@@ -9,14 +9,22 @@ dotenv.config();
 const app = express();
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('✅ Connected to MongoDB Atlas');
-}).catch((err) => {
-  console.error('❌ MongoDB connection error:', err);
-});
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected) return;
+  try {
+    const db = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    isConnected = db.connections[0].readyState === 1;
+    console.log('✅ Connected to MongoDB Atlas');
+  } catch (err) {
+    console.error('❌ MongoDB connection error:', err);
+    throw err;
+  }
+};
 
 // Member Schema
 const MemberSchema = new mongoose.Schema({
@@ -193,6 +201,9 @@ app.post('/api/register', async (req, res) => {
   try {
     console.log('📝 Registration request received:', req.body);
     
+    // Connect to MongoDB
+    await connectDB();
+    
     // Validation
     const { name, email, year, branch, section, why } = req.body;
     
@@ -275,7 +286,8 @@ app.post('/api/register', async (req, res) => {
     console.error('❌ Registration error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error during registration'
+      message: 'Server error during registration',
+      error: error.message
     });
   }
 });
