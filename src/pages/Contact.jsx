@@ -57,7 +57,7 @@ const Contact = () => {
         e.preventDefault();
         setFormStatus('sending');
         const formData = new FormData(e.target);
-        formData.append('_subject', 'New Contact Request – MINDS Website');
+        formData.append('_subject', 'New Contact Message - MINDS Website');
         formData.append('_captcha', 'false');
         try {
             const res = await fetch('https://formsubmit.co/ajax/minds.datascience@hitam.org', {
@@ -250,14 +250,14 @@ const Contact = () => {
                                     ) : (
                                         <form onSubmit={handleSubmit} className="space-y-5">
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                                <Field id="name" label="Your Name" type="text" name="Name" required placeholder="e.g. Rahul Sharma" />
-                                                <Field id="email" label="Email Address" type="email" name="Email" required placeholder="email@example.com" />
+                                                <Field id="name" label="Your Name" type="text" name="name" required placeholder="e.g. Rahul Sharma" />
+                                                <Field id="email" label="Email Address" type="email" name="email" required placeholder="email@example.com" />
                                             </div>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                                <Field id="phone" label="Phone Number (Optional)" type="tel" name="Phone" placeholder="+91 98765 43210" />
-                                                <Field id="subject" label="Subject (Optional)" type="text" name="Subject" placeholder="What's this about?" />
+                                                <Field id="phone" label="Phone Number (Optional)" type="tel" name="phone" placeholder="+91 98765 43210" />
+                                                <Field id="subject" label="Subject (Optional)" type="text" name="subject" placeholder="What's this about?" />
                                             </div>
-                                            <Field id="message" label="Message" as="textarea" name="Message" required rows="5" placeholder="Tell us what's on your mind..." />
+                                            <Field id="message" label="Message" as="textarea" name="message" required rows="5" placeholder="Tell us what's on your mind..." />
 
                                             {formStatus === 'error' && (
                                                 <div className="flex items-center gap-2.5 px-4 py-3 bg-rose-50 border border-rose-100 rounded-[10px]">
