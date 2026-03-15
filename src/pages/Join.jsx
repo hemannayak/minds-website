@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import { Send, CheckCircle, AlertCircle, Zap, BarChart2, Users, Globe, MessageCircle } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-const USE_APPS_SCRIPT = false; // Temporarily disable due to CORS issues
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHTbapRCtdZxgpbllFP_kOX-EIKMOFDy9-OGap0rncWRheH-4Bw3LD6fxQVNiUzDk/exec';
-const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/minds.datascience@hitam.org';
+const USE_APPS_SCRIPT = true;
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTjPmAQmkIiswBKiyV43M3Mn5anESCbucYoFr1aRz7KqgyqpU98WTI3pyep5GSYdLcOg/exec';
 const WHATSAPP_LINK = 'https://chat.whatsapp.com/Hir2hpXuLqAAmW1CoV5qaq?mode=hq1tswa';
 
 const perks = [
@@ -40,7 +38,6 @@ const Join = () => {
     const [formStatus, setFormStatus] = useState('idle');
     const [showWhatsApp, setShowWhatsApp] = useState(false);
     const [submittedData, setSubmittedData] = useState(null);
-    const navigate = useNavigate();
 
     // Check if WhatsApp was already shown in this session
     React.useEffect(() => {
@@ -68,72 +65,19 @@ const Join = () => {
         };
         
         try {
-            if (USE_APPS_SCRIPT && APPS_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-                // Try Google Apps Script first
-                try {
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data),
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        setSubmittedData(data);
-                        setShowWhatsApp(true);
-                        setFormStatus('success');
-                        e.target.reset();
-                        sessionStorage.setItem('whatsappShown', 'true');
-                    } else {
-                        throw new Error(result.error || 'Google Apps Script failed');
-                    }
-                } catch (corsError) {
-                    console.warn('CORS error, falling back to FormSubmit:', corsError);
-                    
-                    // Fallback to FormSubmit
-                    const fallbackFormData = new FormData(e.target);
-                    fallbackFormData.append('_subject', 'New Club Membership Application - MINDS');
-                    fallbackFormData.append('_captcha', 'false');
-                    
-                    const res = await fetch(FORMSUBMIT_URL, {
-                        method: 'POST',
-                        headers: { Accept: 'application/json' },
-                        body: fallbackFormData,
-                    });
-                    
-                    const result = await res.json();
-                    if (result?.success) { 
-                        setSubmittedData(data);
-                        setShowWhatsApp(true);
-                        setFormStatus('success'); 
-                        e.target.reset();
-                        sessionStorage.setItem('whatsappShown', 'true');
-                    } else {
-                        throw new Error('FormSubmit failed');
-                    }
-                }
-            } else {
-                // Fallback to FormSubmit
-                formData.append('_subject', 'New Club Membership Application - MINDS');
-                formData.append('_captcha', 'false');
-                const res = await fetch(FORMSUBMIT_URL, {
-                    method: 'POST',
-                    headers: { Accept: 'application/json' },
-                    body: formData,
-                });
-                const result = await res.json();
-                if (result?.success) { 
-                    setSubmittedData(data);
-                    setShowWhatsApp(true);
-                    setFormStatus('success'); 
-                    e.target.reset();
-                    // Store that WhatsApp was shown in this session
-                    sessionStorage.setItem('whatsappShown', 'true');
-                } else {
-                    setFormStatus('error');
-                }
-            }
+            // Send data to Google Apps Script
+            await fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify(data)
+            });
+            
+            // Assume success and update UI state
+            setSubmittedData(data);
+            setShowWhatsApp(true);
+            setFormStatus("success");
+            e.target.reset();
+            sessionStorage.setItem("whatsappShown", "true");
         } catch (error) { 
             setFormStatus('error');
             console.error('Form submission error:', error);

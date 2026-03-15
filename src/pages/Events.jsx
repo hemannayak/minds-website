@@ -4,7 +4,7 @@ import { Calendar, MapPin, Clock, Mic, Sparkles, ArrowRight, X, Linkedin, CheckC
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-const upcomingEvents = [];
+// We'll load upcomingEvents dynamically in the component
 
 const pastEvents = [
     {
@@ -219,7 +219,19 @@ const Events = () => {
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [activeEvent, setActiveEvent] = useState(null);
 
+    const [upcomingEvents, setUpcomingEvents] = useState([]);
+
     useEffect(() => {
+        // Fetch dynamic data
+        fetch('/website-data.json')
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.upcomingEvents) {
+                    setUpcomingEvents(data.upcomingEvents);
+                }
+            })
+            .catch(err => console.error("Could not fetch website data:", err));
+
         document.body.style.overflow = isDrawerOpen ? 'hidden' : 'unset';
         return () => { document.body.style.overflow = 'unset'; };
     }, [isDrawerOpen]);

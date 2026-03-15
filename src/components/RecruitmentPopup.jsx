@@ -2,17 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Sparkles, ArrowRight, ExternalLink } from 'lucide-react';
 
-const FORM_URL = 'https://forms.gle/R6w2dvaduqBZTMyV6';
-// Resolved from forms.gle/R6w2dvaduqBZTMyV6
-const FORM_EMBED_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSekycKn-NS94WEWZzakhkx2cv5uHI5ySLRZtkrNZWsThkA5qA/viewform?embedded=true';
+const FALLBACK_FORM_URL = 'https://forms.gle/R6w2dvaduqBZTMyV6';
+const FALLBACK_FORM_EMBED_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSekycKn-NS94WEWZzakhkx2cv5uHI5ySLRZtkrNZWsThkA5qA/viewform?embedded=true';
 
 const RecruitmentPopup = () => {
     const [visible, setVisible] = useState(false);
     const [showForm, setShowForm] = useState(false);
+    const [recruitmentData, setRecruitmentData] = useState(null);
 
     useEffect(() => {
-        const t = setTimeout(() => setVisible(true), 2500);
-        return () => clearTimeout(t);
+        let isMounted = true;
+        fetch('/website-data.json')
+            .then(res => res.json())
+            .then(data => {
+                if (isMounted && data && data.recruitment) {
+                    setRecruitmentData(data.recruitment);
+                    if (data.recruitment.isOpen) {
+                        setTimeout(() => setVisible(true), 2500);
+                    }
+                }
+            })
+            .catch(err => console.error("Could not fetch website data:", err));
+        
+        return () => { isMounted = false; };
     }, []);
 
     const dismiss = () => {
@@ -21,6 +33,9 @@ const RecruitmentPopup = () => {
     };
 
     const openForm = () => setShowForm(true);
+
+    const formUrl = recruitmentData?.formUrl || FALLBACK_FORM_URL;
+    const formEmbedUrl = recruitmentData?.formEmbedUrl || FALLBACK_FORM_EMBED_URL;
 
     return (
         <>
@@ -159,7 +174,7 @@ const RecruitmentPopup = () => {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <a
-                                        href={FORM_URL}
+                                        href={formUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[7px] border border-white/10 bg-white/[0.04] text-white/50 hover:text-white hover:bg-white/[0.08] transition-all duration-200 text-[11px] font-medium"
@@ -180,7 +195,7 @@ const RecruitmentPopup = () => {
                             {/* Embedded form — fills remaining space */}
                             <div className="flex-1 overflow-hidden bg-white">
                                 <iframe
-                                    src={FORM_EMBED_URL}
+                                    src={formEmbedUrl}
                                     title="MINDS Core Committee Application Form"
                                     className="w-full h-full border-0"
                                     style={{ minHeight: '100%' }}
