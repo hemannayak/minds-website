@@ -5,7 +5,7 @@ import { Send, CheckCircle, AlertCircle, Zap, BarChart2, Users, Globe, MessageCi
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-const USE_APPS_SCRIPT = true;
+const USE_APPS_SCRIPT = false; // Temporarily disable due to CORS issues
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHTbapRCtdZxgpbllFP_kOX-EIKMOFDy9-OGap0rncWRheH-4Bw3LD6fxQVNiUzDk/exec';
 const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/minds.datascience@hitam.org';
 const WHATSAPP_LINK = 'https://chat.whatsapp.com/Hir2hpXuLqAAmW1CoV5qaq?mode=hq1tswa';
