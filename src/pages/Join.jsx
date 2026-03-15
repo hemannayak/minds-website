@@ -65,10 +65,21 @@ const Join = () => {
         };
 
         try {
-            // Send data to Google Apps Script
+            // Send data to Google Apps Script as form-encoded (more reliable)
+            const formParams = new URLSearchParams();
+            formParams.append('name', data.name);
+            formParams.append('email', data.email);
+            formParams.append('year', data.year);
+            formParams.append('branch', data.branch);
+            formParams.append('section', data.section || '');
+            formParams.append('why', data.why || '');
+
             await fetch(APPS_SCRIPT_URL, {
                 method: "POST",
-                body: JSON.stringify(data)
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: formParams.toString()
             });
 
             // Assume success and update UI state

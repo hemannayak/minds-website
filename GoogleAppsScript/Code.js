@@ -8,27 +8,43 @@ function doPost(e) {
   try {
     Logger.log('Event received: ' + JSON.stringify(e));
     
-    // 1. Parse JSON data from React frontend
+    // 1. Parse data from React frontend (form-encoded is more reliable)
     let data = {};
     
-    // Try to get data from different sources
-    if (e && e.postData && e.postData.contents) {
+    // First try to get data from parameters (form-encoded)
+    if (e && e.parameter) {
+      data = {
+        name: e.parameter.name,
+        email: e.parameter.email,
+        year: e.parameter.year,
+        branch: e.parameter.branch,
+        section: e.parameter.section,
+        why: e.parameter.why
+      };
+      Logger.log('Using form-encoded parameters: ' + JSON.stringify(data));
+    } 
+    // Fallback to JSON if parameters don't work
+    else if (e && e.postData && e.postData.contents) {
       try {
         data = JSON.parse(e.postData.contents);
-        Logger.log('Parsed from postData: ' + JSON.stringify(data));
+        Logger.log('Parsed from JSON postData: ' + JSON.stringify(data));
       } catch (err) {
-        Logger.log('JSON parse failed, trying parameters: ' + err.message);
-        data = e.parameter || {};
-        Logger.log('Using parameters: ' + JSON.stringify(data));
+        Logger.log('JSON parse failed: ' + err.message);
+        throw new Error("Could not parse request data");
       }
-    } else if (e && e.parameter) {
-      data = e.parameter;
-      Logger.log('Using parameters: ' + JSON.stringify(data));
     } else {
       throw new Error("No data received from request");
     }
 
     const { name, email, year, branch, section, why } = data;
+    
+    // Validate required fields
+    if (!name || !email || !year || !branch) {
+      Logger.log('Missing required fields: ' + JSON.stringify({name, email, year, branch}));
+      throw new Error("Missing required fields: name, email, year, branch");
+    }
+    
+    Logger.log('Processing registration for: ' + name + ' (' + email + ')');
     const timestamp = new Date();
 
     // 2. Open spreadsheet and sheet
