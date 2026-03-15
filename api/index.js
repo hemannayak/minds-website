@@ -236,24 +236,28 @@ app.post('/api/register', async (req, res) => {
     await newMember.save();
     console.log('✅ Member saved to MongoDB:', email);
     
-    // Send to Google Sheets (async, don't wait for success)
-    sendToGoogleSheets({
-      name,
-      email,
-      year,
-      branch,
-      section: section || '',
-      why: why || '',
-      status: 'registered',
-      timestamp: new Date().toISOString()
-    }).catch(err => {
+    // Send to Google Sheets and wait
+    try {
+      await sendToGoogleSheets({
+        name,
+        email,
+        year,
+        branch,
+        section: section || '',
+        why: why || '',
+        status: 'registered',
+        timestamp: new Date().toISOString()
+      });
+    } catch (err) {
       console.error('⚠️ Google Sheets sync failed:', err);
-    });
+    }
     
-    // Send welcome email (async, don't wait for success)
-    sendWelcomeEmail(newMember).catch(err => {
+    // Send welcome email and wait
+    try {
+      await sendWelcomeEmail(newMember);
+    } catch (err) {
       console.error('⚠️ Email send failed:', err);
-    });
+    }
     
     // Return success
     res.status(200).json({
