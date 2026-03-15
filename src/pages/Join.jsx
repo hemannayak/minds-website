@@ -5,7 +5,7 @@ import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
 const USE_APPS_SCRIPT = true;
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTjPmAQmkIiswBKiyV43M3Mn5anESCbucYoFr1aRz7KqgyqpU98WTI3pyep5GSYdLcOg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwv-Fyz1E_VVSnRCHgCBdPbg3GraRXRjVKV9KJ87NiZk0YFCXMLn9tBQTJpBvN50eTGuw/exec';
 const WHATSAPP_LINK = 'https://chat.whatsapp.com/Hir2hpXuLqAAmW1CoV5qaq?mode=hq1tswa';
 
 const perks = [
