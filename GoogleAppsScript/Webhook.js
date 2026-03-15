@@ -9,7 +9,7 @@
  * 3. Deploy as a Web App (Execute as: Me, Who has access: Anyone)
  */
 
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE'; // <-- Paste the ID of your Google Sheet here
+const SPREADSHEET_ID = '125cng8ocEjcP3uoyZW4S0RW54FtiZOQYk5tgfowFr2U'; // <-- Paste the ID of your Google Sheet here
 const SHEET_NAME = 'MINDS_Join_Registrations';
 
 function doPost(e) {
