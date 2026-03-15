@@ -69,32 +69,49 @@ const Join = () => {
         
         try {
             if (USE_APPS_SCRIPT && APPS_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-                // Convert FormData to JSON for Google Apps Script
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                });
-                
-                // Try to get response to verify success
-                let result;
+                // Try Google Apps Script first
                 try {
-                    result = await response.json();
-                } catch (e) {
-                    // If no-cors mode, we can't read the response, but will assume success
-                    result = { success: true };
-                }
-                
-                if (result.success) {
-                    setSubmittedData(data);
-                    setShowWhatsApp(true);
-                    setFormStatus('success');
-                    e.target.reset();
-                    // Store that WhatsApp was shown in this session
-                    sessionStorage.setItem('whatsappShown', 'true');
-                } else {
-                    setFormStatus('error');
-                    console.error('Google Apps Script error:', result.error);
+                    const response = await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data),
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        setSubmittedData(data);
+                        setShowWhatsApp(true);
+                        setFormStatus('success');
+                        e.target.reset();
+                        sessionStorage.setItem('whatsappShown', 'true');
+                    } else {
+                        throw new Error(result.error || 'Google Apps Script failed');
+                    }
+                } catch (corsError) {
+                    console.warn('CORS error, falling back to FormSubmit:', corsError);
+                    
+                    // Fallback to FormSubmit
+                    const fallbackFormData = new FormData(e.target);
+                    fallbackFormData.append('_subject', 'New Club Membership Application - MINDS');
+                    fallbackFormData.append('_captcha', 'false');
+                    
+                    const res = await fetch(FORMSUBMIT_URL, {
+                        method: 'POST',
+                        headers: { Accept: 'application/json' },
+                        body: fallbackFormData,
+                    });
+                    
+                    const result = await res.json();
+                    if (result?.success) { 
+                        setSubmittedData(data);
+                        setShowWhatsApp(true);
+                        setFormStatus('success'); 
+                        e.target.reset();
+                        sessionStorage.setItem('whatsappShown', 'true');
+                    } else {
+                        throw new Error('FormSubmit failed');
+                    }
                 }
             } else {
                 // Fallback to FormSubmit
