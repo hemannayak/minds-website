@@ -8,7 +8,7 @@ import { fadeInUp, staggerContainer } from '../lib/animations';
 const USE_APPS_SCRIPT = true;
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHTbapRCtdZxgpbllFP_kOX-EIKMOFDy9-OGap0rncWRheH-4Bw3LD6fxQVNiUzDk/exec';
 const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/minds.datascience@hitam.org';
-const WHATSAPP_LINK = 'https://chat.whatsapp.com/FMwJfGxvZto2wNVlsSHejK?mode=gi_t';
+const WHATSAPP_LINK = 'https://chat.whatsapp.com/Hir2hpXuLqAAmW1CoV5qaq?mode=hq1tswa';
 
 const perks = [
     { icon: Zap, text: 'Exclusive industry sessions & keynotes' },
@@ -66,11 +66,24 @@ const Join = () => {
                     body: JSON.stringify(data),
                 });
                 
-                // Since Google Apps Script uses no-cors, we'll assume success if no error
-                setSubmittedData(data);
-                setShowWhatsApp(true);
-                setFormStatus('success');
-                e.target.reset();
+                // Try to get response to verify success
+                let result;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    // If no-cors mode, we can't read the response, but will assume success
+                    result = { success: true };
+                }
+                
+                if (result.success) {
+                    setSubmittedData(data);
+                    setShowWhatsApp(true);
+                    setFormStatus('success');
+                    e.target.reset();
+                } else {
+                    setFormStatus('error');
+                    console.error('Google Apps Script error:', result.error);
+                }
             } else {
                 // Fallback to FormSubmit
                 formData.append('_subject', 'New Club Membership Application - MINDS');
@@ -90,8 +103,9 @@ const Join = () => {
                     setFormStatus('error');
                 }
             }
-        } catch { 
-            setFormStatus('error'); 
+        } catch (error) { 
+            setFormStatus('error');
+            console.error('Form submission error:', error);
         }
     };
 
