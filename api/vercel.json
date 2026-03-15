@@ -1,22 +1,9 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/index.js",
-      "use": "@vercel/node"
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
     }
-  ],
-  "routes": [
-    {
-      "src": "api/index.js",
-      "dest": "/api/index.js"
-    }
-  ],
-  "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "EMAIL_USER": "@email_user", 
-    "EMAIL_PASS": "@email_pass",
-    "GOOGLE_SHEETS_WEBHOOK": "@google_sheets_webhook",
-    "WHATSAPP_LINK": "@whatsapp_link"
-  }
+  ]
 }

@@ -283,11 +283,15 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Start Server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 MINDS Registration API running on port ${PORT}`);
-  console.log(`📊 MongoDB: ${process.env.MONGODB_URI ? 'Configured' : 'Not configured'}`);
-  console.log(`📧 Email: ${process.env.EMAIL_USER ? 'Configured' : 'Not configured'}`);
-  console.log(`📊 Google Sheets: ${process.env.GOOGLE_SHEETS_WEBHOOK ? 'Configured' : 'Not configured'}`);
-});
+// Start Server locally, Export for Vercel
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🚀 MINDS Registration API running on port ${PORT}`);
+    console.log(`📊 MongoDB: ${process.env.MONGODB_URI ? 'Configured' : 'Not configured'}`);
+    console.log(`📧 Email: ${process.env.EMAIL_USER ? 'Configured' : 'Not configured'}`);
+    console.log(`📊 Google Sheets: ${process.env.GOOGLE_SHEETS_WEBHOOK ? 'Configured' : 'Not configured'}`);
+  });
+}
+
+module.exports = app;
