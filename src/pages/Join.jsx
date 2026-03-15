@@ -53,7 +53,7 @@ const Join = () => {
         e.preventDefault();
         setFormStatus('sending');
         const formData = new FormData(e.target);
-        
+
         // Store form data for WhatsApp link display
         const data = {
             name: formData.get('name'),
@@ -63,22 +63,24 @@ const Join = () => {
             section: formData.get('section'),
             why: formData.get('why')
         };
-        
+
         try {
             // Send data to Google Apps Script
             await fetch(APPS_SCRIPT_URL, {
                 method: "POST",
-                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify(data)
             });
-            
+
             // Assume success and update UI state
             setSubmittedData(data);
             setShowWhatsApp(true);
             setFormStatus("success");
             e.target.reset();
             sessionStorage.setItem("whatsappShown", "true");
-        } catch (error) { 
+        } catch (error) {
             setFormStatus('error');
             console.error('Form submission error:', error);
         }
@@ -207,11 +209,11 @@ const Join = () => {
                                             <div className="w-16 h-16 rounded-[16px] bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
                                                 <CheckCircle size={28} className="text-emerald-400" />
                                             </div>
-                                            
+
                                             <h3 className="text-white font-bold text-2xl mb-3">
                                                 Welcome to MINDS, {submittedData?.name}!
                                             </h3>
-                                            
+
                                             <p className="text-white/60 text-sm leading-relaxed max-w-md mx-auto mb-8">
                                                 Your application has been successfully submitted. Check your email for a welcome message and further instructions.
                                             </p>
