@@ -7,17 +7,16 @@ const WEBSITE_DATA_URL = 'https://minds-ds.vercel.app/website-data.json';
 function doPost(e) {
   try {
     // 1. Parse JSON data from React frontend
-    let data;
-    try {
-      if (e.postData && e.postData.contents) {
+    let data = {};
+
+    if (e && e.postData && e.postData.contents) {
+      try {
         data = JSON.parse(e.postData.contents);
-      } else {
-        throw new Error("No post data received");
+      } catch (err) {
+        data = e.parameter; // fallback for form encoded requests
       }
-    } catch (parseError) {
-      // Sometimes no-cors requests can come through as URL-encoded or raw text depending on how the browser treats it
-      // Since mode='no-cors' from fetch(), it's likely a plain text body
-      throw new Error("Error parsing JSON: " + parseError.message);
+    } else {
+      throw new Error("No post data received from request");
     }
 
     const { name, email, year, branch, section, why } = data;
@@ -28,21 +27,21 @@ function doPost(e) {
     if (SPREADSHEET_ID === 'YOUR_SPREADSHEET_ID_HERE') {
       throw new Error("Spreadsheet ID was not set in the Apps Script.");
     }
-    
+
     const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
     let sheet = spreadsheet.getSheetByName(SHEET_NAME);
-    
+
     // Create the sheet if it doesn't exist
     if (!sheet) {
       sheet = spreadsheet.insertSheet(SHEET_NAME);
       // Setup headers
       sheet.appendRow([
-        'Timestamp', 
-        'Name', 
-        'Email', 
-        'Year', 
-        'Branch', 
-        'Section', 
+        'Timestamp',
+        'Name',
+        'Email',
+        'Year',
+        'Branch',
+        'Section',
         'Why',
         'Status'
       ]);
@@ -63,13 +62,28 @@ function doPost(e) {
     ]);
 
     // 4. Fetch the dynamic website data
-    let websiteData = { upcomingEvents: [], recruitment: { isOpen: false } };
+    let websiteData = { 
+      upcomingEvents: [], 
+      recruitment: { isOpen: false, formUrl: '' } 
+    };
     try {
-      const response = UrlFetchApp.fetch(WEBSITE_DATA_URL);
-      websiteData = JSON.parse(response.getContentText());
-    } catch(err) {
+      const response = UrlFetchApp.fetch(WEBSITE_DATA_URL, {
+        'muteHttpExceptions': true
+      });
+      if (response.getResponseCode() === 200) {
+        const fetchedData = JSON.parse(response.getContentText());
+        // Merge with defaults to ensure all required properties exist
+        websiteData = {
+          upcomingEvents: fetchedData.upcomingEvents || [],
+          recruitment: {
+            isOpen: fetchedData.recruitment?.isOpen || false,
+            formUrl: fetchedData.recruitment?.formUrl || ''
+          }
+        };
+      }
+    } catch (err) {
       console.log('Error fetching website data:', err);
-      // We will proceed using the fallback empty arrays/false flags if it fails
+      // Continue with default empty data
     }
 
     // 5. Send the Welcome Email
@@ -87,7 +101,7 @@ function doPost(e) {
         subject: "MINDS Join Form Error",
         body: "There was an error processing the submission: " + error.message + "\n\nStack: " + error.stack
       });
-    } catch (e) {}
+    } catch (e) { }
 
     // Return error response
     return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: error.message }))
@@ -106,12 +120,18 @@ function doGet(e) {
  * Sends a stylized HTML welcome email.
  */
 function sendWelcomeEmail(name, email, websiteData) {
-  const subject = `Welcome to MINDS - Your Data Journey Starts Here 🚀`;
+  // Ensure websiteData has default values
+  const safeWebsiteData = {
+    upcomingEvents: (websiteData && websiteData.upcomingEvents) ? websiteData.upcomingEvents : [],
+    recruitment: (websiteData && websiteData.recruitment) ? websiteData.recruitment : { isOpen: false, formUrl: '' }
+  };
   
+  const subject = `Welcome to MINDS - Your Data Journey Starts Here 🚀`;
+
   // -- Build Upcoming Events HTML --
   let eventsHtml = '';
-  const events = websiteData.upcomingEvents;
-  
+  const events = safeWebsiteData.upcomingEvents;
+
   if (events && events.length > 0) {
     let eventsList = '';
     events.forEach((event, idx) => {
@@ -123,7 +143,7 @@ function sendWelcomeEmail(name, email, websiteData) {
         </li>
       `;
     });
-    
+
     eventsHtml = `
       <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 30px 0;">
         <h2 style="color: #0f172a; margin-top: 0;">📅 Upcoming Events</h2>
@@ -141,12 +161,12 @@ function sendWelcomeEmail(name, email, websiteData) {
       </div>
     `;
   }
-  
+
   // -- Build Recruitment HTML --
   let recruitmentHtml = '';
-  const isRecruitmentOpen = websiteData.recruitment && websiteData.recruitment.isOpen;
-  const recruitmentFormUrl = (websiteData.recruitment && websiteData.recruitment.formUrl) || '';
-  
+  const isRecruitmentOpen = safeWebsiteData.recruitment && safeWebsiteData.recruitment.isOpen;
+  const recruitmentFormUrl = (safeWebsiteData.recruitment && safeWebsiteData.recruitment.formUrl) || '';
+
   if (isRecruitmentOpen) {
     recruitmentHtml = `
       <div style="background-color: #f0fdf4; padding: 20px; border-radius: 8px; margin: 30px 0;">
