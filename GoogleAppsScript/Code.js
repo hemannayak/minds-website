@@ -1,3 +1,4 @@
+const SPREADSHEET_ID = '125cng8ocEjcP3uoyZW4S0RW54FtiZOQYk5tgfowFr2U';
 const SHEET_NAME = 'MINDS_Join_Registrations';
 const WHATSAPP_LINK = 'https://chat.whatsapp.com/Hir2hpXuLqAAmW1CoV5qaq?mode=hq1tswa';
 const WEBSITE_DATA_URL = 'https://minds-ds.vercel.app/website-data.json';
@@ -23,20 +24,18 @@ function doPost(e) {
     const timestamp = new Date();
 
     // 2. Open spreadsheet and sheet
-    // We cannot use getActiveSpreadsheet() in a standalone web app. 
-    // Instead, we search for the file by name, or create it if missing.
-    let spreadsheet;
-    const files = DriveApp.getFilesByName(SHEET_NAME);
-    if (files.hasNext()) {
-      spreadsheet = SpreadsheetApp.open(files.next());
-    } else {
-      spreadsheet = SpreadsheetApp.create(SHEET_NAME);
+    // We use the explicit Spreadsheet ID to avoid issues with standalone vs bound scripts.
+    if (SPREADSHEET_ID === 'YOUR_SPREADSHEET_ID_HERE') {
+      throw new Error("Spreadsheet ID was not set in the Apps Script.");
     }
-
-    let sheet = spreadsheet.getSheets()[0];
     
-    // Setup headers if empty
-    if (sheet.getLastRow() === 0) {
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    
+    // Create the sheet if it doesn't exist
+    if (!sheet) {
+      sheet = spreadsheet.insertSheet(SHEET_NAME);
+      // Setup headers
       sheet.appendRow([
         'Timestamp', 
         'Name', 
