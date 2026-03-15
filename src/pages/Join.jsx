@@ -42,6 +42,16 @@ const Join = () => {
     const [submittedData, setSubmittedData] = useState(null);
     const navigate = useNavigate();
 
+    // Check if WhatsApp was already shown in this session
+    React.useEffect(() => {
+        const whatsappShown = sessionStorage.getItem('whatsappShown');
+        if (whatsappShown === 'true') {
+            setShowWhatsApp(false);
+            setFormStatus('idle');
+            setSubmittedData(null);
+        }
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setFormStatus('sending');
@@ -80,6 +90,8 @@ const Join = () => {
                     setShowWhatsApp(true);
                     setFormStatus('success');
                     e.target.reset();
+                    // Store that WhatsApp was shown in this session
+                    sessionStorage.setItem('whatsappShown', 'true');
                 } else {
                     setFormStatus('error');
                     console.error('Google Apps Script error:', result.error);
@@ -99,6 +111,8 @@ const Join = () => {
                     setShowWhatsApp(true);
                     setFormStatus('success'); 
                     e.target.reset();
+                    // Store that WhatsApp was shown in this session
+                    sessionStorage.setItem('whatsappShown', 'true');
                 } else {
                     setFormStatus('error');
                 }
@@ -271,6 +285,8 @@ const Join = () => {
                                                     setFormStatus('idle');
                                                     setShowWhatsApp(false);
                                                     setSubmittedData(null);
+                                                    // Clear sessionStorage to allow WhatsApp link to show again
+                                                    sessionStorage.removeItem('whatsappShown');
                                                 }}
                                                 className="text-sm font-semibold text-white/60 hover:text-white underline-offset-4 hover:underline transition-all"
                                             >
