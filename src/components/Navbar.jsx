@@ -88,8 +88,9 @@ const Navbar = () => {
 
                 {/* Mobile Hamburger */}
                 <button
-                    className="lg:hidden relative z-50 p-2 transition-colors text-white/50 hover:text-white"
+                    className="lg:hidden relative z-50 p-3 rounded-lg transition-colors text-white/70 hover:text-white hover:bg-white/10"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    aria-label="Toggle mobile menu"
                 >
                     {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
                 </button>
@@ -103,9 +104,9 @@ const Navbar = () => {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed inset-0 bg-black z-[70] lg:hidden flex flex-col justify-center px-8 border-l border-white/[0.06] overflow-y-auto"
+                        className="fixed inset-0 bg-black z-[100] lg:hidden flex flex-col items-center justify-center px-8 border-l border-white/[0.06] h-screen"
                     >
-                        <div className="flex flex-col gap-8 mt-12">
+                        <div className="flex flex-col gap-8 w-full max-w-md mx-auto">
                             {navLinks.map((link, i) => (
                                 <motion.div
                                     key={link.name}
@@ -117,15 +118,15 @@ const Navbar = () => {
                                         to={link.path}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className={({ isActive }) =>
-                                            `text-4xl font-bold relative w-fit group py-1 block transition-colors ${isActive ? 'text-white' : 'text-white/30 hover:text-white'
-                                            }`
+                                            `text-3xl md:text-4xl font-bold relative w-fit group py-2 block transition-colors ${isActive ? 'text-white' : 'text-white/60 hover:text-white'
+                                                }`
                                         }
                                     >
                                         {({ isActive }) => (
                                             <>
                                                 {link.name}
                                                 <span
-                                                    className={`absolute -bottom-2 left-0 h-[1.5px] bg-white transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                                                    className={`absolute bottom-1 left-0 h-[2px] bg-white transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
                                                         }`}
                                                 ></span>
                                             </>
