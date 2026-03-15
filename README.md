@@ -1,16 +1,47 @@
-# React + Vite
+# MINDS Club Official Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Data Science and Analytics Club - HITAM
 
-Currently, two official plugins are available:
+**© 2025 MINDS Club, HITAM. All rights reserved.**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Overview
 
-## React Compiler
+MINDS (Minds in Data Science) is the official data science and analytics club of HITAM (Hyderabad Institute of Technology And Management). We foster data literacy, analytical thinking, and practical data science skills among students.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- Modern responsive design
+- Interactive animations and 3D effects
+- Member registration with email verification
+- Community integration
+- Professional user interface
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech Stack
+
+- **Frontend**: React 19, Vite, Tailwind CSS, Framer Motion
+- **Backend**: Node.js, Express, MongoDB
+- **Deployment**: Vercel
+
+## Quick Start
+
+```bash
+git clone https://github.com/hemannayak/minds-website.git
+cd minds-website
+npm install
+npm run dev
+```
+
+## Contact
+
+- **Email**: minds@hitam.org
+- **Website**: minds.hitam.org
+
+---
+
+## License
+
+**© 2025 MINDS Club, HITAM. All rights reserved.**
+
+This project is the official property of MINDS Club, Hyderabad Institute of Technology And Management(HITAM). Unauthorized reproduction, distribution, or modification is strictly prohibited.
+
+For licensing inquiries, contact: minds@hitam.org
