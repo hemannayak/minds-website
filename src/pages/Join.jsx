@@ -4,8 +4,7 @@ import { Send, CheckCircle, AlertCircle, Zap, BarChart2, Users, Globe, MessageCi
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-const USE_APPS_SCRIPT = true;
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwv-Fyz1E_VVSnRCHgCBdPbg3GraRXRjVKV9KJ87NiZk0YFCXMLn9tBQTJpBvN50eTGuw/exec';
+const API_URL = '/api/register';
 const WHATSAPP_LINK = 'https://chat.whatsapp.com/Hir2hpXuLqAAmW1CoV5qaq?mode=hq1tswa';
 
 const perks = [
@@ -65,29 +64,29 @@ const Join = () => {
         };
 
         try {
-            // Send data to Google Apps Script as form-encoded (more reliable)
-            const formParams = new URLSearchParams();
-            formParams.append('name', data.name);
-            formParams.append('email', data.email);
-            formParams.append('year', data.year);
-            formParams.append('branch', data.branch);
-            formParams.append('section', data.section || '');
-            formParams.append('why', data.why || '');
-
-            await fetch(APPS_SCRIPT_URL, {
+            // Send data to MINDS Registration API
+            const response = await fetch(API_URL, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+                    "Content-Type": "application/json"
                 },
-                body: formParams.toString()
+                body: JSON.stringify(data)
             });
 
-            // Assume success and update UI state
-            setSubmittedData(data);
-            setShowWhatsApp(true);
-            setFormStatus("success");
-            e.target.reset();
-            sessionStorage.setItem("whatsappShown", "true");
+            const result = await response.json();
+            
+            if (result.success) {
+                // Success: Update UI state
+                setSubmittedData(data);
+                setShowWhatsApp(true);
+                setFormStatus("success");
+                e.target.reset();
+                sessionStorage.setItem("whatsappShown", "true");
+            } else {
+                // API returned error
+                setFormStatus('error');
+                console.error('Registration failed:', result.message);
+            }
         } catch (error) {
             setFormStatus('error');
             console.error('Form submission error:', error);
