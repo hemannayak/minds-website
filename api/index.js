@@ -70,6 +70,74 @@ async function sendToGoogleSheets(memberData) {
 
 // Send Welcome Email
 async function sendWelcomeEmail(member) {
+  let websiteData = { upcomingEvents: [], recruitment: { isOpen: false } };
+  
+  try {
+    const res = await fetch('https://minds-ds.vercel.app/website-data.json');
+    if (res.ok) {
+      websiteData = await res.json();
+    }
+  } catch (err) {
+    console.error('⚠️ Could not fetch website data for email:', err.message);
+  }
+
+  // Build Upcoming Events HTML
+  let eventsHtml = '';
+  const events = websiteData.upcomingEvents;
+  
+  if (events && events.length > 0) {
+    let eventsList = '';
+    events.forEach((event, idx) => {
+      eventsList += `
+        <li style="margin-bottom: 10px;">
+          <strong>${idx + 1}. ${event.title}</strong><br>
+          <em>Date: ${event.date || 'TBA'} | Time: ${event.time || 'TBA'} | Location: ${event.location || 'TBA'}</em><br>
+          ${event.description || ''}
+        </li>
+      `;
+    });
+    
+    eventsHtml = `
+      <div style="background-color: #f8fafc; padding: 25px; border-radius: 10px; margin: 30px 0;">
+        <h3 style="color: #0f172a; margin-top: 0; margin-bottom: 15px;">📅 Upcoming Events</h3>
+        <ul style="padding-left: 20px; color: #334155; margin: 0;">
+          ${eventsList}
+        </ul>
+      </div>
+    `;
+  } else {
+    eventsHtml = `
+      <div style="background-color: #f8fafc; padding: 25px; border-radius: 10px; margin: 30px 0; text-align: center;">
+        <h3 style="color: #0f172a; margin-top: 0; margin-bottom: 15px;">📅 Upcoming Events</h3>
+        <p style="color: #334155; margin: 0;">Stay tuned for exciting workshops, hackathons, and data science events!</p>
+      </div>
+    `;
+  }
+
+  // Build Recruitment HTML
+  let recruitmentHtml = '';
+  const isRecruitmentOpen = websiteData.recruitment && websiteData.recruitment.isOpen;
+  const recruitmentFormUrl = (websiteData.recruitment && websiteData.recruitment.formUrl) || '';
+  
+  if (isRecruitmentOpen) {
+    recruitmentHtml = `
+      <div style="background-color: #f0fdf4; padding: 25px; border-radius: 10px; margin: 30px 0; text-align: center;">
+        <h3 style="color: #059669; margin-top: 0; margin-bottom: 15px;">🚀 Core Committee Recruitment</h3>
+        <p style="color: #064e3b; margin-bottom: 15px;">Applications for the MINDS Core Committee are now open!</p>
+        <a href="${recruitmentFormUrl}" style="display: inline-block; background-color: #059669; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold;">Apply here</a>
+      </div>
+    `;
+  } else {
+    recruitmentHtml = `
+      <div style="background-color: #f8fafc; padding: 25px; border-radius: 10px; margin: 30px 0; text-align: center;">
+        <h3 style="color: #0f172a; margin-top: 0; margin-bottom: 15px;">🚀 Core Committee Recruitment</h3>
+        <p style="color: #334155; margin: 0;">Interested in leadership? Keep an eye out for upcoming recruitment announcements!</p>
+      </div>
+    `;
+  }
+
+  const WA_LINK = 'https://chat.whatsapp.com/Hir2hpXuLqAAmW1CoV5qaq?mode=hq1tswa';
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: member.email,
@@ -88,18 +156,12 @@ async function sendWelcomeEmail(member) {
           We're thrilled to have you join our community of innovators and data enthusiasts at HITAM.
         </p>
         
-        <div style="background-color: #f8fafc; padding: 25px; border-radius: 10px; margin: 30px 0; text-align: center;">
-          <h3 style="color: #0f172a; margin-bottom: 15px;">📅 Upcoming Events</h3>
-          <p style="color: #334155;">Stay tuned for exciting workshops, hackathons, and data science events!</p>
-        </div>
+        ${eventsHtml}
         
-        <div style="background-color: #f0fdf4; padding: 25px; border-radius: 10px; margin: 30px 0; text-align: center;">
-          <h3 style="color: #059669; margin-bottom: 15px;">🚀 Core Committee Recruitment</h3>
-          <p style="color: #064e3b;">Interested in leadership? Keep an eye out for recruitment announcements!</p>
-        </div>
+        ${recruitmentHtml}
         
         <div style="text-align: center; margin: 40px 0;">
-          <a href="${process.env.WHATSAPP_LINK}" 
+          <a href="${WA_LINK}" 
              style="display: inline-block; background-color: #25D366; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
             💬 Join WhatsApp Community
           </a>
