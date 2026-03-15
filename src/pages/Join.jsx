@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Send, CheckCircle, AlertCircle, Zap, BarChart2, Users, Globe } from 'lucide-react';
+import { Send, CheckCircle, AlertCircle, Zap, BarChart2, Users, Globe, MessageCircle } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-const USE_APPS_SCRIPT = false;
-const APPS_SCRIPT_URL = 'https://script.google.com/a/macros/hitam.org/s/AKfycbx_MM60s1N5BhMCMW6G4zrdVfprZfYHU0zjld1F4W7xI0IxzrH6joThEaPVNFmVlgQSOg/exec';
+const USE_APPS_SCRIPT = true;
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHTbapRCtdZxgpbllFP_kOX-EIKMOFDy9-OGap0rncWRheH-4Bw3LD6fxQVNiUzDk/exec';
 const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/minds.datascience@hitam.org';
+const WHATSAPP_LINK = 'https://chat.whatsapp.com/FMwJfGxvZto2wNVlsSHejK?mode=gi_t';
 
 const perks = [
     { icon: Zap, text: 'Exclusive industry sessions & keynotes' },
@@ -37,23 +38,41 @@ const selectClass = "w-full bg-white/5 border border-white/10 rounded-[10px] px-
 
 const Join = () => {
     const [formStatus, setFormStatus] = useState('idle');
+    const [showWhatsApp, setShowWhatsApp] = useState(false);
+    const [submittedData, setSubmittedData] = useState(null);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setFormStatus('sending');
         const formData = new FormData(e.target);
+        
+        // Store form data for WhatsApp link display
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            year: formData.get('year'),
+            branch: formData.get('branch'),
+            section: formData.get('section'),
+            why: formData.get('why')
+        };
+        
         try {
-            if (USE_APPS_SCRIPT && APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                await fetch(APPS_SCRIPT_URL, {
+            if (USE_APPS_SCRIPT && APPS_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                // Convert FormData to JSON for Google Apps Script
+                const response = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams(formData).toString(),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
                 });
-                navigate('/welcome');
-                return;
+                
+                // Since Google Apps Script uses no-cors, we'll assume success if no error
+                setSubmittedData(data);
+                setShowWhatsApp(true);
+                setFormStatus('success');
+                e.target.reset();
             } else {
+                // Fallback to FormSubmit
                 formData.append('_subject', 'New Club Membership Application - MINDS');
                 formData.append('_captcha', 'false');
                 const res = await fetch(FORMSUBMIT_URL, {
@@ -61,11 +80,19 @@ const Join = () => {
                     headers: { Accept: 'application/json' },
                     body: formData,
                 });
-                const data = await res.json();
-                if (data?.success) { navigate('/welcome'); return; }
-                setFormStatus('error');
+                const result = await res.json();
+                if (result?.success) { 
+                    setSubmittedData(data);
+                    setShowWhatsApp(true);
+                    setFormStatus('success'); 
+                    e.target.reset();
+                } else {
+                    setFormStatus('error');
+                }
             }
-        } catch { setFormStatus('error'); }
+        } catch { 
+            setFormStatus('error'); 
+        }
     };
 
     return (
@@ -182,77 +209,133 @@ const Join = () => {
 
                                 {/* Form body */}
                                 <div className="p-6 sm:p-8">
-                                    <form className="space-y-5" onSubmit={handleSubmit}>
-                                        {/* Name + Email */}
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                            <Field id="name" label="Full Name" type="text" name="name" required placeholder="Your full name" />
-                                            <Field id="email" label="College Email" type="email" name="email" required placeholder="roll@hitam.org" />
-                                        </div>
-
-                                        {/* Academic info */}
-                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                            <Field id="year" label="Year">
-                                                <select id="year" name="year" required defaultValue="" className={selectClass}>
-                                                    <option value="" disabled>Select year</option>
-                                                    {['1st Year', '2nd Year', '3rd Year', '4th Year'].map(y => (
-                                                        <option key={y} value={y}>{y}</option>
-                                                    ))}
-                                                </select>
-                                            </Field>
-                                            <Field id="branch" label="Branch" className="sm:col-span-1">
-                                                <select id="branch" name="branch" required defaultValue="" className={selectClass}>
-                                                    <option value="" disabled>Select branch</option>
-                                                    {['Data Science', 'AI & ML', 'CSE Core', 'CSE-ITP', 'Cyber Security', 'ECE', 'EEE', 'Mech', 'MECH-ITP', 'Other'].map(b => (
-                                                        <option key={b} value={b}>{b}</option>
-                                                    ))}
-                                                </select>
-                                            </Field>
-                                            <Field id="section" label="Section" optional type="text" name="section" placeholder="e.g. A" />
-                                        </div>
-
-                                        {/* Why MINDS — bonus field */}
-                                        <Field id="why" label="Why do you want to join?" optional>
-                                            <textarea
-                                                id="why"
-                                                name="why"
-                                                rows="3"
-                                                placeholder="Tell us what excites you about MINDS (optional)"
-                                                className="w-full bg-white/5 border border-white/10 rounded-[10px] px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-white/25 focus:bg-white/8 transition-all duration-200 resize-none"
-                                            />
-                                        </Field>
-
-                                        {/* Error banner */}
-                                        {formStatus === 'error' && (
-                                            <div className="flex items-center gap-3 px-4 py-3 bg-rose-500/10 border border-rose-500/20 rounded-[10px]">
-                                                <AlertCircle size={14} className="text-rose-400 shrink-0" />
-                                                <p className="text-rose-400 text-sm">Submission failed. Please check your connection and try again.</p>
-                                            </div>
-                                        )}
-
-                                        {/* Submit */}
-                                        <button
-                                            type="submit"
-                                            disabled={formStatus === 'sending'}
-                                            className="w-full py-4 rounded-[10px] font-bold text-sm text-slate-900 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] flex items-center justify-center gap-2"
-                                            style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08),0 4px 16px rgba(255,255,255,0.08)' }}
+                                    {formStatus === 'success' && showWhatsApp ? (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.96 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="text-center py-8 px-4"
                                         >
-                                            {formStatus === 'sending' ? (
-                                                <>
-                                                    <span className="w-4 h-4 rounded-full border-2 border-slate-400 border-t-slate-900 animate-spin" />
-                                                    Processing Application…
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Send size={15} />
-                                                    Apply to MINDS — It's Free
-                                                </>
-                                            )}
-                                        </button>
+                                            <div className="w-16 h-16 rounded-[16px] bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
+                                                <CheckCircle size={28} className="text-emerald-400" />
+                                            </div>
+                                            
+                                            <h3 className="text-white font-bold text-2xl mb-3">
+                                                Welcome to MINDS, {submittedData?.name}!
+                                            </h3>
+                                            
+                                            <p className="text-white/60 text-sm leading-relaxed max-w-md mx-auto mb-8">
+                                                Your application has been successfully submitted. Check your email for a welcome message and further instructions.
+                                            </p>
 
-                                        <p className="text-center text-xs text-slate-600">
-                                            By applying you agree to be contacted via email about MINDS events.
-                                        </p>
-                                    </form>
+                                            {/* WhatsApp Community Card */}
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.2 }}
+                                                className="bg-emerald-500/10 border border-emerald-500/20 rounded-[14px] p-6 mb-6"
+                                            >
+                                                <div className="flex items-center justify-center gap-3 mb-4">
+                                                    <MessageCircle size={20} className="text-emerald-400" />
+                                                    <h4 className="text-white font-bold text-lg">Join Our Community</h4>
+                                                </div>
+                                                <p className="text-white/70 text-sm mb-4">
+                                                    Connect with fellow members and stay updated with our latest events and activities.
+                                                </p>
+                                                <a
+                                                    href={WHATSAPP_LINK}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm rounded-[10px] transition-all duration-200 hover:-translate-y-[1px]"
+                                                >
+                                                    <MessageCircle size={16} />
+                                                    Join WhatsApp Community
+                                                </a>
+                                            </motion.div>
+
+                                            <button
+                                                onClick={() => {
+                                                    setFormStatus('idle');
+                                                    setShowWhatsApp(false);
+                                                    setSubmittedData(null);
+                                                }}
+                                                className="text-sm font-semibold text-white/60 hover:text-white underline-offset-4 hover:underline transition-all"
+                                            >
+                                                Submit another application
+                                            </button>
+                                        </motion.div>
+                                    ) : (
+                                        <form className="space-y-5" onSubmit={handleSubmit}>
+                                            {/* Name + Email */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                <Field id="name" label="Full Name" type="text" name="name" required placeholder="Your full name" />
+                                                <Field id="email" label="College Email" type="email" name="email" required placeholder="roll@hitam.org" />
+                                            </div>
+
+                                            {/* Academic info */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                                <Field id="year" label="Year">
+                                                    <select id="year" name="year" required defaultValue="" className={selectClass}>
+                                                        <option value="" disabled>Select year</option>
+                                                        {['1st Year', '2nd Year', '3rd Year', '4th Year'].map(y => (
+                                                            <option key={y} value={y}>{y}</option>
+                                                        ))}
+                                                    </select>
+                                                </Field>
+                                                <Field id="branch" label="Branch" className="sm:col-span-1">
+                                                    <select id="branch" name="branch" required defaultValue="" className={selectClass}>
+                                                        <option value="" disabled>Select branch</option>
+                                                        {['Data Science', 'AI & ML', 'CSE Core', 'CSE-ITP', 'Cyber Security', 'ECE', 'EEE', 'Mech', 'MECH-ITP', 'Other'].map(b => (
+                                                            <option key={b} value={b}>{b}</option>
+                                                        ))}
+                                                    </select>
+                                                </Field>
+                                                <Field id="section" label="Section" optional type="text" name="section" placeholder="e.g. A" />
+                                            </div>
+
+                                            {/* Why MINDS — bonus field */}
+                                            <Field id="why" label="Why do you want to join?" optional>
+                                                <textarea
+                                                    id="why"
+                                                    name="why"
+                                                    rows="3"
+                                                    placeholder="Tell us what excites you about MINDS (optional)"
+                                                    className="w-full bg-white/5 border border-white/10 rounded-[10px] px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-white/25 focus:bg-white/8 transition-all duration-200 resize-none"
+                                                />
+                                            </Field>
+
+                                            {/* Error banner */}
+                                            {formStatus === 'error' && (
+                                                <div className="flex items-center gap-3 px-4 py-3 bg-rose-500/10 border border-rose-500/20 rounded-[10px]">
+                                                    <AlertCircle size={14} className="text-rose-400 shrink-0" />
+                                                    <p className="text-rose-400 text-sm">Submission failed. Please check your connection and try again.</p>
+                                                </div>
+                                            )}
+
+                                            {/* Submit */}
+                                            <button
+                                                type="submit"
+                                                disabled={formStatus === 'sending'}
+                                                className="w-full py-4 rounded-[10px] font-bold text-sm text-slate-900 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] flex items-center justify-center gap-2"
+                                                style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.08),0 4px 16px rgba(255,255,255,0.08)' }}
+                                            >
+                                                {formStatus === 'sending' ? (
+                                                    <>
+                                                        <span className="w-4 h-4 rounded-full border-2 border-slate-400 border-t-slate-900 animate-spin" />
+                                                        Processing Application…
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Send size={15} />
+                                                        Apply to MINDS — It's Free
+                                                    </>
+                                                )}
+                                            </button>
+
+                                            <p className="text-center text-xs text-slate-600">
+                                                By applying you agree to be contacted via email about MINDS events.
+                                            </p>
+                                        </form>
+                                    )}
                                 </div>
                             </motion.div>
 
