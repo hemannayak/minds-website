@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ArrowRight, X, ExternalLink } from 'lucide-react';
+import { Sparkles, ArrowRight, X, ExternalLink, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
 const FORM_EMBED_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSekycKn-NS94WEWZzakhkx2cv5uHI5ySLRZtkrNZWsThkA5qA/viewform?embedded=true';
 const FORM_URL = 'https://forms.gle/R6w2dvaduqBZTMyV6';
+const APPLICATION_DEADLINE = new Date('2026-03-18T12:00:00+05:30'); // March 18, 2026 12:00 Noon IST
 
 /* ── Data ── */
 const leadership = [
@@ -30,6 +31,20 @@ const leadership = [
         dept: 'MINDS Club',
         initials: 'RT',
         tag: 'Facilitator',
+    },
+    {
+        name: 'Mrs. T Naga Praveena',
+        role: 'Faculty Mentor',
+        dept: 'Data Science, HITAM',
+        initials: 'TP',
+        tag: 'FM',
+    },
+    {
+        name: 'Mrs. D. Kranthi Deep',
+        role: 'Faculty Mentor',
+        dept: 'Data Science, HITAM',
+        initials: 'KD',
+        tag: 'FM',
     },
 ];
 
@@ -57,9 +72,79 @@ const teams = [
 const initials = (name) =>
     name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
 
+/* ── Countdown Timer Component ── */
+const CountdownTimer = ({ deadline, className = "" }) => {
+    const [timeLeft, setTimeLeft] = useState({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        isExpired: false
+    });
+
+    useEffect(() => {
+        const calculateTimeLeft = () => {
+            const difference = deadline - new Date();
+            
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+                
+                setTimeLeft({ days, hours, minutes, seconds, isExpired: false });
+            } else {
+                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true });
+            }
+        };
+
+        calculateTimeLeft();
+        const timer = setInterval(calculateTimeLeft, 1000);
+
+        return () => clearInterval(timer);
+    }, [deadline]);
+
+    if (timeLeft.isExpired) {
+        return (
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/20 border border-red-500/30 ${className}`}>
+                <Clock size={12} className="text-red-400" />
+                <span className="text-[10px] font-bold text-red-400">Applications Closed</span>
+            </div>
+        );
+    }
+
+    return (
+        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 ${className}`}>
+            <Clock size={12} className="text-emerald-400" />
+            <span className="text-[10px] font-bold text-emerald-400">
+                {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s left
+            </span>
+        </div>
+    );
+};
+
 /* ── Team page ── */
 const Team = () => {
     const [showForm, setShowForm] = useState(false);
+    const [isExpired, setIsExpired] = useState(false);
+
+    useEffect(() => {
+        const checkDeadline = () => {
+            const now = new Date();
+            setIsExpired(now >= APPLICATION_DEADLINE);
+        };
+
+        checkDeadline();
+        const timer = setInterval(checkDeadline, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    const handleApplyClick = () => {
+        if (!isExpired) {
+            setShowForm(true);
+        }
+    };
 
     return (
         <PageTransition>
@@ -155,57 +240,97 @@ const Team = () => {
             </section>
 
             {/* ── Core Committee Recruitment Banner ── */}
-            <section className="px-6 py-8 bg-[#080808] grid-texture border-b border-white/[0.06]">
+            <section className="px-6 py-16 bg-[#080808] grid-texture border-b border-white/[0.06]">
                 <div className="max-w-7xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, y: 16 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                        className="relative bg-[#0f0f0f] rounded-[16px] overflow-hidden border border-white/10"
-                        style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.5), 0 16px 48px rgba(0,0,0,0.4)' }}
-                    >
-                        {/* Subtle shimmer top line */}
-                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-
-                        <div className="px-6 py-6 md:px-8 md:py-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                            <div className="flex items-start gap-5">
-                                {/* Icon */}
-                                <div className="w-11 h-11 rounded-[10px] bg-white/10 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
-                                    <Sparkles size={18} className="text-white" />
-                                </div>
-
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1.5">
-                                        <span className="text-[10px] font-bold tracking-[0.16em] uppercase text-white/30">Core Committee</span>
-                                        <span className="w-1 h-1 rounded-full bg-white/20" />
-                                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.1em] uppercase text-emerald-400">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                                            Applications Open
-                                        </span>
-                                    </div>
-                                    <h3 className="text-white font-bold text-lg md:text-xl leading-snug mb-1">
-                                        First-ever Core Committee recruitment is live! 🚀
-                                    </h3>
-                                    <p className="text-white/40 text-sm leading-relaxed max-w-lg">
-                                        We're building the team that runs MINDS. If you want to lead events, drive strategy, and actually build something — this is your moment.
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Apply button */}
-                            <div className="shrink-0">
-                                <button
-                                    onClick={() => setShowForm(true)}
-                                    className="group inline-flex items-center gap-2 px-6 py-3 rounded-[10px] bg-white text-slate-900 text-sm font-bold hover:bg-slate-100 transition-all duration-200 hover:-translate-y-[1px]"
-                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.2), 0 4px 12px rgba(255,255,255,0.08)' }}
-                                >
-                                    Apply Now
-                                    <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
-                                </button>
-                            </div>
+                    <div className="relative">
+                        {/* Animated White Shine Border - Outside */}
+                        <div className="absolute inset-0 rounded-[20px] p-[2px]">
+                            <div className="absolute inset-0 rounded-[20px] border border-white/20" />
+                            <div className="absolute inset-0 rounded-[20px] border border-transparent bg-gradient-to-r from-transparent via-white to-transparent opacity-30" 
+                                style={{
+                                    backgroundSize: '200% 100%',
+                                    animation: 'shimmer 3s ease-in-out infinite'
+                                }}
+                            />
                         </div>
-                    </motion.div>
+                        
+                        {/* Main Card */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5 }}
+                            className="relative bg-white/[0.04] rounded-[20px] overflow-hidden"
+                            style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.4),0 8px 24px rgba(0,0,0,0.3)' }}
+                        >
+                            {/* Left Accent Border */}
+                            <div className="absolute left-0 inset-y-0 w-[3px] bg-gradient-to-b from-emerald-400 to-teal-400 rounded-full" />
+                            
+                            {/* Premium Grid Background */}
+                            <div className="absolute inset-0 opacity-30">
+                                <div className="w-full h-full" style={{
+                                    backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
+                                    backgroundSize: '50px 50px'
+                                }} />
+                            </div>
+                            
+                            {/* Content */}
+                            <div className="relative px-8 py-12 md:px-12 md:py-16">
+                                <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-12">
+                                    {/* Left Content */}
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                                                <Sparkles size={14} className="text-emerald-400" />
+                                            </div>
+                                            <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-emerald-400">
+                                                {isExpired ? 'Applications Closed' : 'Applications Open'}
+                                            </span>
+                                        </div>
+                                        <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-4">
+                                            Core Committee Recruitment
+                                        </h2>
+                                        <p className="text-white/60 text-lg leading-relaxed mb-6">
+                                            First-ever Core Committee recruitment is live! 🚀<br />
+                                            We're building the team that runs MINDS. If you want to lead events, drive strategy, and actually build something — this is your moment.
+                                        </p>
+                                        
+                                        {/* Apply Button */}
+                                        <button
+                                            onClick={handleApplyClick}
+                                            disabled={isExpired}
+                                            className={`group inline-flex items-center gap-2 px-6 py-3 font-semibold text-sm rounded-full transition-all duration-300 hover:-translate-y-[1px] hover:shadow-lg ${
+                                                isExpired 
+                                                    ? 'bg-gray-500/20 border border-gray-500/30 text-gray-400 cursor-not-allowed' 
+                                                    : 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                                            }`}
+                                        >
+                                            {isExpired ? 'Applications Closed' : 'Apply Now'}
+                                            {!isExpired && <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />}
+                                        </button>
+                                    </div>
+                                    
+                                    {/* Right Visual Element with Timer */}
+                                    <div className="flex-shrink-0 flex flex-col items-center gap-4">
+                                        {/* Timer - Bottom Right */}
+                                        <CountdownTimer deadline={APPLICATION_DEADLINE} />
+                                        <div className="relative">
+                                            <div className="w-32 h-32 rounded-[20px] bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center">
+                                                <div className="w-16 h-16 rounded-full bg-emerald-500/30 border border-emerald-500/40 flex items-center justify-center">
+                                                    <Sparkles size={24} className="text-emerald-400" />
+                                                </div>
+                                            </div>
+                                            {/* Glow Effect */}
+                                            <div className="absolute inset-0 rounded-[20px] bg-emerald-500/20 blur-xl -z-10" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {/* Top Gradient Line */}
+                            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent" />
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 
@@ -284,7 +409,7 @@ const Team = () => {
 
         {/* ── Embedded Form Modal ── */}
         <AnimatePresence>
-            {showForm && (
+            {showForm && !isExpired && (
                 <>
                     <motion.div
                         key="team-form-backdrop"
@@ -315,7 +440,7 @@ const Team = () => {
                                     <p className="text-white/30 text-[10px] mt-0.5">MINDS — First Batch Recruitment</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-3">
                                 <a
                                     href={FORM_URL}
                                     target="_blank"
@@ -332,6 +457,17 @@ const Team = () => {
                                     <X size={15} />
                                 </button>
                             </div>
+                        </div>
+                        
+                        {/* Timer Bar - Below Header */}
+                        <div className="px-6 py-4 bg-emerald-500/20 border-b border-emerald-500/30 flex items-center justify-center">
+                            <div className="flex items-center gap-2">
+                                <Clock size={14} className="text-emerald-400" />
+                                <span className="text-emerald-400 text-sm font-bold">
+                                    {isExpired ? 'Applications Closed' : 'Deadline: March 18, 2026 12:00 Noon'}
+                                </span>
+                            </div>
+                            <CountdownTimer deadline={APPLICATION_DEADLINE} className="ml-4" />
                         </div>
                         <div className="flex-1 overflow-hidden bg-white">
                             <iframe

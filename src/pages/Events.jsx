@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Clock, Mic, Sparkles, ArrowRight, X, Linkedin, CheckCircle, MessageCircle } from 'lucide-react';
+import { Calendar, MapPin, Clock, Mic, Sparkles, ArrowRight, X, Linkedin, CheckCircle, MessageCircle, Eye } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
@@ -47,119 +47,7 @@ const pastEvents = [
     },
 ];
 
-/* ── Session card (drawer) ── */
-const SessionCard = ({ event, index }) => {
-    const [imgHovered, setImgHovered] = React.useState(false);
-
-    return (
-        <>
-            {/* Full-screen image lightbox on hover */}
-            <AnimatePresence>
-                {imgHovered && event.image && (
-                    <motion.div
-                        key="img-lightbox"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed inset-0 z-[500] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm pointer-events-none"
-                    >
-                        <motion.img
-                            initial={{ scale: 0.92, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                            src={event.image}
-                            alt={event.speaker || event.title}
-                            className="max-w-[80vw] max-h-[80vh] object-contain rounded-[14px]"
-                            style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.5)' }}
-                        />
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white/[0.04] rounded-[14px] ring-1 ring-white/10 overflow-hidden"
-                style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.4),0 8px 24px rgba(0,0,0,0.3)' }}
-            >
-                {/* Speaker image hero — full width, hover to enlarge */}
-                {event.image && (
-                    <div
-                        className="w-full bg-slate-100 flex items-center justify-center overflow-hidden relative cursor-zoom-in"
-                        style={{ height: '220px' }}
-                        onMouseEnter={() => setImgHovered(true)}
-                        onMouseLeave={() => setImgHovered(false)}
-                    >
-                        <img
-                            src={event.image}
-                            alt={event.speaker || event.title}
-                            className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
-                            onError={e => { e.target.parentElement.style.display = 'none'; }}
-                        />
-                        {/* Hover hint */}
-                        <div className="absolute bottom-2 right-2 px-2 py-1 rounded-full bg-slate-900/60 backdrop-blur-sm text-white text-[10px] font-medium opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                            Hover to expand
-                        </div>
-                    </div>
-                )}
-
-                <div className="p-6">
-                    {/* Type + index */}
-                    <div className="flex items-center justify-between mb-4">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border bg-slate-50 text-slate-800 border-slate-100 tracking-wide">
-                            <Sparkles size={10} />{event.type}
-                        </span>
-                        <span className="text-[11px] font-black text-slate-300 tracking-widest">0{index + 1}</span>
-                    </div>
-
-                    <h4 className="text-base font-bold text-slate-900 leading-snug mb-3">{event.title}</h4>
-                    <p className="text-slate-500 text-sm leading-relaxed mb-5">{event.description}</p>
-
-                    {/* Speaker strip */}
-                    {event.speaker && (
-                        <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-[10px] border border-slate-100">
-                            <div className="w-8 h-8 rounded-[8px] bg-slate-900 flex items-center justify-center shrink-0">
-                                <Mic size={14} className="text-white" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="font-bold text-slate-900 text-sm">{event.speaker}</p>
-                                {event.speakerRole && (
-                                    <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{event.speakerRole}</p>
-                                )}
-                            </div>
-                            {event.linkedin && (
-                                <a
-                                    href={event.linkedin}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={e => e.stopPropagation()}
-                                    className="shrink-0 w-8 h-8 rounded-[8px] bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-center transition-colors duration-200"
-                                >
-                                    <Linkedin size={13} />
-                                </a>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Meta chips */}
-                    <div className="mt-4 flex flex-wrap gap-2">
-                        {[
-                            { icon: Clock, label: event.time },
-                            { icon: MapPin, label: event.location },
-                        ].map(({ icon: Icon, label }) => (
-                            <span key={label} className="inline-flex items-center gap-1.5 text-[11px] text-slate-400 border border-slate-100 px-3 py-1.5 rounded-full bg-slate-50">
-                                <Icon size={10} />{label}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-            </motion.div>
-        </>
-    );
-};
+/* ── Enhanced Session Card for Modal ── */
 
 
 /* ── Past event card ── */
@@ -170,21 +58,21 @@ const PastEventCard = ({ event, onClick }) => (
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
         onClick={onClick}
-        className="group relative bg-white/[0.04] rounded-[14px] ring-1 ring-white/10 p-6 sm:p-8 cursor-pointer transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] overflow-hidden flex flex-col md:flex-row md:items-center gap-6"
-        style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.4),0 8px 24px rgba(0,0,0,0.3)' }}
+        className="group relative bg-white/[0.04] rounded-[14px] ring-1 ring-white/10 p-6 cursor-pointer transition-all duration-[300ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[3px] overflow-hidden"
+        style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.4),0 8px 24px rgba(0,0,0,0.3)', aspectRatio: '1/1', maxWidth: '400px' }}
     >
         {/* Left hover accent bar */}
         <div className="absolute left-0 inset-y-0 w-[3px] bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        {/* Date chip */}
-        <div className="shrink-0 w-20 h-20 rounded-[12px] bg-white/[0.04] border border-white/10 flex flex-col items-center justify-center text-center group-hover:bg-white group-hover:border-white transition-all duration-300">
-            <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 group-hover:text-slate-500 transition-colors">Feb</span>
-            <span className="text-3xl font-black text-white group-hover:text-slate-900 leading-none transition-colors">27</span>
-            <span className="text-[10px] font-bold tracking-[0.08em] text-slate-400 group-hover:text-slate-500 transition-colors">2026</span>
+        {/* Date chip - top right */}
+        <div className="absolute top-4 right-4 w-16 h-16 rounded-[12px] bg-white/[0.06] border border-white/10 flex flex-col items-center justify-center text-center group-hover:bg-white group-hover:border-white transition-all duration-300">
+            <span className="text-[8px] font-bold tracking-[0.12em] uppercase text-slate-400 group-hover:text-slate-500 transition-colors">Feb</span>
+            <span className="text-xl font-black text-white group-hover:text-slate-900 leading-none transition-colors">27</span>
+            <span className="text-[8px] font-bold tracking-[0.08em] text-slate-400 group-hover:text-slate-500 transition-colors">2026</span>
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="flex flex-col h-full">
             <div className="flex flex-wrap items-center gap-2 mb-3">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border bg-white/[0.06] text-white border-white/10 tracking-wide">
                     <Sparkles size={11} />{event.type}
@@ -193,24 +81,249 @@ const PastEventCard = ({ event, onClick }) => (
                     <span className="text-xs text-slate-400 font-medium">{event.subEvents.length} sessions</span>
                 )}
             </div>
-            <h3 className="text-lg md:text-xl font-bold text-white leading-snug mb-2 pr-12 md:pr-0">{event.title}</h3>
-            <p className="text-white/50 text-sm leading-relaxed line-clamp-2 mb-4">{event.description}</p>
-            <div className="flex flex-wrap gap-4">
-                <span className="inline-flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                    <Clock size={11} className="text-white/50" />{event.time}
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                    <MapPin size={11} className="text-white/50" />{event.location}
-                </span>
+            
+            <h3 className="text-lg font-bold text-white leading-snug mb-2 pr-16">{event.title}</h3>
+            <p className="text-white/50 text-sm leading-relaxed line-clamp-3 mb-4 flex-1">{event.description}</p>
+            
+            <div className="space-y-2">
+                <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+                    <Clock size={10} className="text-white/50" />
+                    <span>{event.time}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+                    <MapPin size={10} className="text-white/50" />
+                    <span>{event.location}</span>
+                </div>
             </div>
-        </div>
 
-        {/* Arrow chip */}
-        <div className="shrink-0 w-10 h-10 rounded-[10px] bg-white/[0.04] border border-white/10 flex items-center justify-center text-white/50 group-hover:bg-white group-hover:border-white group-hover:text-slate-900 transition-all duration-300 self-start md:self-center">
-            <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+            {/* Arrow chip - bottom right corner */}
+            <div className="absolute bottom-4 right-4">
+                <div className="w-10 h-10 rounded-[10px] bg-white/[0.04] border border-white/10 flex items-center justify-center text-white/50 group-hover:bg-white group-hover:border-white group-hover:text-slate-900 transition-all duration-300">
+                    <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                </div>
+            </div>
         </div>
     </motion.div>
 );
+
+/* ── Premium Event Modal Component ── */
+const PremiumEventModal = ({ event, isOpen, onClose }) => {
+    return (
+        <AnimatePresence mode="wait">
+            {isOpen && event && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="fixed inset-0 z-[300] flex items-center justify-center bg-black/90 backdrop-blur-md p-6"
+                    onClick={onClose}
+                >
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                        className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-[12px] ring-1 ring-white/10 overflow-hidden max-w-2xl w-full max-h-[80vh] flex flex-col"
+                        style={{ boxShadow: '0 12px 40px rgba(0,0,0,0.4)' }}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="relative bg-gradient-to-r from-slate-900/90 to-slate-800/90 backdrop-blur-xl px-3 pt-3 pb-2 border-b border-white/10">
+                            {/* Close button */}
+                            <button
+                                onClick={onClose}
+                                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300"
+                                aria-label="Close"
+                            >
+                                <X size={18} />
+                            </button>
+                            
+                            {/* Event Title */}
+                            <div className="max-w-3xl">
+                                <div className="flex items-center gap-1.5 mb-1.5">
+                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[8px] font-bold border bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-400 border-emerald-500/30 tracking-wider uppercase">
+                                        <Sparkles size={6} />{event.type}
+                                    </span>
+                                    {event.subEvents && (
+                                        <span className="text-[10px] text-white/60 font-medium">{event.subEvents.length} Session{event.subEvents.length > 1 ? 's' : ''}</span>
+                                    )}
+                                </div>
+                                <h1 className="text-lg font-bold text-white leading-tight mb-1.5">
+                                    {event.title}
+                                </h1>
+                                <p className="text-white/70 text-xs leading-relaxed mb-2">
+                                    {event.description}
+                                </p>
+                                
+                                {/* Event Meta */}
+                                <div className="flex flex-wrap gap-4">
+                                    {[
+                                        { icon: Calendar, label: event.date },
+                                        { icon: Clock, label: event.time },
+                                        { icon: MapPin, label: event.location },
+                                    ].map(({ icon: Icon, label }) => label && (
+                                        <div key={label} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+                                            <Icon size={14} className="text-emerald-400" />
+                                            <span className="text-sm text-white/80 font-medium">{label}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Sessions Content */}
+                        <div className="flex-1 overflow-y-auto bg-gradient-to-b from-slate-900/50 to-slate-800/50 p-3">
+                            {event && event.subEvents && event.subEvents.length > 0 ? (
+                                <div>
+                                    <h2 className="text-2xl font-bold text-white mb-6">Session{event.subEvents.length > 1 ? 's' : ''}</h2>
+                                    
+                                    {/* Single Session */}
+                                    {event.subEvents.length === 1 && (
+                                        <div className="bg-gradient-to-br from-white/[0.06] to-white/[0.02] rounded-[20px] border border-white/10 overflow-hidden">
+                                            <SessionCard event={event.subEvents[0]} index={0} isModal={true} />
+                                        </div>
+                                    )}
+                                    
+                                    {/* Multiple Sessions - Vertical Layout */}
+                                    {event.subEvents.length > 1 && (
+                                        <div className="space-y-6">
+                                            {event.subEvents.map((sub, idx) => (
+                                                <div key={idx} className="bg-gradient-to-br from-white/[0.06] to-white/[0.02] rounded-[20px] border border-white/10 overflow-hidden">
+                                                    <SessionCard event={sub} index={idx} isModal={true} />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="text-center py-12">
+                                    <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                                        <Sparkles size={24} className="text-emerald-400" />
+                                    </div>
+                                    <h3 className="text-white font-bold text-xl mb-2">Event Details</h3>
+                                    <p className="text-white/60">No additional sessions for this event.</p>
+                                </div>
+                            )}
+                        </div>
+                        
+                        {/* Footer with Instagram Reel */}
+                        <div className="bg-gradient-to-r from-slate-900/90 to-slate-800/90 backdrop-blur-xl px-4 py-3 border-t border-white/10 shrink-0">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className="text-sm text-white/60">
+                                        <span className="font-medium">Want to see how it went?</span>
+                                    </div>
+                                    <a
+                                        href="https://www.instagram.com/reel/DV3mXdCEtCT/?utm_source=ig_web_copy_link"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm rounded-full transition-all duration-300 hover:-translate-y-[1px] hover:shadow-lg"
+                                    >
+                                        Watch Instagram Reel
+                                    </a>
+                                </div>
+                                <button
+                                    onClick={onClose}
+                                    className="px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white text-sm font-medium hover:bg-white/20 transition-all duration-300"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+};
+
+/* ── Enhanced Session Card for Modal ── */
+const SessionCard = ({ event, index, isModal = false }) => {
+    const [imgHovered, setImgHovered] = React.useState(false);
+    
+    return (
+        <>
+            {/* Image lightbox for modal */}
+            {isModal && imgHovered && event.image && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-[400] flex items-center justify-center bg-black/90 backdrop-blur-sm pointer-events-none"
+                >
+                    <motion.img
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.95, opacity: 0 }}
+                        src={event.image}
+                        alt={event.speaker || event.title}
+                        className="max-w-[60vw] max-h-[60vh] object-contain rounded-[20px]"
+                        style={{ boxShadow: '0 32px 120px rgba(0,0,0,0.8)' }}
+                    />
+                </motion.div>
+            )}
+            
+            <div className="p-3 min-h-full">
+                {/* Speaker Image */}
+                {event.image && (
+                    <div
+                        className="w-full h-24 bg-gradient-to-br from-slate-700 to-slate-800 rounded-[8px] overflow-hidden relative cursor-zoom-in mb-2"
+                        onMouseEnter={() => setImgHovered(true)}
+                        onMouseLeave={() => setImgHovered(false)}
+                    >
+                        <img
+                            src={event.image}
+                            alt={event.speaker || event.title}
+                            className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
+                        <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-sm text-white text-xs font-medium">
+                            Click to expand
+                        </div>
+                    </div>
+                )}
+                
+                {/* Session Info */}
+                <div className="space-y-2">
+                    <div>
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[8px] font-bold border bg-emerald-500/10 text-emerald-400 border-emerald-500/20 tracking-widest uppercase mb-2">
+                            <Sparkles size={4} />Session {index + 1}
+                        </span>
+                        <h3 className="text-base font-bold text-white leading-tight mb-1">{event.title}</h3>
+                        <p className="text-white/70 text-[10px] leading-relaxed">{event.description}</p>
+                    </div>
+                    
+                    {/* Speaker Info */}
+                    {event.speaker && (
+                        <div className="bg-gradient-to-br from-white/[0.04] to-white/[0.02] rounded-[8px] p-3 border border-white/10">
+                            <div className="flex items-start gap-2">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shrink-0">
+                                    <Mic size={14} className="text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <h4 className="text-white font-bold text-xs mb-0.5">{event.speaker}</h4>
+                                    <p className="text-white/60 text-[10px] leading-relaxed mb-1.5">{event.speakerRole}</p>
+                                    {event.linkedin && (
+                                        <a
+                                            href={event.linkedin}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1 px-2 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-medium rounded-full hover:bg-blue-500/20 transition-all duration-300"
+                                        >
+                                            <Linkedin size={10} />
+                                            Connect
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </>
+    );
+};
 
 /* ── Main Page ── */
 const Events = () => {
@@ -218,6 +331,7 @@ const Events = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [activeEvent, setActiveEvent] = useState(null);
+    const [premiumModalOpen, setPremiumModalOpen] = useState(false);
 
     const [upcomingEvents, setUpcomingEvents] = useState([]);
 
@@ -240,6 +354,15 @@ const Events = () => {
         setActiveEvent(event);
         setFormSubmitted(false);
         setIsDrawerOpen(true);
+    };
+    
+    const handleOpenPremiumModal = (event) => {
+        setActiveEvent(event);
+        setPremiumModalOpen(true);
+    };
+    
+    const handleClosePremiumModal = () => {
+        setPremiumModalOpen(false);
     };
 
     const handleDone = () => setFormSubmitted(true);
@@ -328,9 +451,9 @@ const Events = () => {
                                     <div className="w-[3px] h-6 bg-slate-300 rounded-full" />
                                     <h2 className="text-xl font-bold text-white tracking-tight">Past Events</h2>
                                 </div>
-                                <div className="space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                     {pastEvents.map((ev, i) => (
-                                        <PastEventCard key={i} event={ev} onClick={() => handleOpenDrawer(ev)} />
+                                        <PastEventCard key={i} event={ev} onClick={() => handleOpenPremiumModal(ev)} />
                                     ))}
                                 </div>
                             </div>
@@ -339,6 +462,13 @@ const Events = () => {
                 </section>
             </div>
 
+            {/* ── Premium Event Modal ── */}
+            <PremiumEventModal 
+                event={activeEvent} 
+                isOpen={premiumModalOpen} 
+                onClose={handleClosePremiumModal} 
+            />
+            
             {/* ── Right-side Drawer ── */}
             <AnimatePresence>
                 {isDrawerOpen && (
@@ -412,7 +542,73 @@ const Events = () => {
                                                 {activeEvent.subEvents.length} Sessions
                                             </p>
                                             {activeEvent.subEvents.map((sub, idx) => (
-                                                <SessionCard key={idx} event={sub} index={idx} />
+                                                <div key={idx} className="bg-white/[0.04] rounded-[14px] ring-1 ring-white/10 overflow-hidden" style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.4),0 8px 24px rgba(0,0,0,0.3)' }}>
+                                                    {/* Speaker image hero */}
+                                                    {sub.image && (
+                                                        <div
+                                                            className="w-full bg-slate-100 flex items-center justify-center overflow-hidden relative"
+                                                            style={{ height: '200px' }}
+                                                        >
+                                                            <img
+                                                                src={sub.image}
+                                                                alt={sub.speaker || sub.title}
+                                                                className="w-full h-full object-cover object-center"
+                                                                onError={e => { e.target.parentElement.style.display = 'none'; }}
+                                                            />
+                                                        </div>
+                                                    )}
+
+                                                    <div className="p-6">
+                                                        {/* Type + index */}
+                                                        <div className="flex items-center justify-between mb-4">
+                                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border bg-slate-50 text-slate-800 border-slate-100 tracking-wide">
+                                                                <Sparkles size={10} />{sub.type}
+                                                            </span>
+                                                            <span className="text-[11px] font-black text-slate-300 tracking-widest">0{idx + 1}</span>
+                                                        </div>
+
+                                                        <h4 className="text-base font-bold text-slate-900 leading-snug mb-3">{sub.title}</h4>
+                                                        <p className="text-slate-500 text-sm leading-relaxed mb-5">{sub.description}</p>
+
+                                                        {/* Speaker strip */}
+                                                        {sub.speaker && (
+                                                            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-[10px] border border-slate-100">
+                                                                <div className="w-8 h-8 rounded-[8px] bg-slate-900 flex items-center justify-center shrink-0">
+                                                                    <Mic size={14} className="text-white" />
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <p className="font-bold text-slate-900 text-sm">{sub.speaker}</p>
+                                                                    {sub.speakerRole && (
+                                                                        <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{sub.speakerRole}</p>
+                                                                    )}
+                                                                </div>
+                                                                {sub.linkedin && (
+                                                                    <a
+                                                                        href={sub.linkedin}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        onClick={e => e.stopPropagation()}
+                                                                        className="shrink-0 w-8 h-8 rounded-[8px] bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-center transition-colors duration-200"
+                                                                    >
+                                                                        <Linkedin size={13} />
+                                                                    </a>
+                                                                )}
+                                                            </div>
+                                                        )}
+
+                                                        {/* Meta chips */}
+                                                        <div className="mt-4 flex flex-wrap gap-2">
+                                                            {[
+                                                                { icon: Clock, label: sub.time },
+                                                                { icon: MapPin, label: sub.location },
+                                                            ].map(({ icon: Icon, label }) => (
+                                                                <span key={label} className="inline-flex items-center gap-1.5 text-[11px] text-slate-400 border border-slate-100 px-3 py-1.5 rounded-full bg-slate-50">
+                                                                    <Icon size={10} />{label}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             ))}
                                         </motion.div>
                                     ) : !formSubmitted ? (
