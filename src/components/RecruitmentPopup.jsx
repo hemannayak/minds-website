@@ -82,7 +82,7 @@ const RecruitmentPopup = () => {
                                 {/* Banner image — full width, no cropping */}
                                 <div className="w-full overflow-hidden bg-[#0a0a0a]">
                                     <img
-                                        src="/officialrecritementbanner.jpeg"
+                                        src="/officialrecritementbanner.png"
                                         alt="MINDS Core Committee Recruitment"
                                         className="w-full h-auto object-cover block"
                                         onError={e => {

@@ -1,6 +1,6 @@
 # MINDS Club Official Website
 
-> Data Science and Analytics Club - HITAM
+> Modern Innovation In Next-Gen Data Science Society(MINDS) - HITAM
 
 **© 2025 MINDS Club, HITAM. All rights reserved.**
 
