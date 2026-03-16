@@ -41,7 +41,7 @@ const IntroVideo = ({ onComplete }) => {
           <video
             ref={videoRef}
             src="/MINDS_Logo_Intro.mp4"
-            className="w-[85vw] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-xl object-contain"
+            className="w-[90vw] h-[90vh] max-w-5xl md:max-w-6xl lg:max-w-7xl object-contain"
             onEnded={handleVideoEnded}
             autoPlay
             playsInline
