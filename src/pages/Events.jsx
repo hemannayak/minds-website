@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Clock, Mic, Sparkles, ArrowRight, X, Linkedin, CheckCircle, MessageCircle, Eye } from 'lucide-react';
+import { Calendar, MapPin, Clock, Mic, Sparkles, ArrowRight, X, Linkedin, Instagram, CheckCircle, MessageCircle, Eye } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
@@ -116,7 +116,7 @@ const PremiumEventModal = ({ event, isOpen, onClose }) => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="fixed inset-0 z-[300] flex items-center justify-center bg-black/90 backdrop-blur-md p-6"
+                    className="fixed inset-0 z-[300] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-6"
                     onClick={onClose}
                 >
                     <motion.div
@@ -124,7 +124,7 @@ const PremiumEventModal = ({ event, isOpen, onClose }) => {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                        className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-[12px] ring-1 ring-white/10 overflow-hidden max-w-2xl w-full max-h-[80vh] flex flex-col"
+                        className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-[12px] ring-1 ring-white/10 overflow-hidden max-w-2xl w-full max-h-[85vh] sm:max-h-[80vh] flex flex-col"
                         style={{ boxShadow: '0 12px 40px rgba(0,0,0,0.4)' }}
                         onClick={e => e.stopPropagation()}
                     >
@@ -133,10 +133,10 @@ const PremiumEventModal = ({ event, isOpen, onClose }) => {
                             {/* Close button */}
                             <button
                                 onClick={onClose}
-                                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300"
+                                className="absolute top-3 right-3 sm:top-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300"
                                 aria-label="Close"
                             >
-                                <X size={18} />
+                                <X size={14} className="sm:size-[18px]" />
                             </button>
                             
                             {/* Event Title */}
@@ -218,9 +218,10 @@ const PremiumEventModal = ({ event, isOpen, onClose }) => {
                                         href="https://www.instagram.com/reel/DV3mXdCEtCT/?utm_source=ig_web_copy_link"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm rounded-full transition-all duration-300 hover:-translate-y-[1px] hover:shadow-lg"
+                                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-white/90 text-black font-semibold text-xs rounded-full transition-all duration-300 hover:-translate-y-[1px] hover:shadow-lg border-2 border-white"
                                     >
-                                        Watch Instagram Reel
+                                        <Instagram size={14} className="text-pink-500" />
+                                        Instagram Reel
                                     </a>
                                 </div>
                                 <button
