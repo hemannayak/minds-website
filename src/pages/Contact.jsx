@@ -4,7 +4,7 @@ import { Mail, Phone, MapPin, Send, Instagram, CheckCircle, AlertCircle, Externa
 import PageTransition from '../components/PageTransition';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-const INSTAGRAM_URL = 'https://www.instagram.com/hitam_datascience_club/';
+const INSTAGRAM_URL = 'https://www.instagram.com/hitam_minds_club/';
 
 /* ── Contact data ── */
 const contactPoints = [

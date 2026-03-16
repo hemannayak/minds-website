@@ -2,7 +2,7 @@ import React from 'react';
 import { Instagram, Mail, MapPin, Phone, ArrowUpRight, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const INSTAGRAM_URL = 'https://www.instagram.com/hitam_datascience_club/';
+const INSTAGRAM_URL = 'https://www.instagram.com/hitam_minds_club/';
 
 const navLinks = [
     { label: 'About', to: '/about' },
